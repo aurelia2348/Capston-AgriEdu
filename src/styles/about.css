@@ -1,0 +1,82 @@
+/* About section styles */
+.about {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2rem;
+  align-items: center;
+  padding: 2rem 3rem;
+}
+
+.about-images {
+  display: grid;
+  margin-left: 50px;
+  grid-template-areas:
+    "img1 img2"
+    "img3 img2";
+  gap: 15px;
+  justify-content: start;
+  max-width: 350px;
+}
+
+.about-images img {
+  width: 100%;
+  aspect-ratio: 3 / 3;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.about-images img:nth-child(1) {
+  grid-area: img1;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+.about-images img:nth-child(1):hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+}
+
+.about-images img:nth-child(2) {
+  grid-area: img2;
+  height: 100%;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+.about-images img:nth-child(2):hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+}
+
+.about-images img:nth-child(3) {
+  grid-area: img3;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+.about-images img:nth-child(3):hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+}
+
+.about-images img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.about-text h3 {
+  color: #8bc34a;
+  margin-bottom: 0.5rem;
+}
+
+.about-text h2 {
+  font-size: 1.8rem;
+  margin: 1rem 0 0.5rem;
+}
+
+.about-text p {
+  margin: 1rem 0.5rem;
+  line-height: 1.5;
+}

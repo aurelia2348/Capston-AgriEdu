@@ -1,0 +1,19 @@
+/* Base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  color: #333;
+  line-height: 1.6;
+  position: relative;
+}
+
+.short-line {
+  width: 90%;
+  margin: 40px auto;
+  border: 1px solid #ccc;
+}

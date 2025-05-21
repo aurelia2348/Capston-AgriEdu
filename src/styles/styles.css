@@ -1,0 +1,13 @@
+/* Import base styles */
+@import 'base.css';
+/* Kalau ada variables yang berisi root dibuat yaa isinya root variable kayak palet warna dll. */
+
+/* Import component styles */
+@import 'navbar.css';
+@import 'hero.css';
+@import 'about.css';
+@import 'services.css';
+@import 'footer.css';
+
+/* Import responsive styles */
+@import 'responsive.css';

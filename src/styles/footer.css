@@ -1,0 +1,63 @@
+/* Footer styles */
+.main-footer {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  background-image: url("../public/images/Footer-LandingPage.png");
+  background-size: cover;
+  background-position: center;
+  color: white;
+  padding: 4rem 2rem;
+  position: relative;
+}
+
+.main-footer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 80, 0, 0.3);
+  z-index: 0;
+}
+
+.main-footer .cta-text {
+  z-index: 1;
+  text-align: center;
+  padding: 5px;
+}
+
+.main-footer .cta-text button {
+  margin: 0.5rem;
+  padding: 10px 30px;
+  border: none;
+  border-radius: 999px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.main-footer .cta-text .outline {
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+}
+
+.main-footer .cta-text .outline:hover {
+  background-color: #b6bdb6;
+}
+
+.main-footer .cta-text button:not(.outline) {
+  background-color: white;
+  color: green;
+}
+
+.main-footer .cta-text button:not(.outline):hover {
+  background-color: #b6bdb6;
+}
+
+.footer-bottom {
+  background-color: #32cd32;
+  text-align: center;
+  padding: 1rem;
+  color: #080808;
+  font-weight: bold;
+}
+

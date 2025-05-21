@@ -1,0 +1,58 @@
+/* Navbar styles */
+.navbar {
+  background-color: rgb(255, 255, 255, 0.3);
+  padding: 10px 30px;
+  margin: 40px;
+  height: 70px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar input[type="text"] {
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  background-color: white;
+  outline: none;
+  width: 300px;
+}
+
+.logo {
+  height: 150px;
+  width: auto;
+  object-fit: contain;
+  cursor: pointer;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  margin-right: 20px;
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+}
+
+.nav-links li a:hover {
+  color: #b6bdb6;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nav-right form input {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
