@@ -1,22 +1,19 @@
+import LoginPresenter from '../presenters/LoginPresenter.js';
+import AuthService from '../services/AuthService.js';
+
 export default class Login {
-  async render() {
-    return `
-      <section class="container">
-        <h1>Login</h1>
-      </section>
-    `;
+  constructor() {
+    this.presenter = new LoginPresenter(this, new AuthService());
   }
 
-  async afterRender() {
-    export default class Login {
   async render() {
     return `
+      <link rel="stylesheet" href="Login.css">
       <section class="login-container">
         <div class="login-wrapper">
           <div class="login-left">
-            <img src="your-image-path.jpg" alt="Farming Image" class="login-image" />
             <div class="logo">
-              <h1><span class="src/public/logo/Main-Logo-White.png">Agri</span><span class="logo-light">Edu</span></h1>
+              <h1><span class="src/public/images/Hero-Home (2).png">Agri</span><span class="logo-light">Edu</span></h1>
             </div>
           </div>
           <div class="login-right">
@@ -26,18 +23,19 @@ export default class Login {
               <form id="login-form">
                 <label for="email">Email address</label>
                 <input type="email" id="email" placeholder="Enter your email" required />
-                
+
                 <label for="password">Password</label>
                 <div class="password-field">
                   <input type="password" id="password" placeholder="Enter your password" required />
                   <span class="toggle-password">👁️</span>
                 </div>
-                
+
                 <a href="#/forgot-password" class="forgot-link">Forgot password?</a>
-                
+
                 <button type="submit" class="login-button">Login</button>
               </form>
               <p class="register-text">Don't have an account? <a href="#/register">Register here</a></p>
+              <p class="error-text" id="login-error"></p>
             </div>
           </div>
         </div>
@@ -46,23 +44,32 @@ export default class Login {
   }
 
   async afterRender() {
-    const togglePassword = document.querySelector('.toggle-password');
-    const passwordInput = document.getElementById('password');
-
-    togglePassword.addEventListener('click', () => {
-      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-      passwordInput.setAttribute('type', type);
+    document.querySelector('.toggle-password').addEventListener('click', () => {
+      const input = document.getElementById('password');
+      input.type = input.type === 'password' ? 'text' : 'password';
     });
 
-    const form = document.getElementById('login-form');
-    form.addEventListener('submit', (e) => {
+    document.getElementById('login-form').addEventListener('submit', (e) => {
       e.preventDefault();
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-      // You can add your login logic here
-      console.log('Logging in with:', email, password);
+      this.presenter.handleLogin(email, password);
     });
   }
-    }
+
+  showError(message) {
+    const errorText = document.getElementById('login-error');
+    errorText.textContent = message;
+    errorText.style.color = 'red';
+  }
+
+  setLoading(isLoading) {
+    const button = document.querySelector('.login-button');
+    button.disabled = isLoading;
+    button.textContent = isLoading ? 'Logging in...' : 'Login';
+  }
+
+  navigateToDashboard() {
+    window.location.href = '#/dashboard';
   }
 }
