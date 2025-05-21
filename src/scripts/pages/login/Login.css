@@ -1,0 +1,141 @@
+/* login.css */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f7f7f7;
+}
+
+.login-container {
+  display: flex;
+  height: 100vh;
+}
+
+.login-wrapper {
+  display: flex;
+  width: 100%;
+}
+
+.login-left {
+  flex: 1;
+  position: relative;
+  background: url('your-image-path.jpg') no-repeat center center/cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo {
+  text-align: center;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.logo-green {
+  color: #4CAF50;
+}
+
+.logo-light {
+  color: white;
+}
+
+.logo p {
+  font-size: 14px;
+  margin: 5px 0 0;
+  letter-spacing: 1px;
+}
+
+.login-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-box {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.login-box h2 {
+  margin-bottom: 10px;
+  font-size: 26px;
+}
+
+.login-box p {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.login-box label {
+  display: block;
+  text-align: left;
+  margin: 10px 0 5px;
+  font-weight: 500;
+  color: #333;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.password-field {
+  position: relative;
+}
+
+.password-field .toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.forgot-link {
+  display: block;
+  text-align: right;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: #555;
+  text-decoration: none;
+}
+
+.login-button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: #8fd33f;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.login-button:hover {
+  background-color: #7ac431;
+}
+
+.register-text {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.register-text a {
+  color: #0099ff;
+  text-decoration: none;
+}
