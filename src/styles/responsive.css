@@ -15,3 +15,195 @@
     font-size: 2rem;
   }
 }
+
+@media (max-width: 768px) {
+  .register-container {
+    padding: 2rem; /* lebih ramping di tablet */
+    border-radius: 16px;
+  }
+
+  .register-container h1 {
+    font-size: 1.3rem;
+  }
+
+  .register-subtitle {
+    font-size: 0.8rem;
+  }
+
+  .register-container input,
+  .register-container button {
+    font-size: 0.8rem;
+    padding: 8px 16px;
+  }
+
+  .toggle-password {
+    right: 6px;
+    font-size: 0.75rem;
+  }
+
+  .toggle-password i {
+    font-size: 0.7rem;
+  }
+}
+
+
+@media (max-width: 360px) {
+  .form-label {
+    font-size: 0.75rem;
+  }
+}
+
+/* ==== MOBILE SIGNUP LOOK (<=480px) ==== */
+@media (max-width: 480px) {
+  .container {
+    padding: 0.75rem;
+    background-color: #ffffff;
+  }
+
+  .register-container {
+    padding: 1.5rem 1rem;
+    border-radius: 12px;
+    box-shadow: none;
+    background-color: #ffffff;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .register-container h1 {
+    font-size: 1.4rem;
+    text-align: center;
+    margin-bottom: 0.25rem;
+  }
+
+  .register-subtitle {
+    font-size: 0.78rem;
+    color: #555;
+    margin-bottom: 1.25rem;
+    text-align: center;
+  }
+
+  .form-label {
+    font-size: 0.75rem;
+    color: #333;
+    margin-bottom: 0.3rem;
+  }
+
+  .register-container input {
+    font-size: 0.8rem;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background-color: #F5F5F5;
+  }
+
+  .password-wrapper {
+    align-items: center;
+  }
+
+  .toggle-password {
+    font-size: 0.7rem;
+    right: 6px;
+  }
+
+  .toggle-password i {
+    font-size: 0.75rem;
+  }
+
+  .register-container button {
+    font-size: 0.85rem;
+    padding: 10px;
+    border-radius: 25px;
+  }
+
+  .login-link {
+    font-size: 0.75rem;
+    margin-top: 1rem;
+    text-align: center;
+  }
+
+  .login-link a {
+    color: #2483FF;
+    text-decoration: underline;
+  }
+
+  .error {
+    font-size: 0.7rem;
+    margin-bottom: 0.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0.75rem;
+    background-color: #ffffff;
+  }
+
+  .login-container {
+    padding: 1.5rem 1rem;
+    border-radius: 12px;
+    box-shadow: none;
+    background-color: #ffffff;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .login-container h1 {
+    font-size: 1.4rem;
+    text-align: center;
+    margin-bottom: 0.25rem;
+  }
+
+  .login-subtitle {
+    font-size: 0.78rem;
+    color: #555;
+    margin-bottom: 1.25rem;
+    text-align: center;
+  }
+
+  .form-label {
+    font-size: 0.75rem;
+    color: #333;
+    margin-bottom: 0.3rem;
+  }
+
+  .login-container input {
+    font-size: 0.8rem;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background-color: #F5F5F5;
+  }
+
+  .password-wrapper {
+    align-items: center;
+  }
+
+  .toggle-password {
+    font-size: 0.7rem;
+    right: 6px;
+  }
+
+  .toggle-password i {
+    font-size: 0.75rem;
+  }
+
+  .login-container button {
+    font-size: 0.85rem;
+    padding: 10px;
+    border-radius: 25px;
+  }
+
+  .register-link {
+    font-size: 0.75rem;
+    margin-top: 1rem;
+    text-align: center;
+  }
+
+  .register-link a {
+    color: #2483FF;
+    text-decoration: underline;
+  }
+
+  .error {
+    font-size: 0.7rem;
+    margin-bottom: 0.3rem;
+  }
+}
