@@ -17,7 +17,7 @@ export default class LoginPresenter {
       this._handleSubmit();
     });
 
-    // Realtime validation saat user mengetik
+
     this._emailInput.addEventListener("input", () => {
       this._validateEmail();
     });
@@ -96,7 +96,6 @@ export default class LoginPresenter {
   }
 
   _isValidEmail(email) {
-    // Regex simple cek format email
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
   }

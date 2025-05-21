@@ -21,7 +21,7 @@
 }
 
 .login-container {
-  max-width: 450px;
+  max-width: 500px;
   width: 100%;
   padding: 3rem;
   border-radius: 20px;
@@ -148,3 +148,42 @@
   color: #434344;
   text-decoration: none;
 }
+
+.login-page {
+  display: flex;
+  min-height: 100vh;
+  margin: 0!important;
+  padding: 0!important; }     
+
+
+.login-left {
+  flex: 1;
+    min-height: 100vh; 
+    max-width: 40vw;
+    background: url("../public/images/login.png")!important;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover !important;
+    position: relative;
+}
+
+
+.logo-overlay {
+  position: absolute;
+  top: 50%;
+  left: 47%;
+  transform: translate(-50%, -50%);
+  max-width: 300px;
+  width: 60%;
+  height: auto;
+  z-index: 2;
+}
+
+.login-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+

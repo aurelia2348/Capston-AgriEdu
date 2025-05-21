@@ -1,4 +1,4 @@
-/* Responsive styles */
+
 @media (max-width: 768px) {
   .about {
     grid-template-columns: 1fr;
@@ -18,8 +18,12 @@
 
 @media (max-width: 768px) {
   .register-container {
-    padding: 2rem; /* lebih ramping di tablet */
+    padding: 2rem; 
     border-radius: 16px;
+  }
+
+  .login-left {
+    max-width: 0vw; /* opsional, agar lebarnya tetap fleksibel */
   }
 
   .register-container h1 {
