@@ -3,20 +3,23 @@ export default class SetupPageStart {
     return `
       <!-- HTML kamu tetap sama -->
       <section class="setup-wrapper">
-        <div class="left-illustration" id="left-illustration">
-    <img src="logo/dekorasikiri.png" alt="Dekorasi Kiri" />
-  </div>
-      
-        <div class="setup-card">
-          <div class="icon" id="step-icon">
+      <div class="setup-container">
+    <div class="left-illustration" id="left-illustration">
+      <img src="images/setupstart.png" alt="Dekorasi Kiri" />
+    </div>
+    <div class="setup-card">
+      <div class="setup-content">
+        <div class="icon" id="step-icon">
           <img src="logo/setap.gif" alt="Animated Logo" style="width: 80%; height: 80%;" />
-          </div>
-          <h2 class="title" id="step-title">
-            Let’s <span class="green">get</span> your <br /><strong>set up first!</strong>
-          </h2>
-          <p class="desc" id="step-desc">
-            Just a few steps to create your AgriEdu account and start exploring smarter farming tools and learning resources.
-          </p>
+        </div>
+        <h2 class="title" id="step-title">
+          Let’s <span class="green">get</span> your <br /><strong>set up first!</strong>
+        </h2>
+        <p class="desc" id="step-desc">
+          Just a few steps to create your AgriEdu account and start exploring smarter farming tools and learning resources.
+        </p>
+      </div>
+   
 
           <div id="form-step" style="display: none;">
             <form id="setup-form">
