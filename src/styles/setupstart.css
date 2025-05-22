@@ -1,35 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
 }
 
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #ffffff;
-  color: #333;
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f7f9fc;
+  height: 100%;
+}
+
+.setup-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  padding: 1rem;
+  background-color: #ffffff;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
 }
 
-.container {
-  width: 90%;
-  max-width: 400px;
+.setup-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 6px 10px 18px rgba(0, 0, 0, 0.15);
+  padding: 2.5rem 2rem;
+  max-width: 500px;
+  width: 100%;
   text-align: center;
-  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .icon {
   font-size: 4rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+  user-select: none;
 }
 
 .title {
-  font-size: 1.8rem;
-  line-height: 1.4;
-  margin-bottom: 1rem;
+  font-size: 1.6rem;
+  line-height: 1.3;
+  margin-bottom: 0.5rem;
+  color: #222;
+  font-weight: 600;
 }
 
 .title .green {
@@ -37,62 +55,214 @@ body {
 }
 
 .desc {
-  font-size: 0.95rem;
+  font-size: 0.875rem;
   color: #666;
-  margin-bottom: 2rem;
+  font-weight: 400;
 }
 
+#form-step {
+  display: block; /* tampilkan form */
+  width: 100%;
+  text-align: left;
+}
+
+#setup-form label {
+  font-size: 0.9rem;
+  color: #333;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 0;
+}
+
+#setup-form input[type="text"],
+#setup-form select {
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: 15px;
+  background-color: #EFEFEF;
+  border: none;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: background-color 0.3s ease;
+  margin-bottom: 16px;
+}
+
+.experience-options label {
+  display: inline-block!important; 
+  margin-right: 19px; 
+  margin-top: 10px;
+  cursor: pointer;
+  user-select: none;
+  justify-content: center!important;
+  align-items: center! important;    
+
+}
+
+#setup-form .experience-options {
+  margin-bottom: 16px;
+}
+
+
+
+#setup-form input[type="text"]:focus,
+#setup-form select:focus {
+  background-color: #e0e0e0;
+}
+
+#setup-form input[type="radio"] {
+  margin-right: 8px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+#setup-form .radio-group label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #333;
+}
+
+#setup-form button {
+  width: 100%;
+  padding: 9px;
+  background-color: #A9E652;
+  color: rgb(65, 65, 65);
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+  margin-top: 0.8rem;
+}
+
+#setup-form button:hover {
+  background-color: #8ccf3a;
+}
+
+#map {
+  width: 100%!important;    
+  height: 200px;  
+  overflow: hidden;
+  background-color: #eee;
+  margin-top: 10px;
+}
+
+.ol-control button {
+  background-color: white !important;
+  border-left: 1px solid #ccc !important;
+  border-right: 1px solid #ccc !important;
+  border-top: 1px solid #ccc !important;
+  border-bottom: none !important; 
+  color: black !important;
+  width: 30px !important;
+  height: 30px !important;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 1;
+  padding: 0;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  border-radius: 0 !important;
+  margin: 0 !important;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s;
+}
+
+/* Border bawah untuk tombol terakhir (zoom out) */
+.ol-zoom button:last-child {
+  border-bottom: 1px solid #ccc !important;
+}
+
+
+/* Container zoom control (defaultnya vertical) */
+.ol-zoom {
+  display: flex !important;
+  flex-direction: column;
+  gap: 0 !important; /* jarak antar tombol, kecilkan jadi 0 atau 1 untuk lebih rapat */
+  margin: 0 !important; /* hilangkan margin container */
+  padding: 0 !important;
+}
+
+/* Jika kamu ingin tombol betul-betul berdempetan tanpa jarak */
+.ol-zoom {
+  gap: 0 !important;
+}
+
+
+.ol-control button:hover {
+  background-color: #f0f0f0 !important;
+}
+
+
+.ol-control button:hover {
+  background-color: #f0f0f0 !important;
+}
+
+
+
+/* Pagination dots */
 .dots {
   display: flex;
   justify-content: center;
   gap: 0.5rem;
-  margin-bottom: 2rem;
 }
 
 .dot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background-color: #ccc;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, width 0.3s ease, height 0.3s ease;
+  margin-top: 20px;
 }
 
 .dot.active {
-  background-color: #28a745;
-  width: 12px;
-  height: 12px;
+  background-color: #525252;
+  width: 10px;
+  height: 10px;
 }
 
 button#next-btn {
-  background-color: #28a745;
-  color: white;
+  background: none;
+  color: rgb(31, 31, 31);
   border: none;
   padding: 0.75rem 2rem;
   border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  align-self: center;
+  min-width: 120px;
+  user-select: none;
+  margin-left: auto;
 }
 
-button#next-btn:hover {
-  background-color: #218838;
-}
 
-.setup-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  padding: 1rem;
-}
 
-.setup-card {
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 6px 10px 18px rgba(0, 0, 0, 0.232);
-  padding: 2.5rem 2rem;
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-}
 
+
+/* Responsive tweaks */
+@media (max-width: 480px) {
+  .setup-card {
+    padding: 2rem 1.5rem;
+    max-width: 100%;
+  }
+
+  .icon {
+    font-size: 3.5rem;
+  }
+
+  .title {
+    font-size: 1.4rem;
+  }
+
+  #setup-form button,
+  button#next-btn {
+    font-size: 0.9rem;
+    padding: 0.65rem 1.5rem;
+  }
+}
