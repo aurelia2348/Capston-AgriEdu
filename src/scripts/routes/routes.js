@@ -1,6 +1,7 @@
 import Login from '../pages/login/LoginPage.js';
 import LandingPresenter from '../pages/landing-page/LandingPage-Presenter.js';
 import SetupPage from '../pages/setup/SetupPage.js';
+import SetupPageStart from '../pages/setup/SetupPage-Start.js';
 import Logout from '../pages/logout/LogoutPage.js';
 import HomePage from '../pages/home/home-page.js';
 import LearningPage from '../pages/learning/LearningPage.js';
@@ -15,6 +16,7 @@ const routes = {
   '/landing': new LandingPresenter(container),
   '/home': new HomePage(),
   '/setup': new SetupPage(),
+  '/setupstart': new SetupPageStart(),
   '/logout': new Logout(),
   '/learning': new LearningPage(),
   '/chatbot': new ChatbotPage(),

@@ -10,6 +10,7 @@
 @import 'footer.css';
 @import 'login.css';
 @import 'register.css';
+@import 'setupstart.css';
 
 /* Import responsive styles */
 @import 'responsive.css';
