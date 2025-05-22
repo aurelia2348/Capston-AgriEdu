@@ -2,10 +2,10 @@
 
 .container {
   display: flex;
-  justify-content: center; /* horizontal center */
-  align-items: center;     /* vertical center */
-  height: 100vh;           /* tinggi full viewport */
-  background-color: #ffffff; /* putih */
+  justify-content: center; 
+  align-items: center;     
+  height: 100vh;          
+  background-color: #ffffff; 
   padding: 1rem;
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
@@ -41,11 +41,9 @@
   color: #333;
 }
 
-
-/* styling form container */
 .register-container {
   max-width: 450px;
-  width: 100%; /* biar responsif */
+  width: 100%; 
   padding: 3rem;
   border-radius: 20px;
   background: #ffffff;
@@ -60,7 +58,7 @@
 }
 
 .register-subtitle {
-  font-size: 0.85rem; /* diperkecil */
+  font-size: 0.85rem;
   text-align: center;
   color: #666666;
   margin-bottom: 1.5rem;
@@ -73,12 +71,12 @@
 }
 
 .register-container input {
-  padding: 9px 20px;          /* dikurangi supaya inputnya lebih pendek */
+  padding: 9px 20px;  
   border-radius: 15px;
   background-color: #EFEFEF;
   border: none;
   font-family: 'Poppins', sans-serif;
-  font-size: 0.85rem;         /* diperkecil tulisan */
+  font-size: 0.85rem;   
   outline: none;
   transition: background-color 0.3s ease;
 }
@@ -121,10 +119,10 @@
   color: red;
   font-size: 0.75rem;
   font-family: 'Poppins', sans-serif;
-  min-height: 1rem;        /* Kasih minimal tinggi agar stabil */
-  margin-top: 0;           /* default margin 0 */
-  margin-bottom: 0;        /* default margin 0 */
-  overflow: hidden;        /* sembunyikan konten jika kosong */
+  min-height: 1rem;        
+  margin-top: 0;         
+  margin-bottom: 0;  
+  overflow: hidden;
   transition: margin 0.3s ease;
   display: block;
 }
@@ -145,15 +143,15 @@
   background: none !important;
   border: none;
   cursor: pointer;
-  color: #969696 !important; /* warna hitam */
-  font-size: 0.85rem; /* lebih kecil */
+  color: #969696 !important;
+  font-size: 0.85rem; 
   padding: 0;
   display: flex;
   align-items: center;
 }
 
 .toggle-password i {
-  font-size: 0.8rem; /* lebih kecil lagi untuk icon */
+  font-size: 0.8rem; 
   transition: all 0.2s ease;
 }
 
