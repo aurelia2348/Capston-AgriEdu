@@ -4,23 +4,30 @@ export class LandingPage {
   }
 
   async render(services) {
-    this.container.innerHTML = `
+    const serviceItems = Array.isArray(services) ? services : [];
+
+    return `
       <header class="hero-section">
         <nav class="navbar">
-          <img src="logo/Main-Logo-White.png" alt="agriedu" class="logo" />
+          <img src="logo/Main-Logo-White.png" alt="agriedu" class="logo" id="logo-home" />
+          <div class="hamburger-menu">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+          </div>
           <div class="nav-right">
             <ul class="nav-links">
-              <li><a href="#ourServices">Our Service</a></li>
-              <li><a href="#aboutUs">About Us</a></li>
-              <li><a href="#signUp-login">SignUp/Login</a></li>
+              <li><a href="#ourServices" class="scroll-link">Our Service</a></li>
+              <li><a href="#aboutUs" class="scroll-link">About Us</a></li>
+              <li><a href="#signUp-login" class="scroll-link">Sign Up/Login</a></li>
             </ul>
-            <form><input type="text" placeholder="Search your word" /></form>
+            <form class="search-form"><input type="text" placeholder="Search your word" /></form>
           </div>
         </nav>
         <div class="hero-content">
           <h1>Empowering Farmers with <span>Knowledge</span> and <span>Innovation</span></h1>
           <p>AgriEdu provides you with the tools and expertise to transform your farming practices.</p>
-          <button>Get Started</button>
+          <button id="get-started-btn">Get Started</button>
         </div>
       </header>
       <section class="tagline">
@@ -45,18 +52,22 @@ export class LandingPage {
         <h3>Our Services</h3>
         <h2>Farming Made Smarter with AgriEdu</h2>
         <div class="service-grid">
-          ${services
-            .map(
-              (service) => `
-            <div class="card">
-              <img src="${service.icon}" class="img-placeholder small" />
-              <h4>${service.title}</h4>
-              <p>${service.description}</p>
-              <img src="${service.image}" class="card-image" />
-            </div>
-          `
-            )
-            .join("")}
+          ${
+            serviceItems.length > 0
+              ? serviceItems
+                  .map(
+                    (service) => `
+                <div class="card">
+                  <img src="${service.icon}" class="img-placeholder small" />
+                  <h4>${service.title}</h4>
+                  <p>${service.description}</p>
+                  <img src="${service.image}" class="card-image" />
+                </div>
+              `
+                  )
+                  .join("")
+              : '<div class="no-services">No services available</div>'
+          }
         </div>
       </section>
       <footer id="signUp-login" class="main-footer">
@@ -64,8 +75,8 @@ export class LandingPage {
           <h2>Ready to Grow Smarter?</h2>
           <p>Join AgriEdu today and start your journey toward sustainable farming.</p>
           <div class="cta-buttons">
-            <button>Login</button>
-            <button class="outline">SignUp</button>
+            <button onclick="window.location.hash = '/login'">Login</button>
+            <button onclick="window.location.hash = '/register'" class="outline">SignUp</button>
           </div>
         </div>
       </footer>
@@ -73,5 +84,154 @@ export class LandingPage {
         <p>© 2025 AgriEdu. All rights reserved.</p>
       </div>
     `;
+  }
+
+  async afterRender() {
+    const logo = document.querySelector("#logo-home");
+    if (logo) {
+      logo.addEventListener("click", (event) => {
+        event.preventDefault();
+        window.location.hash = "/home";
+      });
+    }
+
+    const getStartedBtn = document.querySelector("#get-started-btn");
+    if (getStartedBtn) {
+      getStartedBtn.addEventListener("click", () => {
+        const targetElement = document.getElementById("signUp-login");
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
+      });
+    }
+
+    const hamburgerMenu = document.querySelector(".hamburger-menu");
+    const navRight = document.querySelector(".nav-right");
+
+    if (hamburgerMenu) {
+      hamburgerMenu.addEventListener("click", () => {
+        hamburgerMenu.classList.toggle("active");
+        navRight.classList.toggle("active");
+      });
+
+      const navLinks = document.querySelectorAll(".nav-links li a");
+      navLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          hamburgerMenu.classList.remove("active");
+          navRight.classList.remove("active");
+        });
+      });
+    }
+
+    this.setupSmoothScrolling();
+
+    const loginBtn = document.querySelector(".cta-buttons .btn:not(.outline)");
+    if (loginBtn) {
+      loginBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        window.location.hash = "/login";
+      });
+    }
+
+    const registerBtn = document.querySelector(".cta-buttons .btn.outline");
+    if (registerBtn) {
+      registerBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        window.location.hash = "/register";
+      });
+    }
+  }
+
+  setupSmoothScrolling() {
+    console.log("Setting up smooth scrolling for landing page");
+    const scrollLinks = document.querySelectorAll(".scroll-link");
+    console.log(`Found ${scrollLinks.length} scroll links`);
+
+    scrollLinks.forEach((link, index) => {
+      console.log(
+        `Setting up scroll link ${index + 1}: ${link.getAttribute("href")}`
+      );
+
+      const newLink = link.cloneNode(true);
+      link.parentNode.replaceChild(newLink, link);
+
+      newLink.addEventListener("click", (event) => {
+        console.log(`Scroll link clicked: ${newLink.getAttribute("href")}`);
+        event.preventDefault();
+
+        const targetId = newLink.getAttribute("href").substring(1);
+        console.log(`Target ID: ${targetId}`);
+        const targetElement = document.getElementById(targetId);
+
+        if (targetElement) {
+          console.log(`Found target element, scrolling to it`);
+          if ("scrollBehavior" in document.documentElement.style) {
+            targetElement.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          } else {
+            this.smoothScrollPolyfill(targetElement);
+          }
+        } else {
+          console.error(`Target element with ID "${targetId}" not found`);
+        }
+      });
+    });
+
+    if (
+      window.location.hash &&
+      window.location.hash.startsWith("#") &&
+      !window.location.hash.startsWith("#/")
+    ) {
+      const targetId = window.location.hash.substring(1);
+      const targetElement = document.getElementById(targetId);
+
+      if (targetElement) {
+        setTimeout(() => {
+          targetElement.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }, 100);
+      }
+    }
+  }
+
+  smoothScrollPolyfill(targetElement) {
+    const startPosition = window.pageYOffset;
+    const targetPosition =
+      targetElement.getBoundingClientRect().top + startPosition;
+    const distance = targetPosition - startPosition;
+    const duration = 500;
+    let startTime = null;
+
+    const easeInOutQuad = (t, b, c, d) => {
+      t /= d / 2;
+      if (t < 1) return (c / 2) * t * t + b;
+      t--;
+      return (-c / 2) * (t * (t - 2) - 1) + b;
+    };
+
+    const animation = (currentTime) => {
+      if (startTime === null) startTime = currentTime;
+      const timeElapsed = currentTime - startTime;
+      const scrollY = easeInOutQuad(
+        timeElapsed,
+        startPosition,
+        distance,
+        duration
+      );
+      window.scrollTo(0, scrollY);
+
+      if (timeElapsed < duration) {
+        requestAnimationFrame(animation);
+      }
+    };
+
+    requestAnimationFrame(animation);
   }
 }

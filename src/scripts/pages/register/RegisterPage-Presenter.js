@@ -12,11 +12,17 @@ export default class RegisterPresenter {
         case "username":
           return data.username ? "" : "Username is required";
         case "email":
-          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email) ? "" : "Invalid email format";
+          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)
+            ? ""
+            : "Invalid email format";
         case "password":
-          return data.password.length >= 8 ? "" : "Password must be at least 8 characters";
+          return data.password.length >= 8
+            ? ""
+            : "Password must be at least 8 characters";
         case "confirmPassword":
-          return data.password === data.confirmPassword ? "" : "Passwords do not match";
+          return data.password === data.confirmPassword
+            ? ""
+            : "Passwords do not match";
         default:
           return "";
       }
@@ -85,24 +91,23 @@ export default class RegisterPresenter {
     };
   }
 
-_initTogglePassword() {
-  document.querySelectorAll('.toggle-password').forEach(button => {
-    button.addEventListener('click', () => {
-      const targetId = button.getAttribute('data-target');
-      const input = document.getElementById(targetId);
-      const icon = button.querySelector('i');
+  _initTogglePassword() {
+    document.querySelectorAll(".toggle-password").forEach((button) => {
+      button.addEventListener("click", () => {
+        const targetId = button.getAttribute("data-target");
+        const input = document.getElementById(targetId);
+        const icon = button.querySelector("i");
 
-      if (input.type === 'password') {
-        input.type = 'text'; // bikin kelihatan
-        icon.classList.remove('fa-eye-slash'); // ganti jadi mata tertutup
-        icon.classList.add('fa-eye');
-      } else {
-        input.type = 'password'; // sembunyikan lagi
-        icon.classList.remove('fa-eye'); // ganti jadi mata terbuka
-        icon.classList.add('fa-eye-slash');
-      }
+        if (input.type === "password") {
+          input.type = "text";
+          icon.classList.remove("fa-eye-slash");
+          icon.classList.add("fa-eye");
+        } else {
+          input.type = "password";
+          icon.classList.remove("fa-eye");
+          icon.classList.add("fa-eye-slash");
+        }
+      });
     });
-  });
-}
-
+  }
 }

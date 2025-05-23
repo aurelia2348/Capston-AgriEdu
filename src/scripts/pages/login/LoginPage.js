@@ -34,7 +34,7 @@ export default class Login {
 
         <button type="submit">Login</button>
       </form>
-      <p class="register-link">Don't have an account? <a href="#register" id="toRegister">Register here</a></p>
+      <p class="register-link">Don't have an account? <a href="#/register" id="toRegister">Register here</a></p>
     </div>
   </div>
 </section>

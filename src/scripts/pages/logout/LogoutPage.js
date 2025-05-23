@@ -7,7 +7,5 @@ export default class Logout {
     `;
   }
 
-  async afterRender() {
-    // Do your job here
-  }
+  async afterRender() {}
 }
