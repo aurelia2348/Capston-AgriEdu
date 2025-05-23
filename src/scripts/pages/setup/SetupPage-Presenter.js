@@ -7,6 +7,7 @@ import Overlay from "ol/Overlay";
 import { fromLonLat, toLonLat } from "ol/proj";
 import Zoom from "ol/control/Zoom";
 import SetupModel from "./SetupPage-Model";
+import { saveSetupData } from "../../utils/indexeddb";
 
 export default class SetupPagePresenter {
   constructor() {
@@ -54,7 +55,7 @@ export default class SetupPagePresenter {
       this.updateStep();
     } else {
       alert("Setup selesai!");
-      // window.location.href = '/home'; // redirect kalau perlu
+      window.location.hash = '#/home';
     }
   }
 
@@ -120,22 +121,24 @@ async _initMap() {
     element: popupElement,
     positioning: "bottom-center",
     stopEvent: false,
-    offset: [0, -35],
+    offset: [0, -40],
   });
   this.map.addOverlay(this.popupOverlay);
 
-  // === Fungsi update posisi & nama tempat ===
-  const updatePosition = async (coordinate) => {
-    this.marker.setPosition(coordinate);
-    const [lon, lat] = toLonLat(coordinate);
+const updatePosition = async (coordinate) => {
+  this.marker.setPosition(coordinate);
+  const [lon, lat] = toLonLat(coordinate);
 
-    latInput.value = lat;
-    lonInput.value = lon;
+  latInput.value = lat;
+  lonInput.value = lon;
 
-    const placeName = await SetupModel.getPlaceName(lat, lon);
-    popupElement.innerHTML = placeName;
-    this.popupOverlay.setPosition(coordinate);
-  };
+  const placeName = await SetupModel.getPlaceName(lat, lon);
+  const truncatedName = placeName.length > 80 ? placeName.slice(0, 80) + "..." : placeName;
+  popupElement.innerHTML = truncatedName;
+  popupElement.title = placeName; // untuk tooltip saat hover
+  this.popupOverlay.setPosition(coordinate);
+};
+
 
   // === Lokasi awal: user atau default ===
   if (navigator.geolocation) {
@@ -194,28 +197,34 @@ async _initMap() {
 }
 
 
-  _initForm() {
-    const form = document.getElementById("setup-form");
-    if (!form) return;
+ _initForm() {
+  const form = document.getElementById("setup-form");
+  if (!form) return;
 
-    form.addEventListener("submit", (event) => {
-      event.preventDefault();
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
 
-      const name = document.getElementById("name").value;
-      const interest = document.getElementById("interest").value;
-      const experience = form.experience.value;
-      const lat = document.getElementById("lat").value;
-      const lon = document.getElementById("lon").value;
+    const name = document.getElementById("name").value;
+    const interest = document.getElementById("interest").value;
+    const experience = form.experience.value;
+    const lat = document.getElementById("lat").value;
+    const lon = document.getElementById("lon").value;
 
-      if (!name || !interest || !experience || !lat || !lon) {
-        alert("Please fill all fields.");
-        return;
-      }
+    if (!name || !interest || !experience || !lat || !lon) {
+      alert("Please fill all fields.");
+      return;
+    }
 
-      console.log({ name, interest, experience, lat, lon });
-      alert("Setup complete!");
+    const dataToSave = { name, interest, experience, lat, lon };
 
+    try {
+      await saveSetupData(dataToSave);
+      alert("Setup complete and saved!");
       this.nextStep();
-    });
-  }
+    } catch (error) {
+      alert("Error saving data: " + error);
+    }
+  });
+}
+
 }

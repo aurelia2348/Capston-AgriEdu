@@ -7,6 +7,7 @@ import ChatbotPage from "../pages/chatbot/ChatBotPage.js";
 import CommunityPage from "../pages/comunity/ComunityPage.js";
 import Register from "../pages/register/RegisterPage.js";
 import SetupPageStart from "../pages/setup/SetupPage-Start.js";
+import ProfilePage from "../pages/profile/profile-page.js";
 
 
 const getRoutes = (mainContent) => {
@@ -20,6 +21,7 @@ const getRoutes = (mainContent) => {
     "/community": new CommunityPage(),
     "/register": new Register(),
     "/setup":new SetupPageStart(),
+    "/profile":new ProfilePage(),
 
     "/": {
       render: () => {
