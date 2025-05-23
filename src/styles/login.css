@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 
 .container {
   display: flex;
@@ -8,7 +8,7 @@
   background-color: #ffffff;
   padding: 1rem;
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .form-label {
@@ -51,12 +51,12 @@
 .login-container input {
   padding: 9px 20px;
   border-radius: 15px;
-  background-color: #EFEFEF;
+  background-color: #efefef;
   border: none;
   font-size: 0.85rem;
   outline: none;
   transition: background-color 0.3s ease;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .login-container input:focus {
@@ -65,14 +65,14 @@
 
 .login-container button {
   padding: 9px;
-  background-color: #A9E652;
-  color: #1E1E1E;
+  background-color: #a9e652;
+  color: #1e1e1e;
   border: none;
   border-radius: 30px;
   cursor: pointer;
   font-size: 0.85rem;
   transition: background-color 0.3s ease;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .login-container button:hover {
@@ -84,18 +84,30 @@
   margin-top: 1rem;
   font-size: 0.9rem;
   color: #444444;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .register-link a {
-  color: #2483FF;
+  color: #2483ff;
+  text-decoration: none;
+}
+
+.back-link {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #444444;
+  font-family: "Poppins", sans-serif;
+}
+
+.back-link a {
+  color: #2483ff;
   text-decoration: none;
 }
 
 .error {
   color: red;
   font-size: 0.75rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   min-height: 1rem;
   margin-top: 0;
   margin-bottom: 0;
@@ -141,7 +153,7 @@
   text-align: right;
   margin-bottom: 0.8rem;
   font-size: 0.8rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .forgot-password a {
@@ -152,21 +164,20 @@
 .login-page {
   display: flex;
   min-height: 100vh;
-  margin: 0!important;
-  padding: 0!important; }     
-
+  margin: 0 !important;
+  padding: 0 !important;
+}
 
 .login-left {
   flex: 1;
-    min-height: 100vh; 
-    max-width: 40vw;
-    background: url("../public/images/login.png")!important;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: cover !important;
-    position: relative;
+  min-height: 100vh;
+  max-width: 40vw;
+  background: url("../public/images/login.png") !important;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover !important;
+  position: relative;
 }
-
 
 .logo-overlay {
   position: absolute;
@@ -186,4 +197,3 @@
   justify-content: center;
   padding: 2rem;
 }
-

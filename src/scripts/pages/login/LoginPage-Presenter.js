@@ -1,3 +1,5 @@
+import authService from "../../data/auth-service.js";
+
 export default class LoginPresenter {
   init(formElement) {
     this._form = formElement;
@@ -8,7 +10,21 @@ export default class LoginPresenter {
     this._emailError = this._form.querySelector("#emailError");
     this._passwordError = this._form.querySelector("#passwordError");
 
+    // Add a general error message element
+    this._generalError = document.createElement("small");
+    this._generalError.classList.add("error");
+    this._generalError.setAttribute("id", "generalError");
+    this._generalError.setAttribute("aria-live", "polite");
+    this._form
+      .querySelector("button[type='submit']")
+      .before(this._generalError);
+
     this._bindEvents();
+
+    // Check if user is already logged in
+    if (authService.isAuthenticated()) {
+      window.location.hash = "#/home";
+    }
   }
 
   _bindEvents() {
@@ -17,16 +33,16 @@ export default class LoginPresenter {
       this._handleSubmit();
     });
 
-
     this._emailInput.addEventListener("input", () => {
       this._validateEmail();
+      this._generalError.textContent = ""; // Clear general error on input
     });
 
     this._passwordInput.addEventListener("input", () => {
       this._validatePassword();
+      this._generalError.textContent = ""; // Clear general error on input
     });
 
-    // toggle password button
     const toggleButtons = this._form.querySelectorAll(".toggle-password");
     toggleButtons.forEach((button) => {
       button.addEventListener("click", () => {
@@ -47,10 +63,14 @@ export default class LoginPresenter {
     });
   }
 
-  _handleSubmit() {
-    // Reset error dulu
+  async _handleSubmit() {
     this._emailError.textContent = "";
     this._passwordError.textContent = "";
+    this._generalError.textContent = "";
+
+    const submitButton = this._form.querySelector("button[type='submit']");
+    submitButton.disabled = true;
+    submitButton.textContent = "Logging in...";
 
     const isEmailValid = this._validateEmail();
     const isPasswordValid = this._validatePassword();
@@ -60,8 +80,22 @@ export default class LoginPresenter {
         email: this._emailInput.value.trim(),
         password: this._passwordInput.value.trim(),
       };
-      console.log("Login submitted", loginData);
-      // TODO: Kirim loginData ke backend API
+
+      try {
+        const response = await authService.login(loginData);
+
+        window.location.hash = "#/home";
+      } catch (error) {
+        this._generalError.textContent =
+          error.message ||
+          "Login failed. Please check your credentials and try again.";
+
+        submitButton.disabled = false;
+        submitButton.textContent = "Login";
+      }
+    } else {
+      submitButton.disabled = false;
+      submitButton.textContent = "Login";
     }
   }
 
@@ -87,7 +121,8 @@ export default class LoginPresenter {
       this._passwordError.textContent = "Password is required.";
       return false;
     } else if (password.length < 8) {
-      this._passwordError.textContent = "Password must be at least 8 characters.";
+      this._passwordError.textContent =
+        "Password must be at least 8 characters.";
       return false;
     } else {
       this._passwordError.textContent = "";

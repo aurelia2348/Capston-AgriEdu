@@ -1,13 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 
 * {
   box-sizing: border-box;
 }
 
-body, html {
+body,
+html {
   margin: 0;
   padding: 0;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   background-color: #f7f9fc;
   height: 100%;
 }
@@ -61,7 +62,7 @@ body, html {
 }
 
 #form-step {
-  display: block; /* tampilkan form */
+  display: block;
   width: 100%;
   text-align: left;
 }
@@ -83,9 +84,9 @@ body, html {
   width: 100%;
   padding: 10px 15px;
   border-radius: 15px;
-  background-color: #EFEFEF;
+  background-color: #efefef;
   border: none;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-size: 0.9rem;
   outline: none;
   transition: background-color 0.3s ease;
@@ -107,21 +108,18 @@ body, html {
 
 
 .experience-options label {
-  display: inline-block!important; 
-  margin-right: 19px; 
+  display: inline-block !important;
+  margin-right: 19px;
   margin-top: 10px;
   cursor: pointer;
   user-select: none;
-  justify-content: center!important;
-  align-items: center! important;    
-
+  justify-content: center !important;
+  align-items: center !important;
 }
 
 #setup-form .experience-options {
   margin-bottom: 16px;
 }
-
-
 
 #setup-form input[type="text"]:focus,
 #setup-form select:focus {
@@ -146,12 +144,12 @@ body, html {
 #setup-form button {
   width: 100%;
   padding: 9px;
-  background-color: #A9E652;
+  background-color: #a9e652;
   color: rgb(65, 65, 65);
   border: none;
   border-radius: 30px;
   cursor: pointer;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-size: 1rem;
   transition: background-color 0.3s ease;
   margin-top: 0.8rem;
@@ -162,8 +160,8 @@ body, html {
 }
 
 #map {
-  width: 100%!important;    
-  height: 200px;  
+  width: 100% !important;
+  height: 200px;
   overflow: hidden;
   background-color: #eee;
   margin-top: 10px;
@@ -174,7 +172,7 @@ body, html {
   border-left: 1px solid #ccc !important;
   border-right: 1px solid #ccc !important;
   border-top: 1px solid #ccc !important;
-  border-bottom: none !important; 
+  border-bottom: none !important;
   color: black !important;
   width: 30px !important;
   height: 30px !important;
@@ -183,7 +181,7 @@ body, html {
   line-height: 1;
   padding: 0;
   text-align: center;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   border-radius: 0 !important;
   margin: 0 !important;
   cursor: pointer;
@@ -191,39 +189,30 @@ body, html {
   transition: background-color 0.3s;
 }
 
-/* Border bawah untuk tombol terakhir (zoom out) */
 .ol-zoom button:last-child {
   border-bottom: 1px solid #ccc !important;
 }
 
-
-/* Container zoom control (defaultnya vertical) */
 .ol-zoom {
   display: flex !important;
   flex-direction: column;
-  gap: 0 !important; /* jarak antar tombol, kecilkan jadi 0 atau 1 untuk lebih rapat */
-  margin: 0 !important; /* hilangkan margin container */
+  gap: 0 !important;
+  margin: 0 !important;
   padding: 0 !important;
 }
 
-/* Jika kamu ingin tombol betul-betul berdempetan tanpa jarak */
 .ol-zoom {
   gap: 0 !important;
 }
 
+.ol-control button:hover {
+  background-color: #f0f0f0 !important;
+}
 
 .ol-control button:hover {
   background-color: #f0f0f0 !important;
 }
 
-
-.ol-control button:hover {
-  background-color: #f0f0f0 !important;
-}
-
-
-
-/* Pagination dots */
 .dots {
   display: flex;
   justify-content: center;
@@ -260,9 +249,6 @@ button#next-btn {
   margin-top: 1rem;
 }
 
-
-
-/* Responsive tweaks */
 @media (max-width: 480px) {
   .setup-card {
     padding: 2rem 1.5rem;

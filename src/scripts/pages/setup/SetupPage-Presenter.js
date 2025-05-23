@@ -1,11 +1,11 @@
-import 'ol/ol.css';
-import Map from 'ol/Map';
-import View from 'ol/View';
-import TileLayer from 'ol/layer/Tile';
-import OSM from 'ol/source/OSM';
-import Overlay from 'ol/Overlay';
-import { fromLonLat, toLonLat } from 'ol/proj';
-import Zoom from 'ol/control/Zoom';
+import "ol/ol.css";
+import Map from "ol/Map";
+import View from "ol/View";
+import TileLayer from "ol/layer/Tile";
+import OSM from "ol/source/OSM";
+import Overlay from "ol/Overlay";
+import { fromLonLat, toLonLat } from "ol/proj";
+import Zoom from "ol/control/Zoom";
 
 export default class SetupPagePresenter {
   constructor() {
@@ -20,12 +20,11 @@ export default class SetupPagePresenter {
       "Please complete all the required fields to begin",
       "Your account is all set. Let's grow smarter, together!",
     ];
-  this.icons = [
-  `<img src="logo/setap.gif" alt="Plant" style="width: 80%; height: 80%;" />`,
-  "",
-  `<img src="logo/finishsetup.gif" alt="Plant" style="width: 80%; height: 80%;" />`
-];
-
+    this.icons = [
+      `<img src="logo/setap.gif" alt="Plant" style="width: 80%; height: 80%;" />`,
+      "",
+      `<img src="logo/finishsetup.gif" alt="Plant" style="width: 80%; height: 80%;" />`,
+    ];
 
     this.map = null;
     this.marker = null;
@@ -58,149 +57,144 @@ export default class SetupPagePresenter {
     }
   }
 
-updateStep() {
-  this.titleEl.innerHTML = this.titles[this.currentStep];
-  this.descEl.textContent = this.descriptions[this.currentStep];
-  this.iconEl.innerHTML = this.icons[this.currentStep];
+  updateStep() {
+    this.titleEl.innerHTML = this.titles[this.currentStep];
+    this.descEl.textContent = this.descriptions[this.currentStep];
+    this.iconEl.innerHTML = this.icons[this.currentStep];
 
-  this.dots.forEach((dot, i) => {
-    dot.classList.toggle('active', i === this.currentStep);
-  });
+    this.dots.forEach((dot, i) => {
+      dot.classList.toggle("active", i === this.currentStep);
+    });
 
-if (this.currentStep === 1) {
-  this.formStepEl.style.display = 'block';
+    if (this.currentStep === 1) {
+      this.formStepEl.style.display = "block";
 
-  this.nextBtn.style.display = 'none';
-} else {
-  this.formStepEl.style.display = 'none';
-  this.descEl.style.display = 'block';
-  this.nextBtn.style.display = 'inline-block';
-}
+      this.nextBtn.style.display = "none";
+    } else {
+      this.formStepEl.style.display = "none";
+      this.descEl.style.display = "block";
+      this.nextBtn.style.display = "inline-block";
+    }
+  }
 
-
-}
-
-
-_initMap() {
-  this.map = new Map({
-    target: 'map',
-    layers: [
-      new TileLayer({
-        source: new OSM(),
+  _initMap() {
+    this.map = new Map({
+      target: "map",
+      layers: [
+        new TileLayer({
+          source: new OSM(),
+        }),
+      ],
+      view: new View({
+        center: fromLonLat([117.0, -1.5]), // default
+        zoom: 5,
       }),
-    ],
-    view: new View({
-      center: fromLonLat([117.0, -1.5]), // default
-      zoom: 5,
-    }),
-    controls: [new Zoom()]
-  });
+      controls: [new Zoom()],
+    });
 
-// Ganti bagian pembuatan markerElement dengan ini
-const markerElement = document.createElement('img');
-markerElement.src = 'https://maps.google.com/mapfiles/ms/icons/red-dot.png';
-markerElement.style.width = '32px';  // ukuran marker, bisa disesuaikan
-markerElement.style.height = '32px';
-markerElement.style.transform = 'translate(-50%, -100%)'; // biar titik bawah marker tepat di posisi koordinat
-markerElement.style.position = 'absolute';
-markerElement.style.cursor = 'grab';
+    // Ganti bagian pembuatan markerElement dengan ini
+    const markerElement = document.createElement("img");
+    markerElement.src = "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
+    markerElement.style.width = "32px"; // ukuran marker, bisa disesuaikan
+    markerElement.style.height = "32px";
+    markerElement.style.transform = "translate(-50%, -100%)"; // biar titik bawah marker tepat di posisi koordinat
+    markerElement.style.position = "absolute";
+    markerElement.style.cursor = "grab";
 
+    this.marker = new Overlay({
+      element: markerElement,
+      positioning: "center-center",
+      stopEvent: false, // supaya event mouse bisa ditangkap
+    });
 
-  this.marker = new Overlay({
-    element: markerElement,
-    positioning: 'center-center',
-    stopEvent: false, // supaya event mouse bisa ditangkap
-  });
+    this.map.addOverlay(this.marker);
 
-  this.map.addOverlay(this.marker);
+    // Fungsi update posisi marker dan input lat/lon
+    const updatePosition = (coordinate) => {
+      this.marker.setPosition(coordinate);
+      const [lon, lat] = toLonLat(coordinate);
+      document.getElementById("lat").value = lat;
+      document.getElementById("lon").value = lon;
+    };
 
-  // Fungsi update posisi marker dan input lat/lon
-  const updatePosition = (coordinate) => {
-    this.marker.setPosition(coordinate);
-    const [lon, lat] = toLonLat(coordinate);
-    document.getElementById('lat').value = lat;
-    document.getElementById('lon').value = lon;
-  };
+    // Coba dapat lokasi perangkat
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
+          const coords = fromLonLat([longitude, latitude]);
 
-  // Coba dapat lokasi perangkat
-if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      const { latitude, longitude } = pos.coords;
-      const coords = fromLonLat([longitude, latitude]);
+          // Animasi pindah ke lokasi pengguna
+          this.map.getView().animate({
+            center: coords,
+            zoom: 12,
+            duration: 3000,
+          });
 
-      // Animasi pindah ke lokasi pengguna
-      this.map.getView().animate({
-        center: coords,
-        zoom: 12,
-        duration: 3000,  
-      });
-
-      updatePosition(coords);
-    },
-    () => {
+          updatePosition(coords);
+        },
+        () => {
+          const defaultCoords = fromLonLat([117.0, -1.5]);
+          this.map.getView().setCenter(defaultCoords);
+          updatePosition(defaultCoords);
+        }
+      );
+    } else {
       const defaultCoords = fromLonLat([117.0, -1.5]);
       this.map.getView().setCenter(defaultCoords);
       updatePosition(defaultCoords);
     }
-  );
-} else {
-  const defaultCoords = fromLonLat([117.0, -1.5]);
-  this.map.getView().setCenter(defaultCoords);
-  updatePosition(defaultCoords);
-}
 
-  let dragging = false;
+    let dragging = false;
 
-  markerElement.addEventListener('mousedown', (evt) => {
-    evt.preventDefault();
-    dragging = true;
-    markerElement.style.cursor = 'grabbing';
-  });
+    markerElement.addEventListener("mousedown", (evt) => {
+      evt.preventDefault();
+      dragging = true;
+      markerElement.style.cursor = "grabbing";
+    });
 
-  this.map.on('pointermove', (evt) => {
-    if (dragging) {
-      updatePosition(evt.coordinate);
-    }
-  });
+    this.map.on("pointermove", (evt) => {
+      if (dragging) {
+        updatePosition(evt.coordinate);
+      }
+    });
 
-  window.addEventListener('mouseup', () => {
-    if (dragging) {
-      dragging = false;
-      markerElement.style.cursor = 'grab';
-    }
-  });
+    window.addEventListener("mouseup", () => {
+      if (dragging) {
+        dragging = false;
+        markerElement.style.cursor = "grab";
+      }
+    });
 
-  this.map.on('click', (evt) => {
-    if (!dragging) {
-      updatePosition(evt.coordinate);
-    }
-  });
-}
+    this.map.on("click", (evt) => {
+      if (!dragging) {
+        updatePosition(evt.coordinate);
+      }
+    });
+  }
 
   _initForm() {
-  const form = document.getElementById('setup-form');
-  if (!form) return;
+    const form = document.getElementById("setup-form");
+    if (!form) return;
 
-  form.addEventListener('submit', (event) => {
-    event.preventDefault();
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
 
-    const name = document.getElementById('name').value;
-    const interest = document.getElementById('interest').value;
-    const experience = form.experience.value;
-    const lat = document.getElementById('lat').value;
-    const lon = document.getElementById('lon').value;
+      const name = document.getElementById("name").value;
+      const interest = document.getElementById("interest").value;
+      const experience = form.experience.value;
+      const lat = document.getElementById("lat").value;
+      const lon = document.getElementById("lon").value;
 
-    if (!name || !interest || !experience || !lat || !lon) {
-      alert('Please fill all fields.');
-      return;
-    }
+      if (!name || !interest || !experience || !lat || !lon) {
+        alert("Please fill all fields.");
+        return;
+      }
 
-    console.log({ name, interest, experience, lat, lon });
-    alert('Setup complete!');
+      console.log({ name, interest, experience, lat, lon });
+      alert("Setup complete!");
 
-    this.nextStep();
-  });
-}
-
+      this.nextStep();
+    });
+  }
 }

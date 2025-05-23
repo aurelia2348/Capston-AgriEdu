@@ -1,4 +1,3 @@
-/* Navbar styles */
 .navbar {
   background-color: rgb(255, 255, 255, 0.3);
   padding: 10px 30px;
@@ -10,6 +9,8 @@
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1000;
 }
 
 .navbar input[type="text"] {
@@ -49,6 +50,113 @@
   display: flex;
   align-items: center;
   gap: 16px;
+}
+
+.hamburger-menu {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 21px;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.bar {
+  height: 3px;
+  width: 100%;
+  background-color: white;
+  border-radius: 10px;
+  transition: all 0.3s ease-in-out;
+}
+
+.hamburger-menu.active .bar:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
+}
+
+.hamburger-menu.active .bar:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-menu.active .bar:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
+}
+
+@media (max-width: 992px) {
+  .navbar {
+    padding: 10px 20px;
+    margin: 20px;
+  }
+
+  .navbar input[type="text"] {
+    width: 200px;
+  }
+
+  .logo {
+    height: 120px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hamburger-menu {
+    display: flex;
+  }
+
+  .nav-right {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    flex-direction: column;
+    background-color: rgba(76, 154, 91, 0.95);
+    width: 70%;
+    height: 100vh;
+    padding: 80px 20px 20px;
+    transition: right 0.3s ease-in-out;
+    z-index: 999;
+  }
+
+  .nav-right.active {
+    right: 0;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    width: 100%;
+    margin: 0 0 30px 0;
+  }
+
+  .nav-links li {
+    margin: 15px 0;
+    text-align: center;
+  }
+
+  .search-form {
+    width: 100%;
+  }
+
+  .navbar input[type="text"] {
+    width: 100%;
+  }
+
+  .logo {
+    height: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 10px 15px;
+    margin: 10px;
+    height: 60px;
+  }
+
+  .logo {
+    height: 80px;
+  }
+
+  .nav-right {
+    width: 85%;
+  }
 }
 
 .nav-right form input {

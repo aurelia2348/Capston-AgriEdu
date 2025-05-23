@@ -1,8 +1,8 @@
-import LoginPresenter from './LoginPage-Presenter.js';
+import LoginPresenter from "./LoginPage-Presenter.js";
 
 export default class Login {
   async render() {
-  return `
+    return `
 <section class="container login-page">
   <div class="login-left">
     <img src="logo/Main-Logo-White.png" alt="AgriEdu Logo" class="logo-overlay" />
@@ -34,13 +34,13 @@ export default class Login {
 
         <button type="submit">Login</button>
       </form>
-      <p class="register-link">Don't have an account? <a href="#register" id="toRegister">Register here</a></p>
+      <p class="register-link">Don't have an account? <a href="#/register" id="toRegister">Register here</a></p>
+      <p class="back-link">Return to <a href="#/landing">landing page</a></p>
     </div>
   </div>
 </section>
   `;
-}
-
+  }
 
   async afterRender() {
     const presenter = new LoginPresenter();

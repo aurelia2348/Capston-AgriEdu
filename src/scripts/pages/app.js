@@ -1,29 +1,116 @@
-import routes from '../routes/routes.js';
+import getRoutes from "../routes/routes.js";
+import Link from "../components/Link.js";
+import Router from "../routes/Router.js";
+import authService from "../data/auth-service.js";
 
 class App {
   constructor({ content, drawerButton, navigationDrawer }) {
     this.content = content;
     this.drawerButton = drawerButton;
     this.navigationDrawer = navigationDrawer;
-    window.addEventListener('hashchange', () => this.renderPage());
+
+    this.router = new Router();
+
+    this.router.registerRoutes(getRoutes(content));
+
+    this.router
+      .beforeRoute((path) => {
+        console.log("Navigating to:", path);
+        return true;
+      })
+      .afterRoute(async (_, pageInstance) => {
+        await this.renderPage(pageInstance);
+      })
+      .setNotFoundCallback((path) => {
+        console.error(`Page not found: ${path}`);
+        this.content.innerHTML = `
+          <div class="error-container">
+            <h1>404 - Page Not Found</h1>
+            <p>The page you are looking for does not exist.</p>
+            <a href="#/landing">Go to Home</a>
+          </div>
+        `;
+      });
   }
 
-  _getInitialPage() {
-    return window.location.hash.slice(1).toLowerCase() || 'landing';
-  }
+  async init() {
+    this.checkAuthStatus();
 
-  async renderPage() {
-    const page = this._getInitialPage();
-    const pageInstance = routes[`/${page}`];
+    this.router.start();
 
-    if (this.content && pageInstance) {
-      console.log('Rendering page:', page);
-      this.content.innerHTML = await pageInstance.render();
-      await pageInstance.afterRender?.();
-    } else {
-      console.error('Page not found or content element missing');
+    if (this.drawerButton && this.navigationDrawer) {
+      this.drawerButton.addEventListener("click", () => {
+        this.navigationDrawer.classList.toggle("open");
+      });
     }
+  }
+
+  checkAuthStatus() {
+    const isAuthenticated = authService.isAuthenticated();
+    console.log(
+      "Authentication status:",
+      isAuthenticated ? "Authenticated" : "Not authenticated"
+    );
+
+    this.updateAuthUI(isAuthenticated);
+  }
+
+  updateAuthUI(isAuthenticated) {
+    const loginLink = document.querySelector('a[href="#/login"]');
+    const logoutLink = document.querySelector('a[href="#/logout"]');
+
+    if (loginLink) {
+      loginLink.style.display = isAuthenticated ? "none" : "block";
+    }
+
+    if (logoutLink) {
+      logoutLink.style.display = isAuthenticated ? "block" : "none";
+    }
+  }
+
+  async renderPage(pageInstance) {
+    if (this.content && pageInstance) {
+      try {
+        console.log("Rendering page instance:", pageInstance);
+
+        const content = await pageInstance.render();
+        console.log(
+          "Rendered content:",
+          content ? "Content available" : "Content is undefined or empty"
+        );
+
+        if (content) {
+          this.content.innerHTML = content;
+
+          if (pageInstance.afterRender) {
+            await pageInstance.afterRender();
+          }
+
+          Link.updateLinks(this.content, this.router);
+
+          this.setupInPageNavigation();
+        } else {
+          console.error(
+            "Page render method returned undefined or empty content"
+          );
+          this.content.innerHTML =
+            '<div class="error-container"><h2>Error rendering page</h2><p>The page content could not be loaded.</p></div>';
+        }
+      } catch (error) {
+        console.error("Error rendering page:", error);
+        this.content.innerHTML = `<div class="error-container"><h2>Error rendering page</h2><p>${error.message}</p></div>`;
+      }
+    } else {
+      console.error("Content element missing or invalid page instance", {
+        contentExists: !!this.content,
+        pageInstanceExists: !!pageInstance,
+      });
+    }
+  }
+
+  setupInPageNavigation() {
+    console.log("Setting up in-page navigation in App");
   }
 }
 
-export default App; 
+export default App;

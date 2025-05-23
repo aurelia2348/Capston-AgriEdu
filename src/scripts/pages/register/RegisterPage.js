@@ -35,7 +35,7 @@ return `
 
       <button type="submit">Sign Up</button>
     </form>
-    <p class="login-link">Already have an account? <a href="#login" id="toLogin">Login here</a></p>
+    <p class="login-link">Already have an account? <a href="#/login" id="toLogin">Login here</a></p>
   </div>
 </section>
 
