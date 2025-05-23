@@ -56,7 +56,7 @@ export default class SetupPageStart {
 
   async afterRender() {
     // Import presenter yang meng-handle logika setup form dan peta
-    const module = await import('./SetupPage-Presenter.js');
+    const module = await import("./SetupPage-Presenter.js");
     const presenter = new module.default();
     presenter.init();
   }
