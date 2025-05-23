@@ -23,7 +23,7 @@ export default class SetupPagePresenter {
     this.icons = [
       `<img src="logo/setap.gif" alt="Plant" style="width: 80%; height: 80%;" />`,
       "",
-      "✅",
+      `<img src="logo/finishsetup.gif" alt="Plant" style="width: 80%; height: 80%;" />`,
     ];
 
     this.map = null;
@@ -69,19 +69,11 @@ export default class SetupPagePresenter {
     if (this.currentStep === 1) {
       this.formStepEl.style.display = "block";
 
-      // this.descEl.style.display = 'none'; ← HAPUS baris ini kalau ingin tetap tampil
       this.nextBtn.style.display = "none";
     } else {
       this.formStepEl.style.display = "none";
       this.descEl.style.display = "block";
       this.nextBtn.style.display = "inline-block";
-    }
-    const leftIllustration = document.getElementById("left-illustration");
-
-    if (this.currentStep === 0) {
-      leftIllustration.style.display = "flex";
-    } else {
-      leftIllustration.style.display = "none";
     }
   }
 
@@ -136,13 +128,12 @@ export default class SetupPagePresenter {
           this.map.getView().animate({
             center: coords,
             zoom: 12,
-            duration: 3000, // durasi animasi dalam ms (1.5 detik)
+            duration: 3000,
           });
 
           updatePosition(coords);
         },
         () => {
-          // fallback jika gagal dapat lokasi
           const defaultCoords = fromLonLat([117.0, -1.5]);
           this.map.getView().setCenter(defaultCoords);
           updatePosition(defaultCoords);
@@ -195,17 +186,14 @@ export default class SetupPagePresenter {
       const lat = document.getElementById("lat").value;
       const lon = document.getElementById("lon").value;
 
-      // Contoh validasi sederhana
       if (!name || !interest || !experience || !lat || !lon) {
         alert("Please fill all fields.");
         return;
       }
 
-      // Jika submit berhasil, lanjut ke step berikutnya
       console.log({ name, interest, experience, lat, lon });
       alert("Setup complete!");
 
-      // Pindah step berikutnya
       this.nextStep();
     });
   }
