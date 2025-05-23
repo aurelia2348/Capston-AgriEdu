@@ -4,11 +4,18 @@ export default class ProfilePage {
 async render() {
   return `
     <section class="container-profile">
-      <h1>Profile Pengguna</h1>
-      <div class="profile-avatar">
-        <img src="default-avatar.png" alt="Avatar" id="avatarPreview" class="avatar"/>
-        <button id="editAvatarBtn">Edit Photo</button>
-      </div>
+<h1>Profile Pengguna</h1>
+<div class="profile-avatar-wrapper">
+  <div class="avatar-left">
+    <img src="default-avatar.png" alt="Avatar" id="avatarPreview" class="avatar"/>
+  </div>
+  <div class="edit-right">
+    <button id="editAvatarBtn">Edit Photo</button>
+    <p class="avatar-note">Format harus berupa gambar. Tidak boleh lebih dari 2MB.</p>
+  </div>
+</div>
+
+
 
       <div class="profile-info">
         <div class="input-group">
