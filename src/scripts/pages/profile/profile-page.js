@@ -11,11 +11,15 @@ async render() {
       </div>
 
       <div class="profile-info">
-        <label>Full Name:</label>
-        <input type="text" id="fullNameInput" placeholder="Enter your full name" />
-        
-        <label>Username:</label>
-        <input type="text" id="usernameInput" placeholder="Enter your username" />
+        <div class="input-group">
+          <label for="fullNameInput">Full Name:</label>
+          <input type="text" id="fullNameInput" placeholder="Enter your full name" />
+        </div>
+
+        <div class="input-group">
+          <label for="usernameInput">Username:</label>
+          <input type="text" id="usernameInput" placeholder="Enter your username" />
+        </div>
       </div>
 
       <div class="profile-experience">
@@ -31,6 +35,7 @@ async render() {
     </section>
   `;
 }
+
 
 
   async afterRender() {
