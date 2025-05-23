@@ -1,6 +1,7 @@
 import getRoutes from "../routes/routes.js";
 import Link from "../components/Link.js";
 import Router from "../routes/Router.js";
+import authService from "../data/auth-service.js";
 
 class App {
   constructor({ content, drawerButton, navigationDrawer }) {
@@ -33,12 +34,37 @@ class App {
   }
 
   async init() {
+    this.checkAuthStatus();
+
     this.router.start();
 
     if (this.drawerButton && this.navigationDrawer) {
       this.drawerButton.addEventListener("click", () => {
         this.navigationDrawer.classList.toggle("open");
       });
+    }
+  }
+
+  checkAuthStatus() {
+    const isAuthenticated = authService.isAuthenticated();
+    console.log(
+      "Authentication status:",
+      isAuthenticated ? "Authenticated" : "Not authenticated"
+    );
+
+    this.updateAuthUI(isAuthenticated);
+  }
+
+  updateAuthUI(isAuthenticated) {
+    const loginLink = document.querySelector('a[href="#/login"]');
+    const logoutLink = document.querySelector('a[href="#/logout"]');
+
+    if (loginLink) {
+      loginLink.style.display = isAuthenticated ? "none" : "block";
+    }
+
+    if (logoutLink) {
+      logoutLink.style.display = isAuthenticated ? "block" : "none";
     }
   }
 

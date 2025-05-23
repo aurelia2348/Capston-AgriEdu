@@ -1,3 +1,5 @@
+import RouteGuard from "./route-guard.js";
+
 class Router {
   constructor() {
     this.routes = {};
@@ -45,6 +47,14 @@ class Router {
     }
 
     this.currentPath = path;
+
+    if (RouteGuard.requiresAuth(path) && !RouteGuard.isAuthenticated()) {
+      console.log(
+        `Route ${path} requires authentication. Redirecting to login.`
+      );
+      window.location.hash = RouteGuard.getAuthRedirectPath().substring(1);
+      return;
+    }
 
     if (this.beforeRouteCallback && !this.beforeRouteCallback(path)) {
       return;

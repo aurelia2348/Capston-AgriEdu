@@ -1,6 +1,15 @@
+import authService from "../../data/auth-service.js";
+
 export default class RegisterPresenter {
   init(form) {
     if (!form) return;
+
+    // Add a general error message element
+    const generalErrorEl = document.createElement("small");
+    generalErrorEl.classList.add("error");
+    generalErrorEl.setAttribute("id", "generalError");
+    generalErrorEl.setAttribute("aria-live", "polite");
+    form.querySelector("button[type='submit']").before(generalErrorEl);
 
     const setError = (id, message) => {
       const el = document.getElementById(id);
@@ -43,6 +52,7 @@ export default class RegisterPresenter {
     form.addEventListener("input", (e) => {
       const data = this._getFormData(form);
       validate(data, e.target.id);
+      setError("generalError", ""); // Clear general error on input
     });
 
     form.addEventListener("focusin", (e) => {
@@ -56,8 +66,16 @@ export default class RegisterPresenter {
       setError(e.target.id + "Error", errorMessage);
     });
 
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
+
+      // Clear all error messages
+      setError("generalError", "");
+
+      // Disable the submit button to prevent multiple submissions
+      const submitButton = form.querySelector("button[type='submit']");
+      submitButton.disabled = true;
+      submitButton.textContent = "Signing Up...";
 
       const data = this._getFormData(form);
 
@@ -74,8 +92,31 @@ export default class RegisterPresenter {
         data.password === data.confirmPassword;
 
       if (isValid) {
-        alert("Registered successfully! (API integration coming soon)");
-        window.location.hash = "#/login";
+        try {
+          const registrationData = {
+            username: data.username,
+            email: data.email,
+            password: data.password,
+          };
+
+          await authService.register(registrationData);
+
+          alert(
+            "Registration successful! Please log in with your new account."
+          );
+          window.location.hash = "#/login";
+        } catch (error) {
+          setError(
+            "generalError",
+            error.message || "Registration failed. Please try again."
+          );
+
+          submitButton.disabled = false;
+          submitButton.textContent = "Sign Up";
+        }
+      } else {
+        submitButton.disabled = false;
+        submitButton.textContent = "Sign Up";
       }
     });
 
