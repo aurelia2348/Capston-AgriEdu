@@ -51,36 +51,62 @@ class HomePage {
 
             <main>
               <section class="hero">
-                <h1>Selamat datang di <span class="green">AgriEdu</span>!</h1>
-                <p>Belajar, berbagi, dan diagnosa tanaman dengan teknologi AI. Semoga pengalaman Anda menyenangkan!</p>
-                <div class="hero-buttons">
-                  <button class="green" id="learnBtn">Mulai Belajar</button>
-                  <button class="white" id="communityBtn">Gabung Komunitas</button>
+                <div class="hero-content">
+                  <h1>Selamat datang di AgriE<span class="green">d</span>u!</h1>
+                  <p>Belajar, berbagi, dan diagnosa tanaman dengan teknologi AI.</p>
+                  <p>Semoga pengalaman Anda menyenangkan!</p>
+                  <div class="hero-buttons">
+                    <button class="green" id="learnBtn">Mulai Belajar</button>
+                    <button class="white" id="communityBtn">Gabung Komunitas</button>
+                  </div>
                 </div>
               </section>
 
               <section class="main-activities">
-                <h2>Aktivitas Utama</h2>
+                <div class="section-header">
+                  <div class="logo-circle">
+                    <img src="logo/Home-Activity.png" alt="Aktivitas Icon" class="header-icon">
+                  </div>
+                  <h2>Aktivitas Utama</h2>
+                </div>
+
                 <div class="grid-container">
-                  <div class="card" id="learnCard">
-                    <h3>Pembelajaran Interaktif</h3>
-                    <p>Tersedia materi bertahap sesuai kategori Anda untuk memahami dunia pertanian dengan cara yang praktis dan menyenangkan.</p>
-                    <button>Mulai Belajar</button>
+                  <div class="card">
+                    <div class="icon">
+                      <img src="logo/Learning-Main.png" alt="Pembelajaran" class="card-icon" />
+                    </div>
+                    <div class="card-content">
+                      <h3>Pembelajaran Interaktif</h3>
+                      <p>Tersedia materi bertahap sesuai kategori Anda untuk memahami dunia pertanian dengan cara yang praktis dan menyenangkan.</p>
+                    </div>
+                    <button class="lihat-btn">Lihat</button>
                   </div>
-                  <div class="card" id="diagnosisCard">
-                    <h3>Diagnosa Tanaman</h3>
-                    <p>Unggah foto, lalu biarkan AI membantu mengidentifikasi masalah dan memberi saran penanganan.</p>
-                    <button>Mulai Diagnosa</button>
+
+                  <div class="card">
+                    <img src="logo/Diagnose-Main.png" alt="Diagnosa" class="card-icon" />
+                    <div class="card-content">
+                      <h3>Diagnosa Tanaman</h3>
+                      <p>Unggah foto, lalu biarkan AI membantu mengidentifikasi masalah dan memberi saran penanganan.</p>
+                    </div>
+                    <button>Lihat</button>
                   </div>
-                  <div class="card" id="communityCard">
-                    <h3>Komunitas Tani</h3>
-                    <p>Forum untuk bertanya, memberi saran, dan saling dukung antara petani, pelajar, maupun pegiat pertanian.</p>
-                    <button>Gabung Komunitas</button>
+
+                  <div class="card">
+                    <img src="logo/Comunity-Main.png" alt="Komunitas" class="card-icon" />
+                    <div class="card-content">
+                      <h3>Komunitas Tani</h3>
+                      <p>Forum untuk bertanya, memberi saran, dan saling dukung antar petani, pelajar, maupun pegiat pertanian.</p>
+                    </div>
+                    <button>Lihat</button>
                   </div>
-                  <div class="card" id="aiCard">
-                    <h3>Asisten AI & ChatBot</h3>
-                    <p>Chatbot cerdas yang siap bantu menjawab pertanyaan tentang tanaman, pembelajaran, dan fitur aplikasi.</p>
-                    <button>Mulai Chat</button>
+
+                  <div class="card">
+                    <div class="card-icon-placeholder">AI</div>
+                    <div class="card-content">
+                      <h3>Asisten AI & ChatBot</h3>
+                      <p>Chatbot cerdas yang siap bantu menjawab pertanyaan tentang tanaman, pembelajaran, dan fitur aplikasi.</p>
+                    </div>
+                    <button>Lihat</button>
                   </div>
                 </div>
               </section>

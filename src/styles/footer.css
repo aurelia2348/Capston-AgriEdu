@@ -58,7 +58,7 @@
 }
 
 .footer-bottom {
-  background-color: #333;
+  background-color: #64b100;
   color: #fff;
   text-align: center;
   padding: 15px;
@@ -151,9 +151,9 @@
 }
 
 .footer-bottom {
-  background-color: #32cd32;
+  background-color: #64b100;
   text-align: center;
   padding: 1rem;
-  color: #080808;
+  color: #ffffff;
   font-weight: bold;
 }
