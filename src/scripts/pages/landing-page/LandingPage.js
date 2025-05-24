@@ -241,13 +241,11 @@ export class LandingPage {
     const searchInput = document.querySelector(".search-form input");
 
     if (searchForm && searchInput) {
-      // Handle form submission
       searchForm.addEventListener("submit", (event) => {
         event.preventDefault();
         this.performSearch(searchInput.value.trim());
       });
 
-      // Handle Enter key press
       searchInput.addEventListener("keypress", (event) => {
         if (event.key === "Enter") {
           event.preventDefault();
@@ -255,7 +253,6 @@ export class LandingPage {
         }
       });
 
-      // Add search icon functionality
       searchInput.addEventListener("input", (event) => {
         const query = event.target.value.trim();
         if (query.length > 2) {
@@ -275,7 +272,6 @@ export class LandingPage {
 
     console.log(`Searching for: ${query}`);
 
-    // Search through service cards
     const serviceCards = document.querySelectorAll(".card");
     let foundResults = false;
 
@@ -293,18 +289,16 @@ export class LandingPage {
         card.style.transform = "scale(1.02)";
         foundResults = true;
 
-        // Remove highlight after 3 seconds
         setTimeout(() => {
           card.style.border = "";
           card.style.transform = "";
         }, 3000);
 
-        return; // Stop at first match
+        return;
       }
     });
 
     if (!foundResults) {
-      // Search through page content
       const sections = document.querySelectorAll("section");
       sections.forEach((section) => {
         const content = section.textContent.toLowerCase();
@@ -324,12 +318,10 @@ export class LandingPage {
   }
 
   highlightSearchResults(query) {
-    // This method can be expanded to show live search suggestions
     console.log(`Live search for: ${query}`);
   }
 
   clearSearchHighlights() {
-    // Clear any search highlights
     const highlightedCards = document.querySelectorAll(
       ".card[style*='border']"
     );

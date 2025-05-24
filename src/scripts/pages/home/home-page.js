@@ -6,8 +6,8 @@ class HomePage {
       state: {
         view: "home",
         user: {
-          initial: "A", // Default initial for profile icon
-          isAuthenticated: false, // Default authentication status
+          initial: "A",
+          isAuthenticated: false,
         },
       },
       setView: (view) => {
@@ -33,7 +33,7 @@ class HomePage {
                 <div class="home-menu-toggle" id="menuToggle">
                   <i class="fas fa-bars"></i>
                 </div>
-                <nav class="home-nav">
+                <nav class="home-nav" id="nav-menu">
                   <a href="#/home" class="nav-link">Home</a>
                   <a href="#/learning" class="nav-link">Learning</a>
                   <a href="#/community" class="nav-link">Community</a>
@@ -69,6 +69,8 @@ class HomePage {
                   </div>
                   <h2>Aktivitas Utama</h2>
                 </div>
+
+                <hr>
 
                 <div class="grid-container">
                   <div class="card">
@@ -123,11 +125,9 @@ class HomePage {
     this.Presenter = new HomePresenter(this.Model, this.View);
   }
 
-  // Method to be called by the router
   async render() {
     try {
       console.log("HomePage render called");
-      // Check authentication status
       this.checkAuthStatus();
       const html = this.View.render(this.Model.state);
       return html;
@@ -140,13 +140,8 @@ class HomePage {
     }
   }
 
-  // Check if user is authenticated
   checkAuthStatus() {
     try {
-      // For demo purposes, we'll set the user as authenticated by default
-      // In a real app, you would check for a valid token from your auth service
-
-      // Set demo user data in localStorage if not already set
       if (!localStorage.getItem("auth_token")) {
         localStorage.setItem("auth_token", "demo-token-" + Date.now());
         localStorage.setItem("user_name", "AgriEdu User");
@@ -156,7 +151,6 @@ class HomePage {
       this.Model.setUserAuth(!!token);
 
       if (token) {
-        // Get user info from localStorage
         const userName = localStorage.getItem("user_name") || "User";
         this.Model.state.user.initial = userName.charAt(0).toUpperCase();
         console.log("User is authenticated:", userName);
@@ -168,21 +162,10 @@ class HomePage {
     }
   }
 
-  // Set up event listeners after rendering
   async afterRender() {
     try {
       console.log("HomePage afterRender called");
       this.Presenter.bindEvents();
-
-      // Add mobile menu toggle functionality
-      const menuToggle = document.getElementById("menuToggle");
-      const homeNav = document.querySelector(".home-nav");
-
-      if (menuToggle && homeNav) {
-        menuToggle.addEventListener("click", () => {
-          homeNav.classList.toggle("show");
-        });
-      }
     } catch (error) {
       console.error("Error in HomePage afterRender:", error);
     }
