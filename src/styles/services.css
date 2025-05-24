@@ -1,5 +1,5 @@
 .services {
-  padding: 60px 40px 60px 60px;
+  padding: 20px 40px 60px 60px;
   text-align: left;
 }
 
@@ -7,83 +7,116 @@
   color: #7ac142;
   font-weight: 500;
   margin-bottom: 8px;
+  margin-left: 20px;
+  margin-top: 0;
 }
 
 .services h2 {
   font-size: 28px;
   font-weight: bold;
-  margin-bottom: 56px;
+  margin-bottom: 48px;
+  margin-left: 20px;
   color: #333;
 }
 
 .service-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 220px));
-  gap: 12px;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(180px, 200px)
+  ); /* Sesuaikan dengan lebar kartu */
+  gap: 20px;
   justify-content: center;
 }
 
 .card {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 8px;
   background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-  padding: 16px;
-  width: 100%;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+  width: 200px; /* 🎯 Dibuat lebih ramping */
+  min-height: 360px; /* 🎯 Dibuat lebih panjang */
   text-align: left;
-  transition: transform 0.5s ease, box-shadow 0.5s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
 }
 
 .img-placeholder.small {
-  width: 48px;
-  height: 48px;
+  width: 42px;
+  height: 42px;
   background-color: #7ac142;
   border-radius: 50%;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
+  justify-self: start;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(122, 193, 66, 0.3);
 }
 
 .card h4 {
   font-size: 18px;
-  margin: 8px 0;
+  margin: 0 0 12px 0;
   color: #222;
+  line-height: 1.3;
+  font-weight: 600;
 }
 
 .card p {
   font-size: 14px;
   color: #666;
+  margin: 0 0 auto 0;
+  line-height: 1.6;
 }
 
 .card img.card-image {
   width: 100%;
-  margin-top: 16px;
+  height: auto; /* ✅ Biarkan menyesuaikan gambar */
+  margin-top: 12px;
   border-radius: 12px;
-  object-fit: cover;
-  height: 120px;
+  object-fit: contain; /* ✅ Gambar tidak akan terpotong */
+  justify-self: stretch;
+  align-self: end;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 992px) {
   .services {
-    padding: 50px 30px;
+    padding: 30px 30px 50px 30px;
   }
 
   .services h2 {
     font-size: 24px;
     margin-bottom: 40px;
+    margin-left: 15px;
   }
 
   .service-grid {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 200px));
-    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 260px));
+    gap: 18px;
+  }
+
+  .card {
+    height: 260px;
+    padding: 18px;
+  }
+
+  .card img.card-image {
+    height: 90px;
   }
 }
 
 @media (max-width: 768px) {
   .services {
-    padding: 40px 20px;
+    padding: 25px 20px 40px 20px;
     text-align: center;
   }
 
@@ -93,26 +126,37 @@
 
   .services h2 {
     font-size: 22px;
-    margin-bottom: 30px;
+    margin-bottom: 32px;
+    margin-left: 0;
   }
 
   .service-grid {
-    grid-template-columns: repeat(auto-fit, minmax(160px, 180px));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 240px));
+    gap: 16px;
   }
 
   .card {
-    padding: 14px;
+    padding: 16px;
+    height: 240px;
   }
 
   .card h4 {
-    font-size: 16px;
+    font-size: 17px;
+  }
+
+  .card p {
+    font-size: 13px;
   }
 
   .img-placeholder.small {
-    width: 40px;
-    height: 40px;
-    margin: 0 auto 12px;
+    width: 44px;
+    height: 44px;
+    margin-bottom: 10px;
+    justify-self: center;
+  }
+
+  .card img.card-image {
+    height: 85px;
   }
 }
 
@@ -122,12 +166,13 @@
   }
 
   .service-grid {
-    grid-template-columns: repeat(auto-fit, minmax(140px, 160px));
-    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 180px));
+    gap: 12px;
   }
 
   .card {
-    padding: 12px;
+    padding: 14px;
+    min-height: 200px;
   }
 
   .card h4 {
@@ -139,7 +184,7 @@
   }
 
   .card img.card-image {
-    height: 100px;
+    height: 85px;
   }
 }
 
@@ -151,24 +196,32 @@
 
   .service-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    gap: 10px;
+  }
+
+  .card {
+    min-height: 180px;
+    padding: 12px;
   }
 
   .img-placeholder.small {
     width: 36px;
     height: 36px;
+    margin-bottom: 6px;
   }
 
   .card h4 {
     font-size: 14px;
+    margin-bottom: 6px;
   }
 
   .card p {
     font-size: 12px;
+    margin-bottom: 8px;
   }
 
   .card img.card-image {
-    height: 90px;
-    margin-top: 12px;
+    height: 75px;
+    margin-top: 6px;
   }
 }

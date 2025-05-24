@@ -101,7 +101,7 @@ class HomePage {
                   </div>
 
                   <div class="card">
-                    <div class="card-icon-placeholder">AI</div>
+                    <img src="logo/Ai-Main.png" alt="ai" class="card-icon" />
                     <div class="card-content">
                       <h3>Asisten AI & ChatBot</h3>
                       <p>Chatbot cerdas yang siap bantu menjawab pertanyaan tentang tanaman, pembelajaran, dan fitur aplikasi.</p>
