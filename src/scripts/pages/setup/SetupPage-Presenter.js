@@ -6,6 +6,8 @@ import OSM from "ol/source/OSM";
 import Overlay from "ol/Overlay";
 import { fromLonLat, toLonLat } from "ol/proj";
 import Zoom from "ol/control/Zoom";
+import SetupModel from "./SetupPage-Model";
+import { saveSetupData } from "../../utils/indexeddb";
 
 export default class SetupPagePresenter {
   constructor() {
@@ -53,7 +55,7 @@ export default class SetupPagePresenter {
       this.updateStep();
     } else {
       alert("Setup selesai!");
-      // window.location.href = '/home'; // redirect kalau perlu
+      window.location.hash = '#/home';
     }
   }
 
@@ -77,124 +79,152 @@ export default class SetupPagePresenter {
     }
   }
 
-  _initMap() {
-    this.map = new Map({
-      target: "map",
-      layers: [
-        new TileLayer({
-          source: new OSM(),
-        }),
-      ],
-      view: new View({
-        center: fromLonLat([117.0, -1.5]), // default
-        zoom: 5,
+async _initMap() {
+  const mapElement = document.getElementById("map");
+  const popupElement = document.getElementById("popup");
+  const latInput = document.getElementById("lat");
+  const lonInput = document.getElementById("lon");
+
+  this.map = new Map({
+    target: mapElement,
+    layers: [
+      new TileLayer({
+        source: new OSM(),
       }),
-      controls: [new Zoom()],
-    });
+    ],
+    view: new View({
+      center: fromLonLat([117.0, -1.5]),
+      zoom: 5,
+    }),
+    controls: [new Zoom()],
+  });
 
-    // Ganti bagian pembuatan markerElement dengan ini
-    const markerElement = document.createElement("img");
-    markerElement.src = "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
-    markerElement.style.width = "32px"; // ukuran marker, bisa disesuaikan
-    markerElement.style.height = "32px";
-    markerElement.style.transform = "translate(-50%, -100%)"; // biar titik bawah marker tepat di posisi koordinat
-    markerElement.style.position = "absolute";
-    markerElement.style.cursor = "grab";
+  // === Marker Setup ===
+  const markerElement = document.createElement("img");
+  markerElement.src = "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
+  markerElement.style.width = "32px";
+  markerElement.style.height = "32px";
+  markerElement.style.transform = "translate(-50%, -100%)";
+  markerElement.style.position = "absolute";
+  markerElement.style.cursor = "grab";
 
-    this.marker = new Overlay({
-      element: markerElement,
-      positioning: "center-center",
-      stopEvent: false, // supaya event mouse bisa ditangkap
-    });
+  this.marker = new Overlay({
+    element: markerElement,
+    positioning: "center-center",
+    stopEvent: false,
+  });
 
-    this.map.addOverlay(this.marker);
+  this.map.addOverlay(this.marker);
 
-    // Fungsi update posisi marker dan input lat/lon
-    const updatePosition = (coordinate) => {
-      this.marker.setPosition(coordinate);
-      const [lon, lat] = toLonLat(coordinate);
-      document.getElementById("lat").value = lat;
-      document.getElementById("lon").value = lon;
-    };
+  // === Popup Setup ===
+  this.popupOverlay = new Overlay({
+    element: popupElement,
+    positioning: "bottom-center",
+    stopEvent: false,
+    offset: [0, -40],
+  });
+  this.map.addOverlay(this.popupOverlay);
 
-    // Coba dapat lokasi perangkat
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const { latitude, longitude } = pos.coords;
-          const coords = fromLonLat([longitude, latitude]);
+const updatePosition = async (coordinate) => {
+  this.marker.setPosition(coordinate);
+  const [lon, lat] = toLonLat(coordinate);
 
-          // Animasi pindah ke lokasi pengguna
-          this.map.getView().animate({
-            center: coords,
-            zoom: 12,
-            duration: 3000,
-          });
+  latInput.value = lat;
+  lonInput.value = lon;
 
-          updatePosition(coords);
-        },
-        () => {
-          const defaultCoords = fromLonLat([117.0, -1.5]);
-          this.map.getView().setCenter(defaultCoords);
-          updatePosition(defaultCoords);
-        }
-      );
-    } else {
-      const defaultCoords = fromLonLat([117.0, -1.5]);
-      this.map.getView().setCenter(defaultCoords);
-      updatePosition(defaultCoords);
+  const placeName = await SetupModel.getPlaceName(lat, lon);
+  const truncatedName = placeName.length > 80 ? placeName.slice(0, 80) + "..." : placeName;
+  popupElement.innerHTML = truncatedName;
+  popupElement.title = placeName; // untuk tooltip saat hover
+  this.popupOverlay.setPosition(coordinate);
+};
+
+
+  // === Lokasi awal: user atau default ===
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const { latitude, longitude } = pos.coords;
+        const coords = fromLonLat([longitude, latitude]);
+
+        this.map.getView().animate({
+          center: coords,
+          zoom: 12,
+          duration: 3000,
+        });
+
+        await updatePosition(coords);
+      },
+      async () => {
+        const defaultCoords = fromLonLat([117.0, -1.5]);
+        this.map.getView().setCenter(defaultCoords);
+        await updatePosition(defaultCoords);
+      }
+    );
+  } else {
+    const defaultCoords = fromLonLat([117.0, -1.5]);
+    this.map.getView().setCenter(defaultCoords);
+    await updatePosition(defaultCoords);
+  }
+
+  // === Drag & click handler ===
+  let dragging = false;
+
+  markerElement.addEventListener("mousedown", (evt) => {
+    evt.preventDefault();
+    dragging = true;
+    markerElement.style.cursor = "grabbing";
+  });
+
+  this.map.on("pointermove", async (evt) => {
+    if (dragging) {
+      await updatePosition(evt.coordinate);
+    }
+  });
+
+  window.addEventListener("mouseup", () => {
+    if (dragging) {
+      dragging = false;
+      markerElement.style.cursor = "grab";
+    }
+  });
+
+  this.map.on("click", async (evt) => {
+    if (!dragging) {
+      await updatePosition(evt.coordinate);
+    }
+  });
+}
+
+
+ _initForm() {
+  const form = document.getElementById("setup-form");
+  if (!form) return;
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const name = document.getElementById("name").value;
+    const interest = document.getElementById("interest").value;
+    const experience = form.experience.value;
+    const lat = document.getElementById("lat").value;
+    const lon = document.getElementById("lon").value;
+
+    if (!name || !interest || !experience || !lat || !lon) {
+      alert("Please fill all fields.");
+      return;
     }
 
-    let dragging = false;
+    const dataToSave = { name, interest, experience, lat, lon };
 
-    markerElement.addEventListener("mousedown", (evt) => {
-      evt.preventDefault();
-      dragging = true;
-      markerElement.style.cursor = "grabbing";
-    });
-
-    this.map.on("pointermove", (evt) => {
-      if (dragging) {
-        updatePosition(evt.coordinate);
-      }
-    });
-
-    window.addEventListener("mouseup", () => {
-      if (dragging) {
-        dragging = false;
-        markerElement.style.cursor = "grab";
-      }
-    });
-
-    this.map.on("click", (evt) => {
-      if (!dragging) {
-        updatePosition(evt.coordinate);
-      }
-    });
-  }
-
-  _initForm() {
-    const form = document.getElementById("setup-form");
-    if (!form) return;
-
-    form.addEventListener("submit", (event) => {
-      event.preventDefault();
-
-      const name = document.getElementById("name").value;
-      const interest = document.getElementById("interest").value;
-      const experience = form.experience.value;
-      const lat = document.getElementById("lat").value;
-      const lon = document.getElementById("lon").value;
-
-      if (!name || !interest || !experience || !lat || !lon) {
-        alert("Please fill all fields.");
-        return;
-      }
-
-      console.log({ name, interest, experience, lat, lon });
-      alert("Setup complete!");
-
+    try {
+      await saveSetupData(dataToSave);
+      alert("Setup complete and saved!");
       this.nextStep();
-    });
-  }
+    } catch (error) {
+      alert("Error saving data: " + error);
+    }
+  });
+}
+
 }

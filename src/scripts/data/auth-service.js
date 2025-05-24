@@ -30,28 +30,32 @@ class AuthService {
   }
 
   async login(credentials) {
-    try {
-      console.log("Mock login:", credentials);
+  try {
+    console.log("Mock login:", credentials);
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const mockResponse = {
-        user: {
-          id: "mock-user-id-123",
-          username: "mockuser",
-          email: credentials.email,
-        },
-        token: "mock-token-" + Date.now(),
-      };
+    // Misal login pakai email dan password, dan kita simulasikan username sesuai email
+    const usernameFromEmail = credentials.email.split('@')[0];
 
-      this.saveAuthData(mockResponse);
+    const mockResponse = {
+      user: {
+        id: "mock-user-id-123",
+        username: usernameFromEmail, 
+        email: credentials.email,
+      },
+      token: "mock-token-" + Date.now(),
+    };
 
-      return mockResponse;
-    } catch (error) {
-      console.error("Login error:", error);
-      throw error;
-    }
+    this.saveAuthData(mockResponse);
+
+    return mockResponse;
+  } catch (error) {
+    console.error("Login error:", error);
+    throw error;
   }
+}
+
 
   async logout() {
     try {

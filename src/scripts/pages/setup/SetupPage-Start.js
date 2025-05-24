@@ -35,7 +35,7 @@ export default class SetupPageStart {
 
               <label>Click on the map to choose your location:</label>
               <div id="map" style="height: 200px;"></div><br />
-
+              <div id="popup" class="ol-popup" style="position: absolute; background: white; padding: 5px; border: 1px solid #ccc; border-radius: 4px;"></div>
               <input type="hidden" id="lat" />
               <input type="hidden" id="lon" />
 
@@ -55,8 +55,7 @@ export default class SetupPageStart {
   }
 
   async afterRender() {
-    // Import presenter yang meng-handle logika setup form dan peta
-    const module = await import("./SetupPage-Presenter.js");
+    const module = await import('./SetupPage-Presenter.js');
     const presenter = new module.default();
     presenter.init();
   }

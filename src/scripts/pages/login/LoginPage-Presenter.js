@@ -84,7 +84,7 @@ export default class LoginPresenter {
       try {
         const response = await authService.login(loginData);
 
-        window.location.hash = "#/home";
+        window.location.hash = "#/setup";
       } catch (error) {
         this._generalError.textContent =
           error.message ||
