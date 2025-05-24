@@ -6,7 +6,7 @@ export default class Logout {
       <section class="container">
         <div class="logout-container">
           <h1>Logging Out...</h1>
-          <p>Please wait while we log you out of your account.</p>
+          <p>Terima kasih telah menggunakan AgriEdu. Anda akan segera dialihkan.</p>
           <div class="loader"></div>
         </div>
       </section>
@@ -15,17 +15,25 @@ export default class Logout {
 
   async afterRender() {
     try {
+      console.log("Logging out user...");
       await authService.logout();
+
+      // Clear any user data from localStorage
+      localStorage.removeItem("auth_token");
+      localStorage.removeItem("user_name");
+
+      console.log("Logout successful, redirecting...");
 
       setTimeout(() => {
         window.location.hash = "#/landing";
-      }, 1000);
+      }, 2000);
     } catch (error) {
       console.error("Logout error:", error);
-      e;
+
+      // Still redirect even if there's an error
       setTimeout(() => {
         window.location.hash = "#/landing";
-      }, 1000);
+      }, 2000);
     }
   }
 }

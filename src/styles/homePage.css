@@ -1,0 +1,484 @@
+.home-container {
+  font-family: "Poppins", Arial, sans-serif;
+  margin: 0;
+  background-color: #f9f9f9;
+  color: #333;
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.home-navbar {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 15px 30px;
+}
+
+/* Navbar content dengan 3 area: logo, menu tengah, dan area logout */
+.home-navbar-content {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  max-width: 1200px;
+  padding: 0 20px;
+  margin: 0 auto;
+  gap: 60px;
+  position: relative; /* Untuk positioning absolut */
+}
+
+.home-logo {
+  font-size: 22px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+  padding: 5px 0;
+  display: flex;
+  align-items: center;
+}
+
+.home-logo img {
+  height: 46px;
+  width: auto;
+  transition: transform 0.3s ease;
+}
+
+.home-logo:hover img {
+  transform: scale(1.05);
+}
+
+.home-logo .green {
+  color: #64b100;
+}
+
+/* Menu navigasi di tengah navbar */
+.home-nav {
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: center;
+  align-items: center;
+  gap: 50px; /* Jarak yang sama antar menu */
+  margin: 0 auto; /* Posisikan di tengah */
+}
+
+/* Link menu navigasi */
+.home-nav a:not(.home-logout) {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  text-align: center;
+  padding: 8px 15px;
+  position: relative;
+  white-space: nowrap; /* Mencegah text wrapping */
+}
+
+/* Efek hover untuk link menu */
+.home-nav a:not(.home-logout):hover {
+  color: #64b100;
+}
+
+/* Link aktif - hanya warna hijau tanpa efek lain */
+.home-nav a.active {
+  color: #64b100;
+  font-weight: 600;
+}
+
+.nav-link {
+  color: #888888;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-weight: 500;
+}
+
+.nav-link:hover {
+  color: #000;
+}
+
+/* Hapus ini jika tidak digunakan */
+.nav-link.active {
+  color: #000000;
+  font-weight: 600;
+  border-bottom: 2px solid #000;
+}
+
+/* Container untuk profil dan logout */
+.user-profile-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-self: end; /* Posisikan di ujung kanan */
+  margin-left: auto; /* Pastikan selalu di kanan */
+  position: relative;
+  order: 2; /* Pastikan selalu di akhir */
+}
+
+/* Tombol logout */
+.home-logout {
+  color: #e74c3c;
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+  gap: 6px;
+  padding: 8px 15px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  text-decoration: none;
+  border: 1px solid transparent;
+  order: 1; /* Posisikan di sebelah kiri ikon profil */
+}
+
+/* Efek hover untuk tombol logout */
+.home-logout:hover {
+  background-color: rgba(231, 76, 60, 0.1);
+  color: #e74c3c;
+  border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+/* Ikon pada tombol logout */
+.home-logout i {
+  color: #e74c3c;
+  font-size: 14px;
+}
+
+/* Ikon profil pengguna */
+.home-profile-icon {
+  width: 42px;
+  height: 42px;
+  background-color: #64b100;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: bold;
+  font-size: 18px; /* Increased proportionally */
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border: 2px solid #fff;
+  order: 2; /* Posisikan di pojok kanan */
+  margin-left: 40px; /* Sedikit jarak dari tombol logout */
+}
+
+/* Efek hover untuk ikon profil */
+.home-profile-icon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.hero {
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url("../public/images/Hero-Home (1).png") no-repeat center/cover;
+  color: #fff;
+  padding: 60px 20px;
+  display: grid;
+  grid-template-rows: auto auto auto;
+  justify-items: center;
+  align-content: center;
+  text-align: center;
+  gap: 20px;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  margin: 0 0 10px;
+}
+
+.hero p {
+  font-size: 1.1rem;
+  max-width: 700px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.hero .green {
+  color: #a6ff00;
+  font-weight: bold;
+}
+
+.hero-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.hero button {
+  padding: 10px 20px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+button.green {
+  background-color: #64b100;
+  color: #fff;
+}
+
+button.green:hover {
+  background-color: #548f00;
+  transform: translateY(-2px);
+}
+
+button.white {
+  background-color: #fff;
+  color: #64b100;
+  border: 2px solid #64b100;
+}
+
+button.white:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-2px);
+}
+
+/* Bagian aktivitas utama */
+.main-activities {
+  padding: 60px 20px;
+  text-align: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Judul bagian */
+.main-activities h2 {
+  font-size: 2rem;
+  margin-bottom: 60px;
+  position: relative;
+  display: inline-block;
+}
+
+/* Garis bawah untuk judul */
+.main-activities h2:after {
+  content: "";
+  position: absolute;
+  width: 50%;
+  height: 3px;
+  background-color: #64b100;
+  bottom: -10px;
+  left: 25%;
+}
+
+/* Container untuk kartu-kartu */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  margin-top: 30px;
+}
+
+/* Kartu aktivitas */
+.card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 10px;
+}
+
+/* Efek hover untuk kartu */
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Judul kartu */
+.card h3 {
+  color: #64b100;
+  margin: 0 0 10px;
+}
+
+/* Teks dalam kartu */
+.card p {
+  line-height: 1.6;
+  margin: 0 0 20px;
+}
+
+/* Tombol kartu */
+.card button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #64b100;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  justify-self: center;
+  width: 80%;
+}
+
+/* Efek hover untuk tombol */
+.card button:hover {
+  background-color: #548f00;
+}
+
+.home-footer {
+  background-color: #c5e6a6;
+  text-align: center;
+  padding: 20px;
+}
+
+.home-menu-toggle {
+  display: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #64b100;
+  justify-self: end;
+}
+
+.home-nav.show {
+  display: grid !important;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Media query untuk perangkat mobile */
+@media (max-width: 768px) {
+  /* Navbar untuk mobile */
+  .home-navbar-content {
+    grid-template-columns: auto auto;
+  }
+
+  /* Menu navigasi untuk mobile */
+  .home-nav {
+    display: none;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 20px 0;
+    gap: 15px;
+    background-color: #fff;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 10px 10px;
+  }
+
+  /* Tombol toggle menu untuk mobile */
+  .home-menu-toggle {
+    display: block;
+  }
+
+  /* Hero section untuk mobile */
+  .hero {
+    padding: 40px 20px;
+  }
+
+  .hero h1 {
+    font-size: 1.8rem;
+  }
+
+  .hero-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  /* Grid container untuk mobile */
+  .grid-container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  /* Container profil untuk mobile */
+  .user-profile-container {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    flex-direction: column-reverse; /* Ikon profil di atas, logout di bawah */
+    gap: 8px;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    display: none;
+    z-index: 100;
+  }
+
+  /* Tampilkan container profil saat menu ditampilkan */
+  .home-nav.show ~ .user-profile-container {
+    display: flex;
+  }
+
+  /* Tombol logout untuk mobile */
+  .home-logout {
+    width: 100%;
+    justify-content: center;
+    padding: 8px 15px;
+    order: 2; /* Ubah urutan untuk mobile */
+  }
+
+  /* Ikon profil untuk mobile */
+  .home-profile-icon {
+    order: 1; /* Ubah urutan untuk mobile */
+    margin: 0 auto; /* Tengahkan */
+    width: 42px; /* Maintain consistent size */
+    height: 42px;
+    font-size: 18px;
+  }
+}
+
+/* Media query untuk tablet */
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Grid container untuk tablet */
+  .grid-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Hero section untuk tablet */
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+
+  /* Menu navigasi untuk tablet */
+  .home-nav {
+    gap: 15px;
+  }
+
+  /* Navbar content untuk tablet */
+  .home-navbar-content {
+    grid-template-columns: auto 1fr auto;
+  }
+}
+
+/* Media query untuk layar besar */
+@media (min-width: 1025px) {
+  /* Grid container untuk layar besar */
+  .grid-container {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Kartu untuk layar besar */
+  .card {
+    transition: all 0.4s ease;
+  }
+
+  /* Efek hover untuk kartu pada layar besar */
+  .card:hover {
+    transform: translateY(-10px);
+  }
+
+  /* Menu navigasi untuk desktop */
+  .home-nav {
+    justify-content: center;
+  }
+}
