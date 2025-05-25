@@ -1,0 +1,190 @@
+body {
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f7f7f7;
+}
+
+.learning-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.learning-container h2 {
+  font-size: 28px;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.highlight {
+  color: #2b9348;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.gallery img {
+  width: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+  height: 100px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* MAIN CONTENT = LEFT + RIGHT (FILTER) */
+.main-content {
+  display: grid;
+  grid-template-columns: 1fr 280px; /* kiri fleksibel, kanan fixed */
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+/* Container kiri (search + artikel + video) */
+.left-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 100%;
+}
+
+/* Search bar styling */
+.search-wrapper {
+  margin-bottom: 12px;
+  position: relative;
+}
+
+#search {
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 100%;
+  font-size: 16px;
+}
+
+.search-wrapper .search-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  pointer-events: none;
+}
+
+/* Article list vertical stack */
+.article-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 100%;
+}
+
+.article-item {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.article-item:hover {
+  transform: translateY(-3px);
+}
+
+.article-item h4 {
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+/* Filter sidebar kanan */
+.filter-box {
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  height: fit-content;
+  position: sticky;
+  top: 24px;
+}
+
+.filter-box h4 {
+  margin-bottom: 16px;
+  font-size: 18px;
+  color: #2b9348;
+}
+
+.filter-box strong {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 6px;
+}
+
+.filter-box label {
+  display: block;
+  margin-bottom: 6px;
+  cursor: pointer;
+}
+
+.filter-box hr {
+  margin: 16px 0;
+}
+
+.filter-box p {
+  color: #2b9348;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+
+.filter-box p i {
+  margin-right: 8px;
+}
+
+/* Recent section video dan link - DI BAWAH SEMUA */
+.recent-section {
+  margin-top: 40px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  max-width: 100%;
+}
+
+.recent-section h3 {
+  color: #2b9348;
+  margin-bottom: 16px;
+}
+
+.recent-section a {
+  color: #2b9348;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.home-footer {
+  background-color: #64b100;
+  color: #fff;
+  text-align: center;
+  padding: 15px;
+  font-size: 14px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .main-content {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-box {
+    position: static;
+    top: auto;
+    margin-top: 24px;
+  }
+}

@@ -1,5 +1,6 @@
 .services {
-  padding: 20px 40px 60px 60px;
+  padding: 40px 40px 60px 60px;
+  margin-bottom: 18px;
   text-align: left;
 }
 
@@ -7,156 +8,137 @@
   color: #7ac142;
   font-weight: 500;
   margin-bottom: 8px;
-  margin-left: 20px;
-  margin-top: 0;
+  margin-top: 10px;
 }
 
 .services h2 {
   font-size: 28px;
   font-weight: bold;
-  margin-bottom: 48px;
-  margin-left: 20px;
+  margin-bottom: 40px;
   color: #333;
 }
 
 .service-grid {
-  display: grid;
-  grid-template-columns: repeat(
-    auto-fit,
-    minmax(180px, 200px)
-  ); /* Sesuaikan dengan lebar kartu */
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
+  align-items: stretch;
 }
 
 .card {
-  display: grid;
-  grid-template-rows: auto auto 1fr auto;
-  gap: 8px;
   background-color: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  padding: 20px;
-  width: 200px; /* 🎯 Dibuat lebih ramping */
-  min-height: 360px; /* 🎯 Dibuat lebih panjang */
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  padding: 16px;
+  flex: 1 1 calc(25% - 15px);
+  min-width: 200px;
+  max-width: 280px;
   text-align: left;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  overflow: hidden;
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
 }
 
 .card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
 }
 
 .img-placeholder.small {
-  width: 42px;
-  height: 42px;
+  width: 48px;
+  height: 48px;
   background-color: #7ac142;
   border-radius: 50%;
-  margin-bottom: 12px;
-  justify-self: start;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(122, 193, 66, 0.3);
+  margin-bottom: 16px;
 }
 
 .card h4 {
   font-size: 18px;
-  margin: 0 0 12px 0;
+  margin: 8px 0;
   color: #222;
-  line-height: 1.3;
-  font-weight: 600;
 }
 
 .card p {
   font-size: 14px;
   color: #666;
-  margin: 0 0 auto 0;
-  line-height: 1.6;
 }
 
 .card img.card-image {
   width: 100%;
-  height: auto; /* ✅ Biarkan menyesuaikan gambar */
-  margin-top: 12px;
+  margin-top: 16px;
   border-radius: 12px;
-  object-fit: contain; /* ✅ Gambar tidak akan terpotong */
-  justify-self: stretch;
-  align-self: end;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  object-fit: cover;
+  height: 120px;
 }
 
-@media (max-width: 992px) {
+/* Large screens (desktop): 4 cards per row */
+@media (min-width: 1200px) {
+  .card {
+    flex: 1 1 calc(25% - 15px);
+    min-width: 220px;
+    max-width: 300px;
+  }
+}
+
+/* Medium screens (tablet): 2 cards per row */
+@media (max-width: 1199px) and (min-width: 768px) {
   .services {
-    padding: 30px 30px 50px 30px;
+    padding: 50px 30px;
   }
 
   .services h2 {
     font-size: 24px;
-    margin-bottom: 40px;
-    margin-left: 15px;
+    margin-bottom: 35px;
   }
 
   .service-grid {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 260px));
     gap: 18px;
   }
 
   .card {
-    height: 260px;
-    padding: 18px;
-  }
-
-  .card img.card-image {
-    height: 90px;
+    flex: 1 1 calc(50% - 9px);
+    min-width: 280px;
+    max-width: none;
   }
 }
 
+/* Small screens (mobile): 1 card per row */
 @media (max-width: 768px) {
   .services {
-    padding: 25px 20px 40px 20px;
+    padding: 40px 20px;
     text-align: center;
   }
 
   .services h3 {
     font-size: 16px;
+    margin-top: 8px;
   }
 
   .services h2 {
     font-size: 22px;
-    margin-bottom: 32px;
-    margin-left: 0;
+    margin-bottom: 25px;
   }
 
   .service-grid {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 240px));
     gap: 16px;
   }
 
   .card {
-    padding: 16px;
-    height: 240px;
+    flex: 1 1 100%;
+    min-width: auto;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 14px;
   }
 
   .card h4 {
-    font-size: 17px;
-  }
-
-  .card p {
-    font-size: 13px;
+    font-size: 16px;
   }
 
   .img-placeholder.small {
-    width: 44px;
-    height: 44px;
-    margin-bottom: 10px;
-    justify-self: center;
-  }
-
-  .card img.card-image {
-    height: 85px;
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 12px;
   }
 }
 
@@ -165,14 +147,21 @@
     padding: 30px 15px;
   }
 
+  .services h3 {
+    margin-top: 6px;
+  }
+
+  .services h2 {
+    margin-bottom: 20px;
+  }
+
   .service-grid {
-    grid-template-columns: repeat(auto-fit, minmax(160px, 180px));
-    gap: 12px;
+    gap: 14px;
   }
 
   .card {
-    padding: 14px;
-    min-height: 200px;
+    padding: 12px;
+    max-width: 350px;
   }
 
   .card h4 {
@@ -184,44 +173,39 @@
   }
 
   .card img.card-image {
-    height: 85px;
+    height: 100px;
   }
 }
 
 @media (max-width: 480px) {
   .services h2 {
     font-size: 20px;
-    margin-bottom: 25px;
+    margin-bottom: 18px;
   }
 
   .service-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 12px;
   }
 
   .card {
-    min-height: 180px;
-    padding: 12px;
+    max-width: 300px;
   }
 
   .img-placeholder.small {
     width: 36px;
     height: 36px;
-    margin-bottom: 6px;
   }
 
   .card h4 {
     font-size: 14px;
-    margin-bottom: 6px;
   }
 
   .card p {
     font-size: 12px;
-    margin-bottom: 8px;
   }
 
   .card img.card-image {
-    height: 75px;
-    margin-top: 6px;
+    height: 90px;
+    margin-top: 12px;
   }
 }
