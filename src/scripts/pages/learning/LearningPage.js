@@ -24,13 +24,35 @@ export default class LearningPage {
         ${navbar.render()}
         <div class="learning-container">
         <h2>Galeri <span class="highlight">Bertani</span></h2>
-        <div class="gallery">
-          <img src="/images/Galeri1.jpg" alt="gallery1" />
-          <img src="/images/Galeri2.jpg" alt="gallery2" />
-          <img src="/images/Galeri3.jpg" alt="gallery3" />
-          <img src="/images/Galeri4.jpg" alt="gallery4" />
-          <img src="/images/Galeri5.jpg" alt="gallery5" />
-          <img src="/images/Galeri6.jpg" alt="gallery6" />
+        <div class="carousel-container">
+          <button class="carousel-nav carousel-nav-left" id="carousel-prev">
+            <i class="fa fa-chevron-left"></i>
+          </button>
+          <div class="carousel-wrapper">
+            <div class="carousel-track" id="carousel-track">
+              <div class="carousel-item">
+                <img src="/images/Galeri1.jpg" alt="gallery1" />
+              </div>
+              <div class="carousel-item">
+                <img src="/images/Galeri2.jpg" alt="gallery2" />
+              </div>
+              <div class="carousel-item">
+                <img src="/images/Galeri3.jpg" alt="gallery3" />
+              </div>
+              <div class="carousel-item">
+                <img src="/images/Galeri4.jpg" alt="gallery4" />
+              </div>
+              <div class="carousel-item">
+                <img src="/images/Galeri5.jpg" alt="gallery5" />
+              </div>
+              <div class="carousel-item">
+                <img src="/images/Galeri6.jpg" alt="gallery6" />
+              </div>
+            </div>
+          </div>
+          <button class="carousel-nav carousel-nav-right" id="carousel-next">
+            <i class="fa fa-chevron-right"></i>
+          </button>
         </div>
 
         <section class="learning-section">
@@ -104,8 +126,74 @@ export default class LearningPage {
       renderArticles(container, filtered);
     });
 
+    // Set up carousel functionality
+    this.setupCarousel();
+
     // Set up navigation bar events
     this.setupNavigationEvents();
+  }
+
+  setupCarousel() {
+    const track = document.getElementById("carousel-track");
+    const prevButton = document.getElementById("carousel-prev");
+    const nextButton = document.getElementById("carousel-next");
+    const items = track.querySelectorAll(".carousel-item");
+
+    if (!track || !prevButton || !nextButton || items.length === 0) {
+      console.error("Carousel elements not found");
+      return;
+    }
+
+    let currentIndex = 2; // Start with the 3rd item centered (index 2)
+    const totalItems = items.length;
+
+    // Function to update carousel position and highlighting
+    const updateCarousel = () => {
+      // Remove all active classes
+      items.forEach((item, index) => {
+        item.classList.remove("active", "dimmed");
+
+        // Calculate position relative to center
+        const relativePosition = index - currentIndex;
+
+        if (relativePosition === 0) {
+          // Center item - highlighted
+          item.classList.add("active");
+        } else if (Math.abs(relativePosition) <= 2) {
+          // Side items within view - dimmed
+          item.classList.add("dimmed");
+        }
+      });
+
+      // Calculate transform for centering - responsive item width
+      const firstItem = items[0];
+      const itemStyle = window.getComputedStyle(firstItem);
+      const itemWidth =
+        firstItem.offsetWidth +
+        parseInt(itemStyle.marginLeft) +
+        parseInt(itemStyle.marginRight);
+      const containerWidth = track.parentElement.offsetWidth;
+      const offset =
+        -currentIndex * itemWidth + containerWidth / 2 - itemWidth / 2;
+      track.style.transform = `translateX(${offset}px)`;
+    };
+
+    // Navigation event listeners
+    prevButton.addEventListener("click", () => {
+      currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+      updateCarousel();
+    });
+
+    nextButton.addEventListener("click", () => {
+      currentIndex = (currentIndex + 1) % totalItems;
+      updateCarousel();
+    });
+
+    // Initialize carousel
+    updateCarousel();
+
+    // Handle window resize
+    window.addEventListener("resize", updateCarousel);
   }
 
   setupNavigationEvents() {
