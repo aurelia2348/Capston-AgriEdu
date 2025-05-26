@@ -5,9 +5,9 @@
   padding: 2rem;
   border: 1px solid #ccc;
   border-radius: 10px;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   background-color: #fff;
-  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
   text-align: start;
 }
 
@@ -41,7 +41,6 @@
   color: #666;
   margin-top: 0.5rem;
 }
-
 
 .profile-title {
   font-size: 20px;
@@ -177,6 +176,3 @@
   border-radius: 8px;
   cursor: pointer;
 }
-
-
-

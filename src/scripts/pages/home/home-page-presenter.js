@@ -24,6 +24,7 @@ export class HomePresenter {
     const mainContent = document.querySelector("#main-content");
     if (!mainContent) return;
 
+    // Hero section button events
     const learnBtn = mainContent.querySelector("#learnBtn");
     if (learnBtn) {
       learnBtn.addEventListener("click", () => {
@@ -40,6 +41,7 @@ export class HomePresenter {
       });
     }
 
+    // Card button events
     const cardButtons = mainContent.querySelectorAll(".card button");
     cardButtons.forEach((button) => {
       const card = button.closest(".card");
@@ -62,23 +64,7 @@ export class HomePresenter {
       });
     });
 
-    this.setupMobileNavigation(mainContent);
-
-    const navLinks = mainContent.querySelectorAll(".home-nav a");
-    navLinks.forEach((link) => {
-      link.addEventListener("click", () => {
-        this.closeMobileMenu();
-      });
-    });
-
-    const profileIcon = mainContent.querySelector(".home-profile-icon");
-    if (profileIcon) {
-      profileIcon.addEventListener("click", () => {
-        const userName = localStorage.getItem("user_name") || "User";
-        alert(`Logged in as: ${userName}\nStatus: Active`);
-      });
-    }
-
+    // Card click events for better UX
     const cards = mainContent.querySelectorAll(".card");
     cards.forEach((card) => {
       const button = card.querySelector("button");
@@ -99,13 +85,16 @@ export class HomePresenter {
         });
       }
     });
+
+    // Set up active navigation tracking
     this._setActiveNav = this._setActiveNav.bind(this);
     this._setActiveNav();
     window.addEventListener("hashchange", this._setActiveNav);
   }
 
   _setActiveNav() {
-    const navLinks = document.querySelectorAll(".home-nav a");
+    // Support both old and new navigation classes for compatibility
+    const navLinks = document.querySelectorAll(".app-nav a, .home-nav a");
     const currentHash = window.location.hash;
 
     navLinks.forEach((link) => {
@@ -115,84 +104,5 @@ export class HomePresenter {
         link.classList.remove("active");
       }
     });
-  }
-  setupMobileNavigation(mainContent) {
-    const menuToggle = mainContent.querySelector("#menuToggle");
-    const homeNav = mainContent.querySelector(".home-nav");
-
-    if (menuToggle && homeNav) {
-      this.menuToggle = menuToggle;
-      this.homeNav = homeNav;
-
-      menuToggle.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        this.toggleMobileMenu();
-      });
-
-      document.addEventListener("click", (e) => {
-        if (!menuToggle.contains(e.target) && !homeNav.contains(e.target)) {
-          this.closeMobileMenu();
-        }
-      });
-
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") {
-          this.closeMobileMenu();
-        }
-      });
-
-      window.addEventListener("resize", () => {
-        if (window.innerWidth > 768) {
-          this.closeMobileMenu();
-        }
-      });
-    }
-  }
-
-  toggleMobileMenu() {
-    if (this.homeNav && this.menuToggle) {
-      const isOpen = this.homeNav.classList.contains("show");
-
-      if (isOpen) {
-        this.closeMobileMenu();
-      } else {
-        this.openMobileMenu();
-      }
-    }
-  }
-
-  openMobileMenu() {
-    if (this.homeNav && this.menuToggle) {
-      this.homeNav.classList.add("show");
-      this.menuToggle.classList.add("active");
-
-      const icon = this.menuToggle.querySelector("i");
-      if (icon) {
-        icon.classList.remove("fa-bars");
-        icon.classList.add("fa-times");
-      }
-
-      document.body.style.overflow = "hidden";
-
-      console.log("Mobile menu opened");
-    }
-  }
-
-  closeMobileMenu() {
-    if (this.homeNav && this.menuToggle) {
-      this.homeNav.classList.remove("show");
-      this.menuToggle.classList.remove("active");
-
-      const icon = this.menuToggle.querySelector("i");
-      if (icon) {
-        icon.classList.remove("fa-times");
-        icon.classList.add("fa-bars");
-      }
-
-      document.body.style.overflow = "";
-
-      console.log("Mobile menu closed");
-    }
   }
 }
