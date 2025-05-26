@@ -1,5 +1,6 @@
 .services {
-  padding: 60px 40px 60px 60px;
+  padding: 40px 40px 60px 60px;
+  margin-bottom: 18px;
   text-align: left;
 }
 
@@ -7,20 +8,23 @@
   color: #7ac142;
   font-weight: 500;
   margin-bottom: 8px;
+  margin-top: 10px;
 }
 
 .services h2 {
   font-size: 28px;
   font-weight: bold;
-  margin-bottom: 56px;
+  margin-bottom: 40px;
   color: #333;
 }
 
 .service-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 220px));
-  gap: 12px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
   justify-content: center;
+  align-items: stretch;
 }
 
 .card {
@@ -28,7 +32,9 @@
   border-radius: 12px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
   padding: 16px;
-  width: 100%;
+  flex: 1 1 calc(25% - 15px);
+  min-width: 200px;
+  max-width: 280px;
   text-align: left;
   transition: transform 0.5s ease, box-shadow 0.5s ease;
 }
@@ -65,22 +71,38 @@
   height: 120px;
 }
 
-@media (max-width: 992px) {
+/* Large screens (desktop): 4 cards per row */
+@media (min-width: 1200px) {
+  .card {
+    flex: 1 1 calc(25% - 15px);
+    min-width: 220px;
+    max-width: 300px;
+  }
+}
+
+/* Medium screens (tablet): 2 cards per row */
+@media (max-width: 1199px) and (min-width: 768px) {
   .services {
     padding: 50px 30px;
   }
 
   .services h2 {
     font-size: 24px;
-    margin-bottom: 40px;
+    margin-bottom: 35px;
   }
 
   .service-grid {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 200px));
-    gap: 10px;
+    gap: 18px;
+  }
+
+  .card {
+    flex: 1 1 calc(50% - 9px);
+    min-width: 280px;
+    max-width: none;
   }
 }
 
+/* Small screens (mobile): 1 card per row */
 @media (max-width: 768px) {
   .services {
     padding: 40px 20px;
@@ -89,19 +111,23 @@
 
   .services h3 {
     font-size: 16px;
+    margin-top: 8px;
   }
 
   .services h2 {
     font-size: 22px;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
   }
 
   .service-grid {
-    grid-template-columns: repeat(auto-fit, minmax(160px, 180px));
-    gap: 15px;
+    gap: 16px;
   }
 
   .card {
+    flex: 1 1 100%;
+    min-width: auto;
+    max-width: 400px;
+    margin: 0 auto;
     padding: 14px;
   }
 
@@ -121,13 +147,21 @@
     padding: 30px 15px;
   }
 
+  .services h3 {
+    margin-top: 6px;
+  }
+
+  .services h2 {
+    margin-bottom: 20px;
+  }
+
   .service-grid {
-    grid-template-columns: repeat(auto-fit, minmax(140px, 160px));
-    gap: 10px;
+    gap: 14px;
   }
 
   .card {
     padding: 12px;
+    max-width: 350px;
   }
 
   .card h4 {
@@ -146,12 +180,15 @@
 @media (max-width: 480px) {
   .services h2 {
     font-size: 20px;
-    margin-bottom: 25px;
+    margin-bottom: 18px;
   }
 
   .service-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    gap: 12px;
+  }
+
+  .card {
+    max-width: 300px;
   }
 
   .img-placeholder.small {

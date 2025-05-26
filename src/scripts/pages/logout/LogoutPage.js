@@ -18,7 +18,6 @@ export default class Logout {
       console.log("Logging out user...");
       await authService.logout();
 
-      // Clear any user data from localStorage
       localStorage.removeItem("auth_token");
       localStorage.removeItem("user_name");
 
@@ -30,7 +29,6 @@ export default class Logout {
     } catch (error) {
       console.error("Logout error:", error);
 
-      // Still redirect even if there's an error
       setTimeout(() => {
         window.location.hash = "#/landing";
       }, 2000);

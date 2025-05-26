@@ -56,7 +56,6 @@
   }
 }
 
-/* Responsive styles */
 @media (max-width: 768px) {
   .logout-container {
     padding: 2rem;

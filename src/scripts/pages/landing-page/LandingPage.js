@@ -127,6 +127,7 @@ export class LandingPage {
     }
 
     this.setupSmoothScrolling();
+    this.setupSearchFunctionality();
 
     const loginBtn = document.querySelector(".cta-buttons .btn:not(.outline)");
     if (loginBtn) {
@@ -233,5 +234,100 @@ export class LandingPage {
     };
 
     requestAnimationFrame(animation);
+  }
+
+  setupSearchFunctionality() {
+    const searchForm = document.querySelector(".search-form");
+    const searchInput = document.querySelector(".search-form input");
+
+    if (searchForm && searchInput) {
+      searchForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        this.performSearch(searchInput.value.trim());
+      });
+
+      searchInput.addEventListener("keypress", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          this.performSearch(searchInput.value.trim());
+        }
+      });
+
+      searchInput.addEventListener("input", (event) => {
+        const query = event.target.value.trim();
+        if (query.length > 2) {
+          this.highlightSearchResults(query);
+        } else {
+          this.clearSearchHighlights();
+        }
+      });
+    }
+  }
+
+  performSearch(query) {
+    if (!query) {
+      alert("Please enter a search term");
+      return;
+    }
+
+    console.log(`Searching for: ${query}`);
+
+    const serviceCards = document.querySelectorAll(".card");
+    let foundResults = false;
+
+    serviceCards.forEach((card) => {
+      const title = card.querySelector("h4")?.textContent.toLowerCase() || "";
+      const description =
+        card.querySelector("p")?.textContent.toLowerCase() || "";
+
+      if (
+        title.includes(query.toLowerCase()) ||
+        description.includes(query.toLowerCase())
+      ) {
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
+        card.style.border = "2px solid #7ac142";
+        card.style.transform = "scale(1.02)";
+        foundResults = true;
+
+        setTimeout(() => {
+          card.style.border = "";
+          card.style.transform = "";
+        }, 3000);
+
+        return;
+      }
+    });
+
+    if (!foundResults) {
+      const sections = document.querySelectorAll("section");
+      sections.forEach((section) => {
+        const content = section.textContent.toLowerCase();
+        if (content.includes(query.toLowerCase())) {
+          section.scrollIntoView({ behavior: "smooth", block: "start" });
+          foundResults = true;
+          return;
+        }
+      });
+    }
+
+    if (!foundResults) {
+      alert(
+        `No results found for "${query}". Try searching for terms like "learning", "community", "diagnosis", or "AI".`
+      );
+    }
+  }
+
+  highlightSearchResults(query) {
+    console.log(`Live search for: ${query}`);
+  }
+
+  clearSearchHighlights() {
+    const highlightedCards = document.querySelectorAll(
+      ".card[style*='border']"
+    );
+    highlightedCards.forEach((card) => {
+      card.style.border = "";
+      card.style.transform = "";
+    });
   }
 }

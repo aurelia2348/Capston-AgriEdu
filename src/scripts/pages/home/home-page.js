@@ -6,8 +6,8 @@ class HomePage {
       state: {
         view: "home",
         user: {
-          initial: "A", // Default initial for profile icon
-          isAuthenticated: false, // Default authentication status
+          initial: "A",
+          isAuthenticated: false,
         },
       },
       setView: (view) => {
@@ -33,7 +33,7 @@ class HomePage {
                 <div class="home-menu-toggle" id="menuToggle">
                   <i class="fas fa-bars"></i>
                 </div>
-                <nav class="home-nav">
+                <nav class="home-nav" id="nav-menu">
                   <a href="#/home" class="nav-link">Home</a>
                   <a href="#/learning" class="nav-link">Learning</a>
                   <a href="#/community" class="nav-link">Community</a>
@@ -51,36 +51,64 @@ class HomePage {
 
             <main>
               <section class="hero">
-                <h1>Selamat datang di <span class="green">AgriEdu</span>!</h1>
-                <p>Belajar, berbagi, dan diagnosa tanaman dengan teknologi AI. Semoga pengalaman Anda menyenangkan!</p>
-                <div class="hero-buttons">
-                  <button class="green" id="learnBtn">Mulai Belajar</button>
-                  <button class="white" id="communityBtn">Gabung Komunitas</button>
+                <div class="hero-content">
+                  <h1>Selamat datang di AgriE<span class="green">d</span>u!</h1>
+                  <p>Belajar, berbagi, dan diagnosa tanaman dengan teknologi AI.</p>
+                  <p>Semoga pengalaman Anda menyenangkan!</p>
+                  <div class="hero-buttons">
+                    <button class="green" id="learnBtn">Mulai Belajar</button>
+                    <button class="white" id="communityBtn">Gabung Komunitas</button>
+                  </div>
                 </div>
               </section>
 
               <section class="main-activities">
-                <h2>Aktivitas Utama</h2>
+                <div class="section-header">
+                  <div class="logo-circle">
+                    <img src="logo/Home-Activity.png" alt="Aktivitas Icon" class="header-icon">
+                  </div>
+                  <h2>Aktivitas Utama</h2>
+                </div>
+
+                <hr>
+
                 <div class="grid-container">
-                  <div class="card" id="learnCard">
-                    <h3>Pembelajaran Interaktif</h3>
-                    <p>Tersedia materi bertahap sesuai kategori Anda untuk memahami dunia pertanian dengan cara yang praktis dan menyenangkan.</p>
-                    <button>Mulai Belajar</button>
+                  <div class="card">
+                    <div class="icon">
+                      <img src="logo/Learning-Main.png" alt="Pembelajaran" class="card-icon" />
+                    </div>
+                    <div class="card-content">
+                      <h3>Pembelajaran Interaktif</h3>
+                      <p>Tersedia materi bertahap sesuai kategori Anda untuk memahami dunia pertanian dengan cara yang praktis dan menyenangkan.</p>
+                    </div>
+                    <button class="lihat-btn">Lihat</button>
                   </div>
-                  <div class="card" id="diagnosisCard">
-                    <h3>Diagnosa Tanaman</h3>
-                    <p>Unggah foto, lalu biarkan AI membantu mengidentifikasi masalah dan memberi saran penanganan.</p>
-                    <button>Mulai Diagnosa</button>
+
+                  <div class="card">
+                    <img src="logo/Diagnose-Main.png" alt="Diagnosa" class="card-icon" />
+                    <div class="card-content">
+                      <h3>Diagnosa Tanaman</h3>
+                      <p>Unggah foto, lalu biarkan AI membantu mengidentifikasi masalah dan memberi saran penanganan.</p>
+                    </div>
+                    <button>Lihat</button>
                   </div>
-                  <div class="card" id="communityCard">
-                    <h3>Komunitas Tani</h3>
-                    <p>Forum untuk bertanya, memberi saran, dan saling dukung antara petani, pelajar, maupun pegiat pertanian.</p>
-                    <button>Gabung Komunitas</button>
+
+                  <div class="card">
+                    <img src="logo/Comunity-Main.png" alt="Komunitas" class="card-icon" />
+                    <div class="card-content">
+                      <h3>Komunitas Tani</h3>
+                      <p>Forum untuk bertanya, memberi saran, dan saling dukung antar petani, pelajar, maupun pegiat pertanian.</p>
+                    </div>
+                    <button>Lihat</button>
                   </div>
-                  <div class="card" id="aiCard">
-                    <h3>Asisten AI & ChatBot</h3>
-                    <p>Chatbot cerdas yang siap bantu menjawab pertanyaan tentang tanaman, pembelajaran, dan fitur aplikasi.</p>
-                    <button>Mulai Chat</button>
+
+                  <div class="card">
+                    <img src="logo/Ai-Main.png" alt="ai" class="card-icon" />
+                    <div class="card-content">
+                      <h3>Asisten AI & ChatBot</h3>
+                      <p>Chatbot cerdas yang siap bantu menjawab pertanyaan tentang tanaman, pembelajaran, dan fitur aplikasi.</p>
+                    </div>
+                    <button>Lihat</button>
                   </div>
                 </div>
               </section>
@@ -97,11 +125,9 @@ class HomePage {
     this.Presenter = new HomePresenter(this.Model, this.View);
   }
 
-  // Method to be called by the router
   async render() {
     try {
       console.log("HomePage render called");
-      // Check authentication status
       this.checkAuthStatus();
       const html = this.View.render(this.Model.state);
       return html;
@@ -114,13 +140,8 @@ class HomePage {
     }
   }
 
-  // Check if user is authenticated
   checkAuthStatus() {
     try {
-      // For demo purposes, we'll set the user as authenticated by default
-      // In a real app, you would check for a valid token from your auth service
-
-      // Set demo user data in localStorage if not already set
       if (!localStorage.getItem("auth_token")) {
         localStorage.setItem("auth_token", "demo-token-" + Date.now());
         localStorage.setItem("user_name", "AgriEdu User");
@@ -130,7 +151,6 @@ class HomePage {
       this.Model.setUserAuth(!!token);
 
       if (token) {
-        // Get user info from localStorage
         const userName = localStorage.getItem("user_name") || "User";
         this.Model.state.user.initial = userName.charAt(0).toUpperCase();
         console.log("User is authenticated:", userName);
@@ -142,21 +162,10 @@ class HomePage {
     }
   }
 
-  // Set up event listeners after rendering
   async afterRender() {
     try {
       console.log("HomePage afterRender called");
       this.Presenter.bindEvents();
-
-      // Add mobile menu toggle functionality
-      const menuToggle = document.getElementById("menuToggle");
-      const homeNav = document.querySelector(".home-nav");
-
-      if (menuToggle && homeNav) {
-        menuToggle.addEventListener("click", () => {
-          homeNav.classList.toggle("show");
-        });
-      }
     } catch (error) {
       console.error("Error in HomePage afterRender:", error);
     }
