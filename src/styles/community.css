@@ -1,0 +1,188 @@
+.container-form {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 30px 25px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  font-family: 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
+  border: 1px solid #e0e0e0;
+}
+
+.container-form h1 {
+  text-align: center;
+  margin-bottom: 10px!important;
+  color: #333;
+  font-weight: 700;
+}
+
+.container-form hr {
+  height: 2px;
+  margin-top: 0px;
+  margin-bottom: 15px;
+}
+
+input::placeholder,
+textarea::placeholder {
+  font-size: 0.8rem;
+  color: #999;
+}
+
+* {
+  font-family: 'Poppins', sans-serif;}
+
+
+.container-form form > div {
+  margin-bottom: 18px;
+}
+
+.container-form label {
+  display: block;
+  margin-bottom: 6px;;
+  color: #555;
+  font-size: 0.87rem!important;
+}
+
+.container-form input[type="text"],
+.container-form textarea,
+.container-form input[type="file"] {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.8px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+  resize: vertical;
+}
+
+.container-form input[type="text"]:focus,
+.container-form textarea:focus {
+  border-color: #242424;
+  outline: none;
+}
+
+.container-form textarea {
+  min-height: 120px;
+}
+
+.container-form button[type="submit"] {
+  width: 100%;
+  padding: 12px 0;
+  background-color: #a9e652;
+  border: none;
+  border-radius: 8px;
+  color: rgb(38, 38, 38);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.container-form button[type="submit"]:hover {
+  background-color: #89e00e;
+}
+
+#post-result {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #1f2937;
+  text-align: center;
+}
+
+.file-camera-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.file-camera-wrapper .input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.file-camera-wrapper .input-group input {
+  flex: 1;
+}
+
+.file-camera-wrapper label {
+  white-space: nowrap; 
+  margin-bottom: 0px;
+}
+
+#showCameraBtn {
+  background: #eeeeee;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding:10px 12px;
+  border-radius: 10px;
+
+}
+
+#cameraSection {
+  max-width: 100%; /* supaya gak melebihi container induk */
+  overflow: hidden; /* sembunyikan yang kelewat */
+  border: 1px solid #ccc; /* opsional, supaya kelihatan batasnya */
+  padding: 8px;
+  box-sizing: border-box;
+  background: #fafafa;
+  border-radius: 8px;
+}
+
+#cameraSection video,
+#cameraSection canvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 4px;
+  object-fit: contain;
+  margin-bottom: 8px;
+}
+
+#cameraSection select,
+#cameraSection button {
+  max-width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+}
+
+#capturePhoto,
+#stopCamera {
+  display: block;         /* supaya bisa diatur margin auto */
+  margin: 0 auto 8px auto; /* atas 0, kanan & kiri auto, bawah 8px */
+  width: 100%;           /* samakan dengan select, bisa disesuaikan */
+  text-align: center;     /* biar teks tombol juga di tengah */
+}
+
+#capturePhoto {
+  background-color: rgb(210, 210, 210);
+  color: rgb(39, 39, 39);
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+#retakePhoto {
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 5px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  text-align: center;
+  display: inline-block; 
+}
+
+#stopCamera {
+  background-color: rgb(246, 63, 63);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-left: 0px!important;
+}
+
+
+
