@@ -421,10 +421,36 @@ hr {
   visibility: visible;
 }
 
+.grid-container-home {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Hanya 2 kolom */
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.card-home {
+  background-color: #f7f7f7;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease;
+}
+
+.card-home:hover {
+  transform: translateY(-4px);
+}
+
 @media (max-width: 480px) {
   .home-navbar-content {
     grid-template-columns: auto 1fr auto;
     position: relative;
+  }
+
+    .grid-container-home {
+    grid-template-columns: 1fr; /* 1 kolom di layar kecil */
   }
 
   .home-nav {
@@ -526,6 +552,10 @@ hr {
   .home-navbar-content {
     grid-template-columns: auto 1fr auto;
     position: relative;
+  }
+
+    .grid-container-home {
+    grid-template-columns: 1fr; /* 1 kolom di layar kecil */
   }
 
   .home-nav {

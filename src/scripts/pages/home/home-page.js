@@ -57,9 +57,8 @@ class HomePage {
                 </div>
 
                 <hr>
-
-                <div class="grid-container">
-                  <div class="card">
+                <div class="grid-container-home">
+                  <div class="card-home">
                     <div class="icon">
                       <img src="logo/Learning-Main.png" alt="Pembelajaran" class="card-icon" />
                     </div>
@@ -70,7 +69,7 @@ class HomePage {
                     <button class="lihat-btn">Lihat</button>
                   </div>
 
-                  <div class="card">
+                  <div class="card-home">
                     <img src="logo/Diagnose-Main.png" alt="Diagnosa" class="card-icon" />
                     <div class="card-content">
                       <h3>Diagnosa Tanaman</h3>
@@ -79,7 +78,7 @@ class HomePage {
                     <button>Lihat</button>
                   </div>
 
-                  <div class="card">
+                  <div class="card-home">
                     <img src="logo/Comunity-Main.png" alt="Komunitas" class="card-icon" />
                     <div class="card-content">
                       <h3>Komunitas Tani</h3>
@@ -88,7 +87,7 @@ class HomePage {
                     <button>Lihat</button>
                   </div>
 
-                  <div class="card">
+                  <div class="card-home">
                     <img src="logo/Ai-Main.png" alt="ai" class="card-icon" />
                     <div class="card-content">
                       <h3>Asisten AI & ChatBot</h3>
