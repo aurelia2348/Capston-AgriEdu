@@ -3,22 +3,35 @@ import {
   renderArticles,
   getFilteredArticles,
 } from "./LearningPage-Presenter.js";
+import { NavigationBar } from "../../components/NavigationBar.js";
 
 export default class LearningPage {
   constructor() {}
 
   render() {
+    // Get user initial from localStorage
+    const userName = localStorage.getItem("user_name") || "User";
+    const userInitial = userName.charAt(0).toUpperCase();
+
+    const navbar = new NavigationBar({
+      currentPath: window.location.hash.slice(1),
+      userInitial: userInitial,
+      showProfile: true,
+    });
+
     return `
-      <div class="learning-container"> 
-        <h2>Galeri <span class="highlight">Bertani</span></h2> 
-        <div class="gallery"> 
-          <img src="/images/Galeri1.jpg" alt="gallery1" /> 
-          <img src="/images/Galeri2.jpg" alt="gallery2" /> 
-          <img src="/images/Galeri3.jpg" alt="gallery3" /> 
-          <img src="/images/Galeri4.jpg" alt="gallery4" /> 
+      <div class="learning-page-container">
+        ${navbar.render()}
+        <div class="learning-container">
+        <h2>Galeri <span class="highlight">Bertani</span></h2>
+        <div class="gallery">
+          <img src="/images/Galeri1.jpg" alt="gallery1" />
+          <img src="/images/Galeri2.jpg" alt="gallery2" />
+          <img src="/images/Galeri3.jpg" alt="gallery3" />
+          <img src="/images/Galeri4.jpg" alt="gallery4" />
           <img src="/images/Galeri5.jpg" alt="gallery5" />
           <img src="/images/Galeri6.jpg" alt="gallery6" />
-        </div> 
+        </div>
 
         <section class="learning-section">
           <h3>Mulai pembelajaran</h3>
@@ -73,10 +86,11 @@ export default class LearningPage {
             </div>
           </section>
         </section>
+        </div>
+        <footer class="home-footer">
+          <p>&copy; 2025 AgriEdu. All rights reserved.</p>
+        </footer>
       </div>
-      <footer class="home-footer">
-        <p>&copy; 2025 AgriEdu. All rights reserved.</p>
-      </footer>
     `;
   }
 
@@ -89,5 +103,23 @@ export default class LearningPage {
       const filtered = getFilteredArticles(value);
       renderArticles(container, filtered);
     });
+
+    // Set up navigation bar events
+    this.setupNavigationEvents();
+  }
+
+  setupNavigationEvents() {
+    // Set up navigation bar events using the NavigationBar component's centralized event handling
+    const userName = localStorage.getItem("user_name") || "User";
+    const userInitial = userName.charAt(0).toUpperCase();
+
+    const navbar = new NavigationBar({
+      currentPath: window.location.hash.slice(1),
+      userInitial: userInitial,
+      showProfile: true,
+    });
+
+    // Use the NavigationBar's built-in event binding
+    navbar.bindEvents();
   }
 }

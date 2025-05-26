@@ -1,4 +1,5 @@
-import ProfilePresenter from './profile-presenter';
+import ProfilePresenter from "./profile-presenter";
+import { NavigationBar } from "../../components/NavigationBar.js";
 
 export default class ProfilePage {
 async render(state) {
@@ -118,13 +119,16 @@ showProfile({ avatar, fullName, username, experience }) {
   document.getElementById('fullNameInput').value = fullName || '';
   document.getElementById('usernameInput').value = username || '';
 
-  if (experience) {
-    const radio = document.querySelector(`input[name="experience"][value="${experience}"]`);
-    if (radio) radio.checked = true;
-  }
+    if (experience) {
+      const radio = document.querySelector(
+        `input[name="experience"][value="${experience}"]`
+      );
+      if (radio) radio.checked = true;
+    }
 
-  if (avatar) {
-    document.getElementById('avatarPreview').src = avatar;
+    if (avatar) {
+      document.getElementById("avatarPreview").src = avatar;
+    }
   }
 
   document.getElementById('sidebarUsername').textContent = username || '';

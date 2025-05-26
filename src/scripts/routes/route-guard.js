@@ -8,6 +8,7 @@ class RouteGuard {
       "/chatbot",
       "/community",
       "/account",
+      "/profile",
       "/logout",
     ];
 

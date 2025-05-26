@@ -1,4 +1,5 @@
-import { HomePresenter } from "./homePage-presenter.js";
+import { HomePresenter } from "./home-page-presenter.js";
+import { NavigationBar } from "../../components/NavigationBar.js";
 
 class HomePage {
   constructor() {
@@ -23,31 +24,16 @@ class HomePage {
         return this.View.templates[state.view](state);
       },
       templates: {
-        home: (state) => `
+        home: (state) => {
+          const navbar = new NavigationBar({
+            currentPath: window.location.hash.slice(1),
+            userInitial: state.user.initial,
+            showProfile: true,
+          });
+
+          return `
           <div class="home-container">
-            <header class="home-navbar">
-              <div class="home-navbar-content">
-                <a href="#/home" class="home-logo">
-                  <img src="logo/Main-Logo-Black.png" alt="AgriEdu" style="height: 52px; width: auto;">
-                </a>
-                <div class="home-menu-toggle" id="menuToggle">
-                  <i class="fas fa-bars"></i>
-                </div>
-                <nav class="home-nav" id="nav-menu">
-                  <a href="#/home" class="nav-link">Home</a>
-                  <a href="#/learning" class="nav-link">Learning</a>
-                  <a href="#/community" class="nav-link">Community</a>
-                  <a href="#/diagnosis" class="nav-link">Diagnosis</a>
-                  <a href="#/chatbot" class="nav-link">AI Assistant</a>
-                </nav>
-                <div class="user-profile-container">
-                  <a href="#/logout" class="home-logout">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                  </a>
-                  <div class="home-profile-icon">${state.user.initial}</div>
-                </div>
-              </div>
-            </header>
+            ${navbar.render()}
 
             <main>
               <section class="hero">
@@ -118,7 +104,8 @@ class HomePage {
               <p>&copy; 2025 AgriEdu. All rights reserved.</p>
             </footer>
           </div>
-        `,
+        `;
+        },
       },
     };
 
@@ -166,6 +153,16 @@ class HomePage {
     try {
       console.log("HomePage afterRender called");
       this.Presenter.bindEvents();
+
+      // Set up navigation bar events using the NavigationBar component's centralized event handling
+      const navbar = new NavigationBar({
+        currentPath: window.location.hash.slice(1),
+        userInitial: this.Model.state.user.initial,
+        showProfile: true,
+      });
+
+      // Use the NavigationBar's built-in event binding
+      navbar.bindEvents();
     } catch (error) {
       console.error("Error in HomePage afterRender:", error);
     }

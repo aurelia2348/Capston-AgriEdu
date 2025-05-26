@@ -6,9 +6,9 @@
   padding: 2rem;
   border: 1px solid #ccc;
   border-radius: 10px;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   background-color: #fff;
-  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
   text-align: start;
   gap: 40px;
 }
@@ -50,7 +50,6 @@ main {
   margin-top: 0.5rem;
 }
 
-
 .profile-title {
   font-size: 20px;
   font-weight: bold;
@@ -72,7 +71,6 @@ main {
 .profile-avatar-wrapper {
   margin-top: 20px;
 }
-
 
 .profile-avatar {
   display: flex;
@@ -140,7 +138,7 @@ main {
 }
 
 .experience-options input[type="radio"] {
-  accent-color: #A9E652;
+  accent-color: #a9e652;
 }
 
 .edit-profile-btn {
@@ -156,12 +154,11 @@ main {
 }
 
 .profile-footer {
-  background-color: #A9E652!important;
-  color: #282828; 
+  background-color: #a9e652 !important;
+  color: #282828;
   padding: 1rem;
   text-align: center;
 }
-
 
 .edit-profile-btn:hover {
   background-color: #6cb117;
@@ -185,7 +182,6 @@ main {
   padding-bottom: 10px;
 }
 
-
 #editAvatarBtn:hover {
   background-color: #cfcfcf;
 }
@@ -197,9 +193,9 @@ main {
 }
 
 #saveProfileBtn {
-  width: 100%; 
+  width: 100%;
   padding: 0.75rem 1rem;
-  background-color: #A9E652;
+  background-color: #a9e652;
   color: rgb(40, 40, 40);
   border: none;
   border-radius: 8px;
@@ -208,19 +204,18 @@ main {
   box-sizing: border-box;
 }
 
-
 .container-profile label {
-  font-size: 0.9rem; 
+  font-size: 0.9rem;
 }
 
 .profile-experience {
-  margin-top: 0.8rem; 
+  margin-top: 0.8rem;
 }
 
 .avatar-note {
-  font-size: 0.75rem; 
-  color: #666; 
-  margin-top: 3px; 
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 3px;
   max-width: 60%;
 }
 
@@ -235,10 +230,9 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 7rem!important;
+  padding-top: 7rem !important;
   height: 100%;
 }
-
 
 .sidebar-avatar img.avatar {
   width: 100px;
@@ -260,7 +254,6 @@ main {
   font-size: 0.9rem;
   margin-bottom: 1rem;
 }
-
 
 .sidebar-button {
   margin-top: 10px;
@@ -339,9 +332,8 @@ main {
   }
 }
 
-
 /* ========== TABLET (768px – 1023px) ========== */
-@media (min-width: 768px){
+@media (min-width: 768px) {
   .profile-container {
     flex-direction: row;
     align-items: flex-start;
@@ -414,7 +406,7 @@ main {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding-top: 1rem!important;
+    padding-top: 1rem !important;
   }
 
   .sidebar-avatar {
@@ -451,11 +443,3 @@ main {
     max-width: 100%;
   }
 }
-
-
-
-
-
-
-
-
