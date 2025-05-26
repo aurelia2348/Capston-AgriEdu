@@ -35,6 +35,17 @@ async render(state) {
         </div>
       </header>
 
+      <section class="community-banner">
+  <div class="banner-content">
+    <img src="logo/Comunity-Main.png" alt="Community Icon" class="banner-icon" />
+    <div class="banner-text">
+      <h2>Selamat datang di Komunitas AgriEdu!</h2>
+      <p>Komunitas untuk saling berbagi solusi dan pengalaman bercocok tanam. Mulai berbagi pengalaman Anda.</p>
+    </div>
+  </div>
+</section>
+
+
       <div class="profile-container">
         <aside class="profile-sidebar">
           <div class="sidebar-avatar">

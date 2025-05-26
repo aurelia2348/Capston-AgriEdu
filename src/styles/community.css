@@ -186,9 +186,12 @@ textarea::placeholder {
 
 .profile-sidebar {
   width: 100%; 
-  background-color: #f5f5f5; /* opsional */
+  background-color: #ffffff;
   padding: 20px;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1); /* shadow ke kanan */
+  z-index: 1;
 }
+
 
 .sidebar-avatar {
   display: flex;
@@ -204,6 +207,37 @@ textarea::placeholder {
   border-radius: 50%; /* agar bulat */
   object-fit: cover;
   margin-bottom: 10px;
+}
+
+
+.community-banner {
+  padding: 2rem 7rem;
+  max-width: 100%!important;
+  background: #f5f5f5;
+  border: 1px solid #bdbdbd;
+}
+
+
+.banner-content {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.banner-icon {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.banner-text {
+  color: rgb(32, 32, 32);
+  max-width: 50%;
+}
+
+.banner-text h2 {
+  margin: 0 0
 }
 
 
