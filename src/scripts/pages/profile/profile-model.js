@@ -15,28 +15,39 @@ const ProfileModel = {
     };
   },
 
-  async updateUsername(newUsername) {
-    const userData = authService.getUserData();
+async updateUsername(newUsername) {
+  const userData = authService.getUserData();
 
-    if (!userData) {
-      throw new Error('User belum login');
-    }
+  if (!userData) {
+    throw new Error('User belum login');
+  }
 
-    if (newUsername === userData.username) {
-      // Username tidak berubah, skip update API
-      return;
-    }
+  if (newUsername === userData.username) {
+    // Username tidak berubah, skip update API
+    return;
+  }
 
-    // Panggil API PUT /api/account untuk update username
-    const updatedUser = await updateData('/api/account', {
-      username: newUsername,
-      email: userData.email,  // asumsi harus dikirim juga
-    });
+  // Panggil API PUT /api/account untuk update username
+  const updatedUser = await updateData('/api/account', {
+    username: newUsername,
+    email: userData.email,  // asumsi masih wajib dikirim
+  });
 
-    // Update user data di local storage authService
-    const newUserData = { ...userData, username: updatedUser.username };
-    authService.saveAuthData({ user: newUserData });
-  },
+  // Ambil token dan refreshToken yang sudah ada
+  const token = authService.getToken();
+  const refreshToken = authService.getRefreshToken();
+
+  // Simpan kembali data lengkap agar tidak hilang
+  authService.saveAuthData({
+    token,
+    refreshToken,
+    user: {
+      ...userData,
+      username: updatedUser.username,
+    },
+  });
+},
+
 
   async saveSetupData({ name, experience }) {
     // Ambil data setup lama dulu, jika ada
