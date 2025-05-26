@@ -162,6 +162,7 @@
   align-content: center;
   justify-items: left;
   gap: 20px;
+  margin-bottom: 5rem;
 }
 
 .hero-content {
@@ -185,8 +186,7 @@
 }
 
 .hero .green {
-  font-weight: bold;
-  color: #64b100;
+  color: #a9e652
 }
 
 .hero-buttons {
@@ -199,16 +199,16 @@
 .hero button {
   padding: 10px 20px;
   font-size: 1rem;
-  font-weight: bold;
   border: none;
   border-radius: 30px;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-weight: normal;
 }
 
 .hero-buttons button.green {
-  background-color: #64b100;
-  color: #fff;
+  background-color: #a9e652;
+  color: #1f1f1f;
 }
 
 .hero-buttons button.green:hover {
@@ -219,7 +219,7 @@
 .hero-buttons button.white {
   background-color: #fff;
   color: #080808;
-  border: 2px solid #64b100;
+
 }
 
 .hero-buttons button.white:hover {
@@ -229,11 +229,11 @@
 
 .main-activities {
   border: 1px solid #ccc;
-  border-radius: 36px;
+  border-radius: 20px;
   padding: 2rem;
   background-color: #fff;
   margin: 2rem auto;
-  max-width: 1200px;
+  max-width: 1300px;
 }
 
 .section-header {
@@ -252,7 +252,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #64b100;
+  background-color: #a9e652;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -303,7 +303,7 @@ hr {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background-color: #e6f4d7;
+  background-color: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -349,7 +349,7 @@ hr {
 }
 
 .home-footer {
-  background-color: #64b100;
+  background-color: #a9e652;
   color: #000000;
   text-align: center;
   padding: 15px;
@@ -375,7 +375,7 @@ hr {
 }
 
 .home-menu-toggle.active {
-  color: #548f00;
+  color: #a9e652;
   background-color: rgba(100, 177, 0, 0.15);
 }
 
@@ -443,11 +443,33 @@ hr {
   transform: translateY(-4px);
 }
 
+
+.card-home button {
+  padding: 8px 40px;
+  font-size: 0.8rem;
+  background-color: #1e1e1e; /* hitam */
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  margin-top: 1rem;
+  cursor: pointer;
+  align-self: flex-end; /* tombol tidak full lebar, hanya selebar konten */
+  transition: background-color 0.2s ease;
+}
+
+.card-home button:hover {
+  background-color: #333333; /* lebih terang sedikit saat hover */
+}
+
 @media (max-width: 480px) {
   .home-navbar-content {
     grid-template-columns: auto 1fr auto;
     position: relative;
   }
+
+  .hero-content {
+  margin: auto;
+}
 
     .grid-container-home {
     grid-template-columns: 1fr; /* 1 kolom di layar kecil */
@@ -493,6 +515,12 @@ hr {
     gap: 0.75rem;
   }
 
+    .grid-container-home {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 0px;
+  }
+
   .card {
     min-height: 160px;
     padding: 14px;
@@ -510,11 +538,6 @@ hr {
   }
 
   .card p {
-    font-size: 0.8rem;
-  }
-
-  .card button {
-    padding: 6px 12px;
     font-size: 0.8rem;
   }
 
@@ -546,6 +569,11 @@ hr {
     order: 1;
     margin: 0 auto;
   }
+
+    .card-home button {
+    width: 100%;        /* tombol selebar card */
+    align-self: center; }
+
 }
 
 @media (max-width: 768px) {
@@ -553,10 +581,13 @@ hr {
     grid-template-columns: auto 1fr auto;
     position: relative;
   }
-
     .grid-container-home {
     grid-template-columns: 1fr; /* 1 kolom di layar kecil */
   }
+
+  .hero-content {
+  margin:auto;
+}
 
   .home-nav {
     display: none;

@@ -40,29 +40,37 @@ export class HomePresenter {
       });
     }
 
-    const cardButtons = mainContent.querySelectorAll(".card button");
+    // Perbaikan di sini: .card-home bukan .card
+    const cardButtons = mainContent.querySelectorAll(".card-home button");
     cardButtons.forEach((button) => {
-      const card = button.closest(".card");
+      const card = button.closest(".card-home");
       if (!card) return;
 
       button.addEventListener("click", () => {
-        if (card.id === "learnCard") {
-          console.log("Navigating to learning page from card");
-          window.location.hash = "#/learning";
-        } else if (card.id === "diagnosisCard") {
-          console.log("Navigating to diagnosis page from card");
-          window.location.hash = "#/diagnosis";
-        } else if (card.id === "communityCard") {
-          console.log("Navigating to community page from card");
-          window.location.hash = "#/community";
-        } else if (card.id === "aiCard") {
-          console.log("Navigating to chatbot page from card");
-          window.location.hash = "#/chatbot";
+        const cardId = card.getAttribute("id");
+        switch (cardId) {
+          case "learnCard":
+            console.log("Navigating to learning page from card");
+            window.location.hash = "#/learning";
+            break;
+          case "diagnosisCard":
+            console.log("Navigating to diagnosis page from card");
+            window.location.hash = "#/diagnosis";
+            break;
+          case "communityCard":
+            console.log("Navigating to community page from card");
+            window.location.hash = "#/community";
+            break;
+          case "aiCard":
+            console.log("Navigating to chatbot page from card");
+            window.location.hash = "#/chatbot";
+            break;
         }
       });
     });
 
-    const cards = mainContent.querySelectorAll(".card");
+    // Tambahkan fitur klik di seluruh kartu jika bukan tombol
+    const cards = mainContent.querySelectorAll(".card-home");
     cards.forEach((card) => {
       const button = card.querySelector("button");
       if (button) {
