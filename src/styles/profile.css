@@ -235,8 +235,8 @@ main {
 }
 
 .sidebar-avatar img.avatar {
-  width: 100px;
-  height: 100px;
+  width: 150px!important;
+  height: 150px!important;
   border-radius: 50%;
   object-fit: cover;
   align-items: center;
@@ -275,6 +275,7 @@ main {
   .profile-sidebar {
     width: 100%;
     max-height: 100%;
+    max-width: 300px!important;
     flex-direction: row;
     justify-content: center; /* ganti dari flex-start */
     border-right: none;
@@ -332,6 +333,26 @@ main {
   }
 }
 
+@media (max-width: 768px) {
+
+  .profile-sidebar {
+    width: 100%;
+    max-width: none!important;
+  }
+    main{
+    width: 100%!important;
+    max-width: none!important;
+  }
+    .profile-sidebar {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-top: 2rem !important;
+    width: 100%!important;
+    max-width: none!important;
+  }
+}
+
 /* ========== TABLET (768px – 1023px) ========== */
 @media (min-width: 768px) {
   .profile-container {
@@ -339,8 +360,13 @@ main {
     align-items: flex-start;
   }
 
+  main{
+    width: 100%!important;
+    max-width: none!important;
+  }
+
   .profile-sidebar {
-    width: 250px;
+    width: 100%;
     flex-direction: column;
     justify-content: flex-start;
     border-right: 1px solid #ccc;
@@ -406,7 +432,9 @@ main {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding-top: 1rem !important;
+    padding-top: 2rem !important;
+    width: 100%!important;
+    max-width: none!important;
   }
 
   .sidebar-avatar {

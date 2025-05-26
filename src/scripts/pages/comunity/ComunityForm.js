@@ -1,3 +1,7 @@
+import authService from "../../data/auth-service";
+import CONFIG from "../../config";
+import { openDB } from 'idb';
+
 export default class CommunityForm {
   constructor() {
     this.presenter = null; 
@@ -90,10 +94,49 @@ async render(state) {
 }
 
 
-  async afterRender() {
-    this.setupForm();
-    this.setupCamera();
+async afterRender() {
+  this.setupForm();
+  this.setupCamera();
+
+  await this.loadUserInfo(); 
+}
+
+async loadUserInfo() {
+  try {
+    // Ambil username dari API
+    const token = authService.getToken();
+    const response = await fetch(`${CONFIG.BASE_URL}/api/auth/user`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+    const username = data?.data?.username || 'Pengguna';
+
+    document.getElementById('sidebarUsername').textContent = username;
+  } catch (err) {
+    console.error("Gagal ambil username:", err);
+    document.getElementById('sidebarUsername').textContent = "Gagal ambil username";
   }
+
+try {
+  const db = await openDB('agriEduDB', 1);  // harus sama dengan yang di indexeddb.js
+  const tx = db.transaction('setupData', 'readonly');
+  const store = tx.objectStore('setupData');
+  const allSetupData = await store.getAll(); // ambil semua data
+  const setupData = allSetupData[0]; // ambil data pertama (jika ada)
+  const experienceLevel = setupData?.experience || 'Belum diatur';
+
+  document.getElementById('sidebarExperience').textContent = experienceLevel;
+} catch (err) {
+  console.error("Gagal ambil experience dari IndexedDB:", err);
+  document.getElementById('sidebarExperience').textContent = "Gagal ambil experience";
+}
+
+}
+
+
 
   setupForm() {
     const form = document.getElementById('create-post-form');
