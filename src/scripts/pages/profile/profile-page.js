@@ -2,32 +2,20 @@ import ProfilePresenter from "./profile-presenter";
 import { NavigationBar } from "../../components/NavigationBar.js";
 
 export default class ProfilePage {
-  async render(state) {
+  async render() {
+    // Get user initial from localStorage
+    const userName = localStorage.getItem("user_name") || "User";
+    const userInitial = userName.charAt(0).toUpperCase();
+
+    const navbar = new NavigationBar({
+      currentPath: window.location.hash.slice(1),
+      userInitial: userInitial,
+      showProfile: true,
+    });
+
     return `
-      <div class="home-container">
-        <header class="home-navbar">
-          <div class="home-navbar-content">
-            <a href="#/home" class="home-logo">
-              <img src="logo/Main-Logo-Black.png" alt="AgriEdu" style="height: 52px; width: auto;">
-            </a>
-            <div class="home-menu-toggle" id="menuToggle">
-              <i class="fas fa-bars"></i>
-            </div>
-            <nav class="home-nav">
-              <a href="#/home" class="nav-link">Home</a>
-              <a href="#/learning" class="nav-link">Learning</a>
-              <a href="#/community" class="nav-link">Community</a>
-              <a href="#/diagnosis" class="nav-link">Diagnosis</a>
-              <a href="#/chatbot" class="nav-link">AI Assistant</a>
-            </nav>
-            <div class="user-profile-container">
-              <a href="#/logout" class="home-logout">
-                <i class="fas fa-sign-out-alt"></i> Logout
-              </a>
-              <div class="home-profile-icon">${state?.user?.initial ?? 'U'}</div>
-            </div>
-          </div>
-        </header>
+      <div class="profile-page-container">
+        ${navbar.render()}
 
         <div class="profile-container">
           <aside class="profile-sidebar">
@@ -91,32 +79,64 @@ export default class ProfilePage {
   }
 
   async afterRender() {
-    const editBtn = document.getElementById('editAvatarBtn');
-    const avatarInput = document.getElementById('avatarInput');
-    const avatarPreview = document.getElementById('avatarPreview');
+    // Set up navigation bar events
+    this.setupNavigationEvents();
 
-    editBtn.addEventListener('click', () => {
-      avatarInput.click();
-    });
+    // Set up avatar upload functionality
+    const editBtn = document.getElementById("editAvatarBtn");
+    const avatarInput = document.getElementById("avatarInput");
+    const avatarPreview = document.getElementById("avatarPreview");
 
-    avatarInput.addEventListener('change', () => {
-      const file = avatarInput.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          avatarPreview.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    });
+    if (editBtn && avatarInput && avatarPreview) {
+      editBtn.addEventListener("click", () => {
+        avatarInput.click();
+      });
 
+      avatarInput.addEventListener("change", () => {
+        const file = avatarInput.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            avatarPreview.src = e.target.result;
+            // Also update sidebar avatar
+            const sidebarAvatar = document.getElementById("sidebarAvatar");
+            if (sidebarAvatar) {
+              sidebarAvatar.src = e.target.result;
+            }
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    // Initialize ProfilePresenter
     ProfilePresenter.init(this);
   }
 
-  showProfile({ avatar, fullName, username, experience }) {
-    document.getElementById('fullNameInput').value = fullName || '';
-    document.getElementById('usernameInput').value = username || '';
+  setupNavigationEvents() {
+    // Set up navigation bar events using the NavigationBar component's centralized event handling
+    const userName = localStorage.getItem("user_name") || "User";
+    const userInitial = userName.charAt(0).toUpperCase();
 
+    const navbar = new NavigationBar({
+      currentPath: window.location.hash.slice(1),
+      userInitial: userInitial,
+      showProfile: true,
+    });
+
+    // Use the NavigationBar's built-in event binding
+    navbar.bindEvents();
+  }
+
+  showProfile({ avatar, fullName, username, experience }) {
+    // Update main profile form
+    const fullNameInput = document.getElementById("fullNameInput");
+    const usernameInput = document.getElementById("usernameInput");
+
+    if (fullNameInput) fullNameInput.value = fullName || "";
+    if (usernameInput) usernameInput.value = username || "";
+
+    // Update experience radio buttons
     if (experience) {
       const radio = document.querySelector(
         `input[name="experience"][value="${experience}"]`
@@ -124,13 +144,22 @@ export default class ProfilePage {
       if (radio) radio.checked = true;
     }
 
+    // Update avatar images
     if (avatar) {
-      document.getElementById("avatarPreview").src = avatar;
-      document.getElementById('sidebarAvatar').src = avatar;
+      const avatarPreview = document.getElementById("avatarPreview");
+      if (avatarPreview) avatarPreview.src = avatar;
+
+      const sidebarAvatar = document.getElementById("sidebarAvatar");
+      if (sidebarAvatar) sidebarAvatar.src = avatar;
     }
 
-    document.getElementById('sidebarUsername').textContent = username || '';
-    document.getElementById('sidebarExperience').textContent = experience || '';
+    // Update sidebar information
+    const sidebarUsername = document.getElementById("sidebarUsername");
+    const sidebarExperience = document.getElementById("sidebarExperience");
+
+    if (sidebarUsername)
+      sidebarUsername.textContent = username || "Username User";
+    if (sidebarExperience)
+      sidebarExperience.textContent = experience || "Experience Level";
   }
 }
-
