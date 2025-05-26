@@ -8,7 +8,7 @@ const createHeaders = (includeAuth = false) => {
 
   if (includeAuth) {
     const token = authService.getToken();
-    console.log('Token untuk Authorization:', token);  // <== tambahkan ini
+    console.log("Token untuk Authorization:", token);
     if (token) {
       headers.append("Authorization", `Bearer ${token}`);
     }
@@ -16,7 +16,6 @@ const createHeaders = (includeAuth = false) => {
 
   return headers;
 };
-
 
 export async function apiRequest(url, options = {}) {
   try {

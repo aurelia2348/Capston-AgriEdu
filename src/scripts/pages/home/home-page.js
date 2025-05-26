@@ -154,14 +154,12 @@ class HomePage {
       console.log("HomePage afterRender called");
       this.Presenter.bindEvents();
 
-      // Set up navigation bar events using the NavigationBar component's centralized event handling
       const navbar = new NavigationBar({
         currentPath: window.location.hash.slice(1),
         userInitial: this.Model.state.user.initial,
         showProfile: true,
       });
 
-      // Use the NavigationBar's built-in event binding
       navbar.bindEvents();
     } catch (error) {
       console.error("Error in HomePage afterRender:", error);

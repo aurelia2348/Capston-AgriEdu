@@ -2,7 +2,6 @@ import { NavigationBar } from "../../components/NavigationBar.js";
 
 export default class ChatbotPage {
   async render() {
-    // Get user initial from localStorage
     const userName = localStorage.getItem("user_name") || "User";
     const userInitial = userName.charAt(0).toUpperCase();
 
@@ -23,12 +22,10 @@ export default class ChatbotPage {
   }
 
   async afterRender() {
-    // Set up navigation bar events
     this.setupNavigationEvents();
   }
 
   setupNavigationEvents() {
-    // Set up navigation bar events using the NavigationBar component's centralized event handling
     const userName = localStorage.getItem("user_name") || "User";
     const userInitial = userName.charAt(0).toUpperCase();
 
@@ -38,7 +35,6 @@ export default class ChatbotPage {
       showProfile: true,
     });
 
-    // Use the NavigationBar's built-in event binding
     navbar.bindEvents();
   }
 }

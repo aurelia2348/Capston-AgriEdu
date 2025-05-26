@@ -24,7 +24,6 @@ export class HomePresenter {
     const mainContent = document.querySelector("#main-content");
     if (!mainContent) return;
 
-    // Hero section button events
     const learnBtn = mainContent.querySelector("#learnBtn");
     if (learnBtn) {
       learnBtn.addEventListener("click", () => {
@@ -41,7 +40,6 @@ export class HomePresenter {
       });
     }
 
-    // Card button events
     const cardButtons = mainContent.querySelectorAll(".card button");
     cardButtons.forEach((button) => {
       const card = button.closest(".card");
@@ -64,7 +62,6 @@ export class HomePresenter {
       });
     });
 
-    // Card click events for better UX
     const cards = mainContent.querySelectorAll(".card");
     cards.forEach((card) => {
       const button = card.querySelector("button");
@@ -86,14 +83,12 @@ export class HomePresenter {
       }
     });
 
-    // Set up active navigation tracking
     this._setActiveNav = this._setActiveNav.bind(this);
     this._setActiveNav();
     window.addEventListener("hashchange", this._setActiveNav);
   }
 
   _setActiveNav() {
-    // Support both old and new navigation classes for compatibility
     const navLinks = document.querySelectorAll(".app-nav a, .home-nav a");
     const currentHash = window.location.hash;
 
