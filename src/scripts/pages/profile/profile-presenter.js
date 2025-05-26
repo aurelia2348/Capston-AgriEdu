@@ -1,8 +1,15 @@
 import ProfileModel from './profile-model';
+import authService from '../../data/auth-service';
 
 const ProfilePresenter = {
-  async init(view) {
+async init(view) {
     this.view = view;
+
+    try {
+      await authService.getCurrentUser();
+    } catch (error) {
+      console.warn('Gagal update user data dari API:', error);
+    }
     const profile = await ProfileModel.getUserProfile();
     view.showProfile(profile);
 

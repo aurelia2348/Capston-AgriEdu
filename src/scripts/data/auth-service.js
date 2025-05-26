@@ -9,20 +9,8 @@ import { postData, getData } from "./api.js";
 class AuthService {
   async register(userData) {
     try {
-      console.log("Mock register:", userData);
-
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      const mockResponse = {
-        user: {
-          id: "mock-user-id-" + Date.now(),
-          username: userData.username,
-          email: userData.email,
-          createdAt: new Date().toISOString(),
-        },
-      };
-
-      return mockResponse;
+      const response = await postData(CONFIG.API_ENDPOINTS.AUTH.REGISTER, userData);
+      return response;
     } catch (error) {
       console.error("Registration error:", error);
       throw error;
@@ -30,69 +18,56 @@ class AuthService {
   }
 
   async login(credentials) {
-  try {
-    console.log("Mock login:", credentials);
+    try {
+      // Kirim data login ke backend
+      const response = await postData(CONFIG.API_ENDPOINTS.AUTH.LOGIN, credentials);
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Simpan token dan user data ke localStorage
+      this.saveAuthData(response);
 
-    // Misal login pakai email dan password, dan kita simulasikan username sesuai email
-    const usernameFromEmail = credentials.email.split('@')[0];
-
-    const mockResponse = {
-      user: {
-        id: "mock-user-id-123",
-        username: usernameFromEmail, 
-        email: credentials.email,
-      },
-      token: "mock-token-" + Date.now(),
-    };
-
-    this.saveAuthData(mockResponse);
-
-    return mockResponse;
-  } catch (error) {
-    console.error("Login error:", error);
-    throw error;
+      return response;
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error;
+    }
   }
-}
-
 
   async logout() {
     try {
-      console.log("Mock logout");
-
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Kirim request logout ke backend (pakai token)
+      await postData(CONFIG.API_ENDPOINTS.AUTH.LOGOUT, {}, true);
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
+      // Bersihkan data lokal apapun yang terjadi
       this.clearAuthData();
     }
   }
 
-  async getCurrentUser() {
-    try {
-      console.log("Mock getCurrentUser");
+async getCurrentUser() {
+  try {
+    const token = this.getToken();
 
-      const token = this.getToken();
-
-      if (!token) {
-        throw new Error("No authentication token found");
-      }
-
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      const userData = this.getUserData();
-
-      if (!userData) {
-        throw new Error("User data not found");
-      }
-
-      return userData;
-    } catch (error) {
-      console.error("Get current user error:", error);
-      throw error;
+    if (!token) {
+      throw new Error("No authentication token found");
     }
+
+    // Ambil data user dari backend
+    const response = await getData(CONFIG.API_ENDPOINTS.AUTH.GET_USER, true);
+
+    // Kalau response langsung user object
+    if (response && response.id) {
+      setToStorage(CONFIG.STORAGE_KEYS.USER_DATA, response);
+      return response;
+    }
+
+    throw new Error("Invalid response from server");
+  } catch (error) {
+    console.error("Get current user error:", error);
+    throw error;
   }
+}
+
 
   saveAuthData(data) {
     if (data.token) {

@@ -1,8 +1,8 @@
-export default class CommunityPage {
+export default class ComunityPage {
   async render() {
     return `
       <section class="container">
-        <h1>Community</h1>
+        <h1>Chatbot</h1>
       </section>
     `;
   }
@@ -10,3 +10,4 @@ export default class CommunityPage {
   async afterRender() {
   }
 }
+

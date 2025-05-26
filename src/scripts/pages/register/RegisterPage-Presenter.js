@@ -4,7 +4,6 @@ export default class RegisterPresenter {
   init(form) {
     if (!form) return;
 
-    // Add a general error message element
     const generalErrorEl = document.createElement("small");
     generalErrorEl.classList.add("error");
     generalErrorEl.setAttribute("id", "generalError");
