@@ -1,29 +1,4 @@
-body {
-  font-family: "Poppins", sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f7f7f7;
-}
-
-.learning-container {
-  padding: 24px;
-  max-width: 1200px;
-  margin: auto;
-}
-
-.learning-container h2 {
-  font-size: 28px;
-  margin-bottom: 16px;
-  text-align: center;
-  color: #333;
-}
-
-.highlight {
-  color: #2b9348;
-}
-
-/* Carousel Gallery Styles */
-.carousel-container {
+.gallery-carousel {
   position: relative;
   display: flex;
   align-items: center;
@@ -32,59 +7,56 @@ body {
   padding: 20px 0;
 }
 
-.carousel-wrapper {
+.gallery-carousel-track-wrapper {
   width: 100%;
   max-width: 800px;
   overflow: hidden;
   position: relative;
 }
 
-.carousel-track {
+.gallery-carousel-track {
   display: flex;
   transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   will-change: transform;
 }
 
-.carousel-item {
+.gallery-slide {
   flex: 0 0 150px;
   margin: 0 5px;
-  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: all 0.5s ease;
   transform: scale(0.8);
   opacity: 0.6;
   filter: brightness(0.7);
 }
 
-.carousel-item img {
+.gallery-slide img {
   width: 100%;
   height: 150px;
   border-radius: 10px;
   object-fit: cover;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: all 0.5s ease;
 }
 
-/* Center item highlighting */
-.carousel-item.active {
+.gallery-slide.active {
   transform: scale(1.1);
   opacity: 1;
   filter: brightness(1);
   z-index: 2;
 }
 
-.carousel-item.active img {
+.gallery-slide.active img {
   box-shadow: 0 8px 20px rgba(43, 147, 72, 0.3);
   border: 2px solid #2b9348;
 }
 
-/* Side items dimming */
-.carousel-item.dimmed {
+.gallery-slide.dimmed {
   transform: scale(0.85);
   opacity: 0.7;
   filter: brightness(0.8);
 }
 
-/* Navigation buttons */
-.carousel-nav {
+.gallery-carousel-nav {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -103,225 +75,74 @@ body {
   font-size: 16px;
 }
 
-.carousel-nav:hover {
+.gallery-carousel-nav:hover {
   background-color: #2b9348;
   transform: translateY(-50%) scale(1.1);
   box-shadow: 0 4px 12px rgba(43, 147, 72, 0.4);
 }
 
-.carousel-nav-left {
+.gallery-carousel-left {
   left: 10px;
 }
 
-.carousel-nav-right {
+.gallery-carousel-right {
   right: 10px;
 }
 
-/* MAIN CONTENT = LEFT + RIGHT (FILTER) */
-.main-content {
-  display: grid;
-  grid-template-columns: 1fr 280px; /* kiri fleksibel, kanan fixed */
-  gap: 24px;
-  margin-bottom: 40px;
-}
-
-/* Container kiri (search + artikel + video) */
-.left-content {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  max-width: 100%;
-}
-
-/* Search bar styling */
-.search-wrapper {
-  margin-bottom: 12px;
-  position: relative;
-}
-
-#search {
-  padding: 10px 14px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  width: 100%;
-  font-size: 16px;
-}
-
-.search-wrapper .search-icon {
-  position: absolute;
-  right: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #888;
-  pointer-events: none;
-}
-
-/* Article list vertical stack */
-.article-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-width: 100%;
-}
-
-.article-item {
-  background-color: #fff;
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease;
-  cursor: pointer;
-}
-
-.article-item:hover {
-  transform: translateY(-3px);
-}
-
-.article-item h4 {
-  font-size: 16px;
-  margin-bottom: 8px;
-  color: #333;
-}
-
-/* Filter sidebar kanan */
-.filter-box {
-  background-color: #fff;
-  padding: 16px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  height: fit-content;
-  position: sticky;
-  top: 24px;
-}
-
-.filter-box h4 {
-  margin-bottom: 16px;
-  font-size: 18px;
-  color: #2b9348;
-}
-
-.filter-box strong {
-  display: block;
-  margin-top: 12px;
-  margin-bottom: 6px;
-}
-
-.filter-box label {
-  display: block;
-  margin-bottom: 6px;
-  cursor: pointer;
-}
-
-.filter-box hr {
-  margin: 16px 0;
-}
-
-.filter-box p {
-  color: #2b9348;
-  cursor: pointer;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-}
-
-.filter-box p i {
-  margin-right: 8px;
-}
-
-/* Recent section video dan link - DI BAWAH SEMUA */
-.recent-section {
-  margin-top: 40px;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  max-width: 100%;
-}
-
-.recent-section h3 {
-  color: #2b9348;
-  margin-bottom: 16px;
-}
-
-.recent-section a {
-  color: #2b9348;
-  font-weight: bold;
-  text-decoration: none;
-}
-
-.home-footer {
-  background-color: #64b100;
-  color: #fff;
-  text-align: center;
-  padding: 15px;
-  font-size: 14px;
-}
-
-/* RESPONSIVE */
+/* Responsive */
 @media (max-width: 768px) {
-  .main-content {
-    grid-template-columns: 1fr;
-  }
-
-  .filter-box {
-    position: static;
-    top: auto;
-    margin-top: 24px;
-  }
-
-  /* Carousel responsive adjustments */
-  .carousel-container {
+  .gallery-carousel {
     margin: 15px 0;
     padding: 15px 0;
   }
 
-  .carousel-wrapper {
+  .gallery-carousel-track-wrapper {
     max-width: 90%;
   }
 
-  .carousel-item {
+  .gallery-slide {
     flex: 0 0 120px;
     margin: 0 3px;
   }
 
-  .carousel-item img {
+  .gallery-slide img {
     height: 120px;
   }
 
-  .carousel-item.active {
+  .gallery-slide.active {
     transform: scale(1.05);
   }
 
-  .carousel-item.dimmed {
+  .gallery-slide.dimmed {
     transform: scale(0.9);
   }
 
-  .carousel-nav {
+  .gallery-carousel-nav {
     width: 35px;
     height: 35px;
     font-size: 14px;
   }
 
-  .carousel-nav-left {
+  .gallery-carousel-left {
     left: 5px;
   }
 
-  .carousel-nav-right {
+  .gallery-carousel-right {
     right: 5px;
   }
 }
 
 @media (max-width: 480px) {
-  .carousel-item {
+  .gallery-slide {
     flex: 0 0 100px;
     margin: 0 2px;
   }
 
-  .carousel-item img {
+  .gallery-slide img {
     height: 100px;
   }
 
-  .carousel-nav {
+  .gallery-carousel-nav {
     width: 30px;
     height: 30px;
     font-size: 12px;
