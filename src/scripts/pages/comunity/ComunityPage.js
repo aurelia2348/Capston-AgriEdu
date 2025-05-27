@@ -43,8 +43,6 @@ export default class CommunityPage {
           </aside>
 
           <main class="community-content" data-aos="fade-left" data-aos-duration="1000">
-            <h1>Community</h1>
-            <p>Ini tempat main content</p>
           <main class="community-content">
             <div class="community-header">
               <h1>Diskusi Komunitas</h1>
@@ -611,7 +609,6 @@ export default class CommunityPage {
         }
       }
 
-      // Create modal for post detail
       const modal = document.createElement("div");
       modal.className = "post-detail-modal";
       modal.innerHTML = `
@@ -678,8 +675,6 @@ export default class CommunityPage {
       console.log("Deleting post:", postId);
 
       await CommunityModel.deletePost(postId);
-
-      // Refresh the posts list
       await this.loadPosts();
 
       alert("Diskusi berhasil dihapus!");

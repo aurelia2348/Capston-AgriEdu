@@ -1,0 +1,458 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.chatbot-fullscreen-container {
+  height: 100vh;
+  width: 100vw;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.chatbot-welcome,
+.chatbot-desc {
+  text-align: center;
+  margin: 0 auto;
+  padding: 5px 10px;
+  line-height: 1.4;
+  word-wrap: break-word;
+  width: 100%;
+}
+
+.chatbot-welcome {
+  font-size: 1.1rem;
+}
+
+.chatbot-desc {
+  font-size: 0.9rem;
+}
+
+/* Tablet */
+@media (min-width: 600px) {
+  .chatbot-welcome {
+    font-size: 1.3rem;
+  }
+
+  .chatbot-desc {
+    font-size: 1rem;
+  }
+}
+
+/* Laptop */
+@media (min-width: 1024px) {
+  .chatbot-welcome {
+    font-size: 1.5rem;
+  }
+
+  .chatbot-desc {
+    font-size: 1.1rem;
+  }
+}
+
+
+.chatbot-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+/* Tulisan welcome di paling atas */
+.chatbot-welcome {
+  margin: 0 0 15px 0;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: #333;
+}
+
+.chat-container {
+  flex: 1;
+  border-radius: 8px;
+  background-color: transparent; /* jangan pakai none, pakai transparent */
+  padding: 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 1000px;
+
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%; /* supaya responsive */
+}
+
+
+/* Chat bubble styling */
+.chat-message {
+  max-width: 70%;
+  padding: 10px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+  line-height: 1.4;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  word-wrap: break-word;
+}
+
+.user-message {
+  background-color: #2a2a2a;
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+}
+
+.bot-message {
+  background-color: #e0e0e0;
+  color: #333;
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+
+.input-container {
+  position: sticky;
+  bottom: 0;
+  background-color: white; /* supaya background putih menutupi chat */
+  padding: 10px 0 0 0;
+  display: flex;
+  gap: 10px;
+  border-top: 1px solid #ddd;
+}
+
+.input-container {
+  display: flex;
+  gap: 10px;
+
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  padding: 20px 0;
+}
+
+
+#chat-input {
+  flex: 1;
+  padding: 12px 15px;
+  border-radius: 25px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  max-width: 1000px;
+}
+
+#chat-input:focus {
+  border-color: #2a2a2a;
+}
+
+/* Tombol kirim */
+#send-btn {
+  padding: 12px 25px;
+  background-color: #2a2a2a;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#send-btn:hover {
+  background-color: #2a2a2a;
+}
+
+.typing {
+  display: flex;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0 auto 20px auto;
+  color: #333;
+  white-space: nowrap;
+  margin-top: 20px;
+  margin-bottom: 5px;
+}
+
+.typing .text {
+  overflow: hidden;
+  border-right: none;
+  letter-spacing: 1px;
+  animation: typing 4s steps(43, end) forwards;
+}
+
+.typing-desc {
+  display: flex;
+  justify-content: center;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.typing-desc .text {
+  overflow: hidden;
+  border-right: none;
+  letter-spacing: 1px;
+  animation: typing-desc 3s steps(56, end) forwards; 
+}
+
+.typing .text,
+.typing-desc .text {
+  display: inline-block;
+  white-space: normal;  /* <--- penting! supaya teks bisa pindah baris */
+  word-break: break-word;
+  width: 100%;
+}
+
+
+
+@keyframes typing-desc {
+  from {
+    width: 0;
+  }
+  to {
+    width: 56ch; 
+  }
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes hide-cursor {
+  to {
+    opacity: 0;
+  }
+}
+
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 43ch;
+  }
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes hide-cursor {
+  to {
+    opacity: 0;
+  }
+}
+
+/* Responsive untuk Mobile (max-width: 600px) */
+@media (max-width: 600px) {
+  .chatbot-wrapper {
+    padding: 10px;
+  }
+
+  .chatbot-welcome {
+    font-size: 1.1rem;
+  }
+
+  .chat-container {
+    max-width: 100%;
+    padding: 8px;
+  }
+
+  .chat-message {
+    max-width: 90%; /* Lebih lebar untuk mobile */
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+
+  #chat-input {
+    font-size: 13px;
+    padding: 10px 12px;
+    max-width: 100%;
+  }
+
+  #send-btn {
+    padding: 10px 18px;
+    font-size: 13px;
+  }
+
+  .input-container {
+    padding: 15px 0;
+    gap: 8px;
+  }
+
+  .typing {
+    font-size: 20px;
+    margin-top: 15px;
+  }
+
+  .typing-desc {
+    font-size: 0.85rem;
+  }
+}
+
+/* Responsive untuk Tablet (min-width: 601px) and (max-width: 1024px) */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .chatbot-wrapper {
+    padding: 15px 20px;
+  }
+
+  .chatbot-welcome {
+    font-size: 1.2rem;
+  }
+
+  .chat-container {
+    max-width: 90%;
+    padding: 10px;
+  }
+
+  .chat-message {
+    max-width: 75%;
+    font-size: 14px;
+    padding: 10px 14px;
+  }
+
+  #chat-input {
+    font-size: 14px;
+    padding: 12px 15px;
+    max-width: 100%;
+  }
+
+  #send-btn {
+    padding: 12px 22px;
+    font-size: 14px;
+  }
+
+  .input-container {
+    padding: 20px 0;
+    gap: 10px;
+  }
+
+  .typing {
+    font-size: 22px;
+  }
+
+  .typing-desc {
+    font-size: 0.9rem;
+  }
+}
+
+/* Responsive untuk Laptop Besar & Desktop (min-width: 1025px) sampai 1440px */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .chatbot-wrapper {
+    padding: 20px 30px;
+  }
+
+  .chatbot-welcome {
+    font-size: 1.3rem;
+  }
+
+  .chat-container {
+    max-width: 900px;
+    padding: 12px 15px;
+  }
+
+  .chat-message {
+    max-width: 70%;
+    font-size: 14px;
+    padding: 12px 15px;
+  }
+
+  #chat-input {
+    max-width: 900px;
+    font-size: 14px;
+    padding: 12px 15px;
+  }
+
+  #send-btn {
+    padding: 12px 25px;
+    font-size: 14px;
+  }
+
+  .input-container {
+    padding: 20px 0;
+    gap: 12px;
+  }
+
+  .typing {
+    font-size: 24px;
+  }
+
+  .typing-desc {
+    font-size: 0.9rem;
+  }
+}
+
+/* Khusus untuk layar sangat kecil di bawah 550px */
+@media (max-width: 549px) {
+  .chatbot-wrapper {
+    padding: 8px 10px;
+  }
+
+  .chatbot-welcome {
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+
+  .chat-container {
+    max-width: 100%;
+    padding: 5px 8px;
+    gap: 8px;
+  }
+
+  .chat-message {
+    max-width: 95% !important; /* Supaya bubble benar-benar lebar di layar kecil */
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+
+  #chat-input {
+    font-size: 13px;
+    padding: 10px 12px;
+    max-width: 100% !important;
+    border-radius: 20px;
+  }
+
+  #send-btn {
+    padding: 10px 16px;
+    font-size: 13px;
+    border-radius: 20px;
+  }
+
+  .input-container {
+    padding: 15px 5px 10px 5px;
+    gap: 6px;
+  }
+
+  .typing {
+    font-size: 18px;
+    margin-top: 15px;
+  }
+
+  .typing-desc {
+    font-size: 0.8rem;
+  }
+}
+
+
+
+
