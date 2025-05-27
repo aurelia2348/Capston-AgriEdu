@@ -22,7 +22,7 @@ export default class CommunityPage {
         ${navbar.render()}
 
         <section class="community-banner">
-          <div class="banner-content">
+          <div class="banner-content" data-aos="fade-up" data-aos-duration="1000">
             <img src="logo/Comunity-Main.png" alt="Community Icon" class="banner-icon" />
             <div class="banner-text">
               <h2>Selamat datang di Komunitas AgriEdu!</h2>
@@ -33,7 +33,7 @@ export default class CommunityPage {
         </section>
 
         <div class="profile-container">
-          <aside class="profile-sidebar">
+          <aside class="profile-sidebar" data-aos="fade-right" data-aos-duration="1000">
             <div class="sidebar-avatar">
               <img src="images/avatar.jpg" alt="Avatar" class="avatar" id="sidebarAvatar"/>
               <p id="sidebarUsername">Username User</p>
@@ -42,6 +42,9 @@ export default class CommunityPage {
             </div>
           </aside>
 
+          <main class="community-content" data-aos="fade-left" data-aos-duration="1000">
+            <h1>Community</h1>
+            <p>Ini tempat main content</p>
           <main class="community-content">
             <div class="community-header">
               <h1>Diskusi Komunitas</h1>
@@ -62,6 +65,13 @@ export default class CommunityPage {
     window.communityPage = this;
 
     this.setupNavigationEvents();
+
+    // Inisialisasi AOS setelah elemen dirender
+    if (typeof AOS !== "undefined") {
+      AOS.init({
+        once: true, // animasi hanya terjadi sekali
+      });
+    }
     this.setupCreatePostButtons();
     await this.loadUserInfo();
     await this.loadPosts();

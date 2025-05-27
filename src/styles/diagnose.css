@@ -1,0 +1,312 @@
+.diagnose-hero-carousel {
+  width: 100%!important;
+  max-width: 100%a!important;
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: #ffffff;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff;
+}
+
+
+
+
+.carousel-container {
+  width: 100%!important;
+  height: 100%!important;
+  position: relative;
+  overflow: hidden;
+  margin:20px auto;
+   border-radius: 20px;
+}
+
+.carousel-slide {
+  display: flex;
+  width: 600%;
+  height: 100%;
+  transition: transform 0.8s ease-in-out;
+}
+
+.carousel-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+
+
+.diagnose-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.highlight-green {
+  color: #a9e652;
+}
+
+.diagnose-desc {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+.diagnose-button {
+  background-color: #a9e652;
+  color: rgb(24, 24, 24);
+  padding: 10px 30px;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.diagnose-button:hover {
+  background-color: #86cd23;
+}
+
+.carousel-container {
+  position: relative;
+  width: 100%!important;
+  height: 100%!important;
+}
+
+.carousel-caption {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.564); /* bisa disesuaikan tingkat transparansinya */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 2;
+  animation: fadeText 1.5s ease-in-out;
+  padding: 0 20px; /* biar nggak mepet di pinggir */
+}
+.carousel-caption h2 {
+  font-size: 2rem; 
+  margin-bottom: 0.5rem;
+}
+
+.carousel-caption p {
+  font-size: 1rem; /* Deskripsi agak besar */
+  max-width: 50%;
+}
+
+.diagnose-feature {
+  margin-bottom: 0px;
+  padding: 20px 40px;
+  max-width: 100%;
+  text-align: center;
+}
+
+.feature-intro h2 {
+  font-size: 2rem;
+  color: #222222;
+  margin-bottom: 10px;
+}
+
+.floating-button-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.fab {
+  background-color: #000;
+  color: #fff;
+  font-size: 32px;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.fab:hover {
+  transform: rotate(90deg);
+}
+
+.fab-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-bottom: 10px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Tambahkan shadow */
+}
+
+
+.icon-scan {
+  width: 1.2rem;
+  height: 1.2rem;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+
+.fab-menu-item {
+  background-color: #111;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 16px;
+  margin: 5px 0;
+  font-size: 14px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.fab-description {
+  color: black;
+  padding: 15px;
+  border-radius: 12px;
+  font-size: 14px;
+  max-width: 220px;
+}
+
+.hidden {
+  display: none;
+}
+
+
+
+.feature-intro p {
+  font-size: 16px;
+  color: #444;
+  margin-bottom: 40px;
+  max-width: 1000px; /* misal maksimal 600px */
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center; /* optional, biar teksnya rata tengah */
+}
+
+
+
+.feature-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+}
+
+.step {
+  flex: 1 1 200px;
+  max-width: 240px;
+  background-color: #edf1e8;
+  border-radius: 10px; 
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+
+.step img {
+  width: 30%;
+  height: 4rem;
+  margin-bottom: 5px;
+  object-fit: contain;
+  border-radius: 50px;
+}
+
+.white-container {
+  width: 100%;
+  background-color: #ffffff;
+  padding: 3rem;
+  border-radius: 0.6rem;
+  border: 1px solid #ddd; /* garis tipis abu-abu */
+}
+
+
+
+.step h3 {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.step p {
+  font-size: 14px;
+  color: #666;
+}
+
+.diagnose-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;  
+  justify-content: center; 
+  text-align: center;  
+  padding: 0 20px; 
+  padding-bottom: 60px; 
+
+}
+
+
+@media (max-width: 600px) {
+  .diagnose-title {
+    font-size: 1.6rem;
+  }
+
+  .diagnose-desc {
+    font-size: 0.95rem;
+  }
+
+  .diagnose-button {
+    width: 100%;
+  }
+
+  .feature-intro h2 {
+  font-size: 1.5rem;
+}
+
+  .feature-intro p {
+  font-size: 0.9rem;
+}
+}
+
+
+
+@media (max-width: 600px) {
+  .feature-steps {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .step {
+    max-width: 100%;
+  }
+
+  .carousel-caption h2 {
+    font-size: 1.3rem;
+  }
+
+  .carousel-caption p {
+    font-size: 0.9rem;
+    max-width: 90%;
+  }
+
+  .diagnose-desc {
+    font-size: 0.9rem;
+  }
+}
+

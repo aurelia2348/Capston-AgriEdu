@@ -9,6 +9,9 @@ import CommunityPagePresenter from "../pages/comunity/ComunityPage-Presenter.js"
 import Register from "../pages/register/RegisterPage.js";
 import SetupPageStart from "../pages/setup/SetupPage-Start.js";
 import ProfilePage from "../pages/profile/profile-page.js";
+import CommunityForm from "../pages/comunity/ComunityForm.js";
+import DiagnosePage from "../pages/diagnose/DiagnosePage.js";
+import DiagnoseForm from "../pages/diagnose/DiagnoseForm.js";
 
 const getRoutes = (mainContent) => {
   return {
@@ -22,7 +25,9 @@ const getRoutes = (mainContent) => {
     "/register": new Register(),
     "/setup": new SetupPageStart(),
     "/profile": new ProfilePage(),
-    "/form": new CommunityPagePresenter(mainContent),
+    "/form": new CommunityForm(),
+    "/diagnosis": new DiagnosePage(),
+    "/diagnosisForm": new DiagnoseForm(),
 
     "/": {
       render: () => {

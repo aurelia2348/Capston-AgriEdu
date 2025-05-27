@@ -57,12 +57,9 @@ class HomePage {
                 </div>
 
                 <hr>
-
-                <div class="grid-container">
-                  <div class="card">
-                    <div class="icon">
+                <div class="grid-container-home">
+                  <div class="card-home" id="learnCard">
                       <img src="logo/Learning-Main.png" alt="Pembelajaran" class="card-icon" />
-                    </div>
                     <div class="card-content">
                       <h3>Pembelajaran Interaktif</h3>
                       <p>Tersedia materi bertahap sesuai kategori Anda untuk memahami dunia pertanian dengan cara yang praktis dan menyenangkan.</p>
@@ -70,7 +67,7 @@ class HomePage {
                     <button class="lihat-btn">Lihat</button>
                   </div>
 
-                  <div class="card">
+                  <div class="card-home" id="diagnosisCard">
                     <img src="logo/Diagnose-Main.png" alt="Diagnosa" class="card-icon" />
                     <div class="card-content">
                       <h3>Diagnosa Tanaman</h3>
@@ -79,8 +76,8 @@ class HomePage {
                     <button>Lihat</button>
                   </div>
 
-                  <div class="card">
-                    <img src="logo/Comunity-Main.png" alt="Komunitas" class="card-icon" />
+                  <div class="card-home" id="communityCard">
+                    <img src="logo/comunityhome.png" alt="Komunitas" class="card-icon" />
                     <div class="card-content">
                       <h3>Komunitas Tani</h3>
                       <p>Forum untuk bertanya, memberi saran, dan saling dukung antar petani, pelajar, maupun pegiat pertanian.</p>
@@ -88,8 +85,8 @@ class HomePage {
                     <button>Lihat</button>
                   </div>
 
-                  <div class="card">
-                    <img src="logo/Ai-Main.png" alt="ai" class="card-icon" />
+                  <div class="card-home" id="aiCard">
+                    <img src="logo/Ai.png" alt="ai" class="card-icon" />
                     <div class="card-content">
                       <h3>Asisten AI & ChatBot</h3>
                       <p>Chatbot cerdas yang siap bantu menjawab pertanyaan tentang tanaman, pembelajaran, dan fitur aplikasi.</p>
