@@ -43,10 +43,8 @@ class CommunityPagePresenter {
   }
 
   async _handleSubmit(event) {
-    console.log(
-      "CommunityPagePresenter: _handleSubmit called with event:",
-      event
-    );
+    console.log("CommunityPagePresenter: submit-post event received");
+
     try {
       const formData = event.detail;
       console.log("CommunityPagePresenter: FormData received:", formData);
@@ -68,9 +66,10 @@ class CommunityPagePresenter {
 
       this.formComponent?.resetForm?.();
 
+      // Langsung pindah ke halaman community dan refresh posts
       setTimeout(() => {
         window.location.hash = "#/community";
-      }, 2000);
+      }, 1000);
     } catch (error) {
       console.error("Error creating post:", error);
 
