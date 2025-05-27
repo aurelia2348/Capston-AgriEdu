@@ -1,22 +1,24 @@
-/* Navigation Component Styles */
-/* Reusable navigation bar component for AgriEdu application */
-
 .app-navbar {
   background: #fff;
-  padding: 15px 30px;
-   border-bottom: 1px solid rgb(211, 211, 211)!important;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgb(211, 211, 211) !important;
 }
+
 
 .app-navbar-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 1200px;
+  max-width: 100%; 
   margin: 0 auto;
-  padding: 0 20px;
-  gap: 60px;
+  padding: 0 10px; 
+  gap: 30px;
   position: relative;
+  flex-wrap: wrap; 
+  box-sizing: border-box;
 }
+
+
 
 .app-logo {
   font-size: 22px;

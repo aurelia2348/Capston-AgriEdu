@@ -1,4 +1,5 @@
 import { NavigationBar } from "../../components/NavigationBar.js";
+import ChatbotPresenter from "./ChatBotPage-Presenter.js";
 
 export default class ChatbotPage {
   async render() {
@@ -11,18 +12,36 @@ export default class ChatbotPage {
       showProfile: true,
     });
 
-    return `
-      <div class="chatbot-page-container">
-        ${navbar.render()}
-        <section class="container">
-          <h1>Chatbot</h1>
-        </section>
+return `
+  <div class="chatbot-fullscreen-container">
+    ${navbar.render()}
+    <section class="chatbot-wrapper">
+      <h1 class="chatbot-welcome typing">
+  <span class="text">Hai, selamat datang di ChatBot AgriEdu!</span><span class="cursor"></span>
+</h1>
+<p class="chatbot-desc typing-desc">
+  <span class="text">Tanyakan apa saja pada ChatBot AgriEdu perihal tanamanmu</span><span class="cursor"></span>
+</p>
+<hr/>
+
+      <div id="chat-container" class="chat-container"></div>
+      <div class="input-container">
+        <input type="text" id="chat-input" placeholder="Ketik pesan..." autocomplete="off" />
+        <button id="send-btn">Kirim</button>
       </div>
-    `;
+    </section>
+  </div>
+`;
   }
 
   async afterRender() {
     this.setupNavigationEvents();
+
+    const chatContainer = document.getElementById('chat-container');
+    const chatInput = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-btn');
+
+    this.chatbot = new ChatbotPresenter(chatContainer, chatInput, sendBtn);
   }
 
   setupNavigationEvents() {
@@ -38,3 +57,4 @@ export default class ChatbotPage {
     navbar.bindEvents();
   }
 }
+
