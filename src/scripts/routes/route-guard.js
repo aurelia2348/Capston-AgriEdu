@@ -7,6 +7,7 @@ class RouteGuard {
       "/learning",
       "/chatbot",
       "/community",
+      "/form",
       "/account",
       "/profile",
       "/logout",
