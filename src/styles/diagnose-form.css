@@ -1,0 +1,71 @@
+.typing-animation {
+  display: flex;
+  justify-content: center !important;
+  align-items: center;
+  text-align: center;
+  min-height: 70vh;
+  font-size: 2rem;
+  font-weight: 600;
+  padding: 0 1rem;
+  transition: opacity 0.5s ease;
+  flex-wrap: wrap;
+  word-break: break-word;
+}
+
+.form-preview-wrapper {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+#diagnosis-form {
+  flex: 1 1 300px;
+}
+
+.preview-result-box {
+  flex: 1 1 300px;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+.analysis-placeholder {
+  padding: 1rem;
+  background-color: #eee;
+  border-radius: 8px;
+  font-style: italic;
+  color: #555;
+  margin-top: 1rem;
+}
+
+
+/* Untuk tablet (≤ 768px) */
+@media (max-width: 768px) {
+  .typing-animation {
+    font-size: 1.5rem;
+    min-height: 60vh;
+  }
+}
+
+/* Untuk hp kecil (≤ 480px) */
+@media (max-width: 480px) {
+  .typing-animation {
+    font-size: 1.2rem;
+    min-height: 50vh;
+  }
+}
+
+
+.hidden-form {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.show-form {
+  display: block;
+  opacity: 1;
+}
+
