@@ -43,7 +43,6 @@ export default class CommunityPage {
           </aside>
 
           <main class="community-content" data-aos="fade-left" data-aos-duration="1000">
-          <main class="community-content">
             <div class="community-header">
               <h1>Diskusi Komunitas</h1>
               <button class="create-post-btn" id="createPostBtnMain">+ Buat Diskusi Baru</button>
@@ -339,11 +338,6 @@ export default class CommunityPage {
                 post.id
               }')">
                 <i class="fas fa-comment"></i> Komentar
-              </button>
-              <button class="action-btn view-btn" onclick="event.stopPropagation(); window.communityPage.showPostDetail('${
-                post.id
-              }')">
-                <i class="fas fa-eye"></i> Lihat Detail
               </button>
               ${
                 isOwner
