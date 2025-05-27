@@ -16,10 +16,10 @@ const CONFIG = {
       DELETE: "/api/posts/",
     },
     COMMENTS: {
-      GET_ALL: "/api/posts/",
-      CREATE: "/api/posts/",
-      UPDATE: "/api/posts/",
-      DELETE: "/api/posts/",
+      GET_ALL: "/api/posts/{postId}/comments",
+      CREATE: "/api/posts/{postId}/comments",
+      UPDATE: "/api/posts/{postId}/comments/{commentId}",
+      DELETE: "/api/posts/{postId}/comments/{commentId}",
     },
     ACCOUNT: {
       GET: "/api/account",
