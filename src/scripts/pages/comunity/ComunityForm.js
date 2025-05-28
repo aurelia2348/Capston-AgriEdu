@@ -1,6 +1,7 @@
 import authService from "../../data/auth-service";
 import CONFIG from "../../config";
 import { openDB } from "idb";
+import { NavigationBar } from "../../components/NavigationBar.js";
 
 export default class CommunityForm {
   constructor() {
@@ -9,42 +10,28 @@ export default class CommunityForm {
   }
 
   async render(state) {
+    const userName = localStorage.getItem("user_name") || "User";
+    const userInitial = userName.charAt(0).toUpperCase();
+
+    const navbar = new NavigationBar({
+      currentPath: window.location.hash.slice(1),
+      userInitial: userInitial,
+      showProfile: true,
+    });
+
     return `
     <div class="home-container">
-      <header class="home-navbar">
-        <div class="home-navbar-content">
-          <a href="#/home" class="home-logo">
-            <img src="logo/Main-Logo-Black.png" alt="AgriEdu" style="height: 52px; width: auto;">
-          </a>
-          <div class="home-menu-toggle" id="menuToggle">
-            <i class="fas fa-bars"></i>
-          </div>
-          <nav class="home-nav">
-            <a href="#/home" class="nav-link">Home</a>
-            <a href="#/learning" class="nav-link">Learning</a>
-            <a href="#/community" class="nav-link">Community</a>
-            <a href="#/diagnosis" class="nav-link">Diagnosis</a>
-            <a href="#/chatbot" class="nav-link">AI Assistant</a>
-          </nav>
-          <div class="user-profile-container">
-            <a href="#/logout" class="home-logout">
-              <i class="fas fa-sign-out-alt"></i> Logout
-            </a>
-            <div class="home-profile-icon">${state?.user?.initial ?? "U"}</div>
-          </div>
-        </div>
-      </header>
+      ${navbar.render()}
 
       <section class="community-banner">
-  <div class="banner-content">
-    <img src="logo/Comunity-Main.png" alt="Community Icon" class="banner-icon" />
-    <div class="banner-text">
-      <h2>Selamat datang di Komunitas AgriEdu!</h2>
-      <p>Komunitas untuk saling berbagi solusi dan pengalaman bercocok tanam. Mulai berbagi pengalaman Anda.</p>
-    </div>
-  </div>
-</section>
-
+        <div class="banner-content">
+          <img src="logo/Comunity-Main.png" alt="Community Icon" class="banner-icon" />
+          <div class="banner-text">
+            <h2>Selamat datang di Komunitas AgriEdu!</h2>
+            <p>Komunitas untuk saling berbagi solusi dan pengalaman bercocok tanam. Mulai berbagi pengalaman Anda.</p>
+          </div>
+        </div>
+      </section>
 
       <div class="profile-container">
         <aside class="profile-sidebar">
@@ -107,8 +94,22 @@ export default class CommunityForm {
   async afterRender() {
     this.setupForm();
     this.setupCamera();
+    this.setupNavigationEvents();
 
     await this.loadUserInfo();
+  }
+
+  setupNavigationEvents() {
+    const userName = localStorage.getItem("user_name") || "User";
+    const userInitial = userName.charAt(0).toUpperCase();
+
+    const navbar = new NavigationBar({
+      currentPath: window.location.hash.slice(1),
+      userInitial: userInitial,
+      showProfile: true,
+    });
+
+    navbar.bindEvents();
   }
 
   async loadUserInfo() {

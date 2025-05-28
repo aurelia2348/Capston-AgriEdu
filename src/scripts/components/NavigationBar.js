@@ -36,10 +36,24 @@ export class NavigationBar {
             `
               )
               .join("")}
+            ${this.showProfile ? this.renderMobileProfileSection() : ""}
           </nav>
           ${this.showProfile ? this.renderProfileSection() : ""}
         </div>
       </header>
+    `;
+  }
+
+  renderMobileProfileSection() {
+    return `
+      <div class="user-profile-container mobile-only">
+        <a href="#/profile" class="app-profile-link">
+          <i class="fas fa-user"></i> Profile
+        </a>
+        <a href="#/logout" class="app-logout">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
     `;
   }
 
@@ -92,7 +106,7 @@ export class NavigationBar {
       });
 
       window.addEventListener("resize", () => {
-        if (window.innerWidth > 768) {
+        if (window.innerWidth > 1155) {
           this.closeMobileMenu();
         }
       });
