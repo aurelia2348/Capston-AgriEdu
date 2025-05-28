@@ -4,21 +4,18 @@
   border-bottom: 1px solid rgb(211, 211, 211) !important;
 }
 
-
 .app-navbar-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 100%; 
+  max-width: 100%;
   margin: 0 auto;
-  padding: 0 10px; 
-  gap: 30px;
+  padding: 0 10px;
+  gap: 10px;
   position: relative;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
   box-sizing: border-box;
 }
-
-
 
 .app-logo {
   font-size: 22px;
@@ -47,7 +44,7 @@
   grid-auto-flow: column;
   justify-content: center;
   align-items: center;
-  gap: 50px;
+  gap: 25px;
   margin: 0 auto;
   text-align: center;
 }
@@ -110,7 +107,7 @@
 .user-profile-container {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   margin-left: auto;
   position: relative;
   justify-self: end;
@@ -155,7 +152,7 @@
   transition: all 0.3s ease;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   border: 2px solid #fff;
-  margin-left: 40px;
+  margin-left: 5px;
 }
 
 .app-profile-icon:hover {

@@ -126,12 +126,17 @@ class HomePage {
 
   checkAuthStatus() {
     try {
-      if (!localStorage.getItem("auth_token")) {
-        localStorage.setItem("auth_token", "demo-token-" + Date.now());
+      // Use the same token key as auth service for consistency
+      const authToken = localStorage.getItem("agriedu_auth_token");
+      const fallbackToken = localStorage.getItem("auth_token");
+
+      // If no proper auth token exists, create a demo token
+      if (!authToken && !fallbackToken) {
+        localStorage.setItem("agriedu_auth_token", "demo-token-" + Date.now());
         localStorage.setItem("user_name", "AgriEdu User");
       }
 
-      const token = localStorage.getItem("auth_token");
+      const token = authToken || fallbackToken;
       this.Model.setUserAuth(!!token);
 
       if (token) {
@@ -158,6 +163,25 @@ class HomePage {
       });
 
       navbar.bindEvents();
+
+      // Show welcome notification if user just completed setup
+      const hashParts = window.location.hash.split("?");
+      if (hashParts.length > 1) {
+        const urlParams = new URLSearchParams(hashParts[1]);
+        if (urlParams.get("welcome") === "true") {
+          const userName = localStorage.getItem("user_name") || "User";
+          Swal.fire({
+            icon: "success",
+            title: `Selamat datang, ${userName}!`,
+            text: "Setup berhasil diselesaikan! Selamat menjelajahi fitur-fitur AgriEdu.",
+            showConfirmButton: false,
+            timer: 4000,
+          });
+
+          // Remove the welcome parameter from URL
+          window.history.replaceState(null, null, "#/home");
+        }
+      }
     } catch (error) {
       console.error("Error in HomePage afterRender:", error);
     }

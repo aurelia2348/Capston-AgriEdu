@@ -390,7 +390,13 @@ export default class CommunityForm {
         stopBtn.style.display = "inline-block";
         isCaptured = false;
       } catch (err) {
-        alert("Gagal mengakses kamera: " + err.message);
+        Swal.fire({
+          icon: "error",
+          title: "Gagal mengakses kamera",
+          text: err.message,
+          showConfirmButton: false,
+          timer: 3000,
+        });
       }
     };
 

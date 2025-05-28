@@ -84,7 +84,19 @@ export default class LoginPresenter {
       try {
         const response = await authService.login(loginData);
 
-        window.location.hash = "#/setup";
+        // Show welcome notification after successful login
+        Swal.fire({
+          icon: "success",
+          title: "Selamat datang!",
+          text: "Login berhasil! Selamat datang kembali di AgriEdu.",
+          showConfirmButton: false,
+          timer: 3000,
+        });
+
+        // Small delay to show the notification before redirect
+        setTimeout(() => {
+          window.location.hash = "#/setup";
+        }, 1000);
       } catch (error) {
         this._generalError.textContent =
           error.message ||

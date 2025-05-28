@@ -186,7 +186,18 @@ export default class CommunityPage {
   }
 
   async deletePost(postId) {
-    if (!confirm("Apakah Anda yakin ingin menghapus diskusi ini?")) {
+    const result = await Swal.fire({
+      title: "Hapus Diskusi",
+      text: "Apakah Anda yakin ingin menghapus diskusi ini?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Ya, Hapus",
+      cancelButtonText: "Batal",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+    });
+
+    if (!result.isConfirmed) {
       return;
     }
 
@@ -194,10 +205,22 @@ export default class CommunityPage {
       await CommunityModel.deletePost(postId);
       // Reload posts after successful deletion
       await this.loadPosts();
-      alert("Diskusi berhasil dihapus!");
+      Swal.fire({
+        icon: "success",
+        title: "Berhasil",
+        text: "Diskusi berhasil dihapus!",
+        showConfirmButton: false,
+        timer: 3000,
+      });
     } catch (error) {
       console.error("Error deleting post:", error);
-      alert(`Gagal menghapus diskusi: ${error.message}`);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal menghapus diskusi",
+        text: error.message,
+        showConfirmButton: false,
+        timer: 3000,
+      });
     }
   }
 
@@ -432,7 +455,13 @@ export default class CommunityPage {
       document.body.appendChild(modal);
     } catch (error) {
       console.error("Error showing comments:", error);
-      alert(`Gagal memuat komentar: ${error.message}`);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal memuat komentar",
+        text: error.message,
+        showConfirmButton: false,
+        timer: 3000,
+      });
     }
   }
 
@@ -508,7 +537,13 @@ export default class CommunityPage {
       const content = textarea.value.trim();
 
       if (!content) {
-        alert("Silakan tulis komentar terlebih dahulu.");
+        Swal.fire({
+          icon: "warning",
+          title: "Komentar kosong",
+          text: "Silakan tulis komentar terlebih dahulu.",
+          showConfirmButton: false,
+          timer: 3000,
+        });
         return;
       }
 
@@ -529,15 +564,38 @@ export default class CommunityPage {
         commentsList.innerHTML = this.renderComments(comments, postId);
       }
 
-      alert("Komentar berhasil ditambahkan!");
+      Swal.fire({
+        icon: "success",
+        title: "Berhasil",
+        text: "Komentar berhasil ditambahkan!",
+        showConfirmButton: false,
+        timer: 3000,
+      });
     } catch (error) {
       console.error("Error adding comment:", error);
-      alert(`Gagal menambah komentar: ${error.message}`);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal menambah komentar",
+        text: error.message,
+        showConfirmButton: false,
+        timer: 3000,
+      });
     }
   }
 
   async deleteComment(postId, commentId) {
-    if (!confirm("Apakah Anda yakin ingin menghapus komentar ini?")) {
+    const result = await Swal.fire({
+      title: "Hapus Komentar",
+      text: "Apakah Anda yakin ingin menghapus komentar ini?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Ya, Hapus",
+      cancelButtonText: "Batal",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+    });
+
+    if (!result.isConfirmed) {
       return;
     }
 
@@ -555,10 +613,22 @@ export default class CommunityPage {
         commentsList.innerHTML = this.renderComments(comments, postId);
       }
 
-      alert("Komentar berhasil dihapus!");
+      Swal.fire({
+        icon: "success",
+        title: "Berhasil",
+        text: "Komentar berhasil dihapus!",
+        showConfirmButton: false,
+        timer: 3000,
+      });
     } catch (error) {
       console.error("Error deleting comment:", error);
-      alert(`Gagal menghapus komentar: ${error.message}`);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal menghapus komentar",
+        text: error.message,
+        showConfirmButton: false,
+        timer: 3000,
+      });
     }
   }
 
@@ -652,29 +722,13 @@ export default class CommunityPage {
       document.body.appendChild(modal);
     } catch (error) {
       console.error("Error showing post detail:", error);
-      alert(`Gagal memuat detail diskusi: ${error.message}`);
-    }
-  }
-
-  async deletePost(postId) {
-    if (
-      !confirm(
-        "Apakah Anda yakin ingin menghapus diskusi ini? Tindakan ini tidak dapat dibatalkan."
-      )
-    ) {
-      return;
-    }
-
-    try {
-      console.log("Deleting post:", postId);
-
-      await CommunityModel.deletePost(postId);
-      await this.loadPosts();
-
-      alert("Diskusi berhasil dihapus!");
-    } catch (error) {
-      console.error("Error deleting post:", error);
-      alert(`Gagal menghapus diskusi: ${error.message}`);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal memuat detail diskusi",
+        text: error.message,
+        showConfirmButton: false,
+        timer: 3000,
+      });
     }
   }
 

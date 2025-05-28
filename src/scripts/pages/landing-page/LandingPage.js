@@ -266,7 +266,13 @@ export class LandingPage {
 
   performSearch(query) {
     if (!query) {
-      alert("Please enter a search term");
+      Swal.fire({
+        icon: "warning",
+        title: "Pencarian kosong",
+        text: "Please enter a search term",
+        showConfirmButton: false,
+        timer: 3000,
+      });
       return;
     }
 
@@ -311,9 +317,13 @@ export class LandingPage {
     }
 
     if (!foundResults) {
-      alert(
-        `No results found for "${query}". Try searching for terms like "learning", "community", "diagnosis", or "AI".`
-      );
+      Swal.fire({
+        icon: "info",
+        title: "Tidak ada hasil",
+        text: `No results found for "${query}". Try searching for terms like "learning", "community", "diagnosis", or "AI".`,
+        showConfirmButton: false,
+        timer: 4000,
+      });
     }
   }
 

@@ -100,9 +100,13 @@ export default class RegisterPresenter {
 
           await authService.register(registrationData);
 
-          alert(
-            "Registration successful! Please log in with your new account."
-          );
+          Swal.fire({
+            icon: "success",
+            title: "Registrasi berhasil",
+            text: "Registration successful! Please log in with your new account.",
+            showConfirmButton: false,
+            timer: 3000,
+          });
           window.location.hash = "#/login";
         } catch (error) {
           setError(
