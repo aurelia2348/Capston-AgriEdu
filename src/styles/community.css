@@ -1,4 +1,4 @@
-/* Form Diskusi - Desktop Layout */
+
 .container-form {
   max-width: 1300px;
   width: 100%;
@@ -191,9 +191,11 @@ textarea::placeholder {
   display: flex;
   gap: 2rem;
   max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
+  margin: 0 auto!important;
+  padding: 0 !important;
+  padding-right: 10px;
   align-items: flex-start;
+  margin-left: 0!important;
 }
 
 .profile-sidebar {
@@ -202,24 +204,24 @@ textarea::placeholder {
   min-width: 280px;
   background-color: #ffffff;
   padding: 1rem;
-  border-radius: 12px;
+  height: 100vh;
+  border-radius: 0;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  height: fit-content;
   position: sticky;
-  top: 2rem;
+  top: 0;
   border: 1px solid #e9ecef;
+  padding-top: 30px;
+  padding:10px;
 }
 
-main {
-  flex: 1;
-}
 
 .sidebar-avatar {
+  padding-top: 70px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0!important;
 }
 
 .avatar {
@@ -1022,6 +1024,7 @@ main {
     min-width: auto;
     position: static;
     padding: 1.5rem;
+    padding-top: 0;
   }
 
   .sidebar-avatar {
@@ -1138,6 +1141,10 @@ main {
     padding: 0.25rem;
   }
 
+  .profile-sidebar {
+    padding-top: 0px!important;
+  }
+
   .posts-container {
     gap: 1rem;
   }
@@ -1191,3 +1198,32 @@ main {
     padding: 1rem;
   }
 }
+
+@media screen and (max-width: 600px) {
+  .banner-content {
+    flex-direction: column; /* ubah jadi kolom, logo jadi di atas */
+    align-items: center;    /* supaya center */
+    text-align: center;
+    gap:0;
+  }
+
+  .community-banner{
+    padding-left:0;
+    padding-right:0;
+    padding-top: 5;
+  }
+
+  .banner-icon {
+    width: 60px; 
+  }
+
+  .banner-text h2 {
+    font-size: 1.3rem;
+    padding-bottom: 5px;
+  }
+
+  .banner-text p {
+    font-size: 0.8rem;
+  }
+}
+
