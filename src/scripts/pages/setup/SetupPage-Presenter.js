@@ -54,8 +54,14 @@ export default class SetupPagePresenter {
       this.currentStep++;
       this.updateStep();
     } else {
-      alert("Setup selesai!");
-      window.location.hash = '#/home';
+      Swal.fire({
+        icon: "success",
+        title: "Setup selesai!",
+        text: "Pengaturan awal telah berhasil diselesaikan.",
+        showConfirmButton: false,
+        timer: 3000,
+      });
+      window.location.hash = "#/home?welcome=true";
     }
   }
 
@@ -79,152 +85,180 @@ export default class SetupPagePresenter {
     }
   }
 
-async _initMap() {
-  const mapElement = document.getElementById("map");
-  const popupElement = document.getElementById("popup");
-  const latInput = document.getElementById("lat");
-  const lonInput = document.getElementById("lon");
+  async _initMap() {
+    const mapElement = document.getElementById("map");
+    const popupElement = document.getElementById("popup");
+    const latInput = document.getElementById("lat");
+    const lonInput = document.getElementById("lon");
 
-  this.map = new Map({
-    target: mapElement,
-    layers: [
-      new TileLayer({
-        source: new OSM(),
+    this.map = new Map({
+      target: mapElement,
+      layers: [
+        new TileLayer({
+          source: new OSM(),
+        }),
+      ],
+      view: new View({
+        center: fromLonLat([117.0, -1.5]),
+        zoom: 5,
       }),
-    ],
-    view: new View({
-      center: fromLonLat([117.0, -1.5]),
-      zoom: 5,
-    }),
-    controls: [new Zoom()],
-  });
+      controls: [new Zoom()],
+    });
 
-  // === Marker Setup ===
-  const markerElement = document.createElement("img");
-  markerElement.src = "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
-  markerElement.style.width = "32px";
-  markerElement.style.height = "32px";
-  markerElement.style.transform = "translate(-50%, -100%)";
-  markerElement.style.position = "absolute";
-  markerElement.style.cursor = "grab";
+    // === Marker Setup ===
+    const markerElement = document.createElement("img");
+    markerElement.src = "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
+    markerElement.style.width = "32px";
+    markerElement.style.height = "32px";
+    markerElement.style.transform = "translate(-50%, -100%)";
+    markerElement.style.position = "absolute";
+    markerElement.style.cursor = "grab";
 
-  this.marker = new Overlay({
-    element: markerElement,
-    positioning: "center-center",
-    stopEvent: false,
-  });
+    this.marker = new Overlay({
+      element: markerElement,
+      positioning: "center-center",
+      stopEvent: false,
+    });
 
-  this.map.addOverlay(this.marker);
+    this.map.addOverlay(this.marker);
 
-  // === Popup Setup ===
-  this.popupOverlay = new Overlay({
-    element: popupElement,
-    positioning: "bottom-center",
-    stopEvent: false,
-    offset: [0, -40],
-  });
-  this.map.addOverlay(this.popupOverlay);
+    // === Popup Setup ===
+    this.popupOverlay = new Overlay({
+      element: popupElement,
+      positioning: "bottom-center",
+      stopEvent: false,
+      offset: [0, -40],
+    });
+    this.map.addOverlay(this.popupOverlay);
 
-const updatePosition = async (coordinate) => {
-  this.marker.setPosition(coordinate);
-  const [lon, lat] = toLonLat(coordinate);
+    const updatePosition = async (coordinate) => {
+      this.marker.setPosition(coordinate);
+      const [lon, lat] = toLonLat(coordinate);
 
-  latInput.value = lat;
-  lonInput.value = lon;
+      latInput.value = lat;
+      lonInput.value = lon;
 
-  const placeName = await SetupModel.getPlaceName(lat, lon);
-  const truncatedName = placeName.length > 80 ? placeName.slice(0, 80) + "..." : placeName;
-  popupElement.innerHTML = truncatedName;
-  popupElement.title = placeName; // untuk tooltip saat hover
-  this.popupOverlay.setPosition(coordinate);
-};
+      const placeName = await SetupModel.getPlaceName(lat, lon);
+      const truncatedName =
+        placeName.length > 80 ? placeName.slice(0, 80) + "..." : placeName;
+      popupElement.innerHTML = truncatedName;
+      popupElement.title = placeName; // untuk tooltip saat hover
+      this.popupOverlay.setPosition(coordinate);
+    };
 
+    // === Lokasi awal: user atau default ===
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          const { latitude, longitude } = pos.coords;
+          const coords = fromLonLat([longitude, latitude]);
 
-  // === Lokasi awal: user atau default ===
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const { latitude, longitude } = pos.coords;
-        const coords = fromLonLat([longitude, latitude]);
+          this.map.getView().animate({
+            center: coords,
+            zoom: 12,
+            duration: 3000,
+          });
 
-        this.map.getView().animate({
-          center: coords,
-          zoom: 12,
-          duration: 3000,
-        });
+          await updatePosition(coords);
+        },
+        async () => {
+          const defaultCoords = fromLonLat([117.0, -1.5]);
+          this.map.getView().setCenter(defaultCoords);
+          await updatePosition(defaultCoords);
+        }
+      );
+    } else {
+      const defaultCoords = fromLonLat([117.0, -1.5]);
+      this.map.getView().setCenter(defaultCoords);
+      await updatePosition(defaultCoords);
+    }
 
-        await updatePosition(coords);
-      },
-      async () => {
-        const defaultCoords = fromLonLat([117.0, -1.5]);
-        this.map.getView().setCenter(defaultCoords);
-        await updatePosition(defaultCoords);
+    // === Drag & click handler ===
+    let dragging = false;
+
+    markerElement.addEventListener("mousedown", (evt) => {
+      evt.preventDefault();
+      dragging = true;
+      markerElement.style.cursor = "grabbing";
+    });
+
+    this.map.on("pointermove", async (evt) => {
+      if (dragging) {
+        await updatePosition(evt.coordinate);
       }
-    );
-  } else {
-    const defaultCoords = fromLonLat([117.0, -1.5]);
-    this.map.getView().setCenter(defaultCoords);
-    await updatePosition(defaultCoords);
+    });
+
+    window.addEventListener("mouseup", () => {
+      if (dragging) {
+        dragging = false;
+        markerElement.style.cursor = "grab";
+      }
+    });
+
+    this.map.on("click", async (evt) => {
+      if (!dragging) {
+        await updatePosition(evt.coordinate);
+      }
+    });
   }
 
-  // === Drag & click handler ===
-  let dragging = false;
+  _initForm() {
+    const form = document.getElementById("setup-form");
+    if (!form) return;
 
-  markerElement.addEventListener("mousedown", (evt) => {
-    evt.preventDefault();
-    dragging = true;
-    markerElement.style.cursor = "grabbing";
-  });
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
 
-  this.map.on("pointermove", async (evt) => {
-    if (dragging) {
-      await updatePosition(evt.coordinate);
-    }
-  });
+      const name = document.getElementById("name").value;
+      const interest = document.getElementById("interest").value;
+      const experience = form.experience.value;
+      const lat = document.getElementById("lat").value;
+      const lon = document.getElementById("lon").value;
 
-  window.addEventListener("mouseup", () => {
-    if (dragging) {
-      dragging = false;
-      markerElement.style.cursor = "grab";
-    }
-  });
+      if (!name || !interest || !experience || !lat || !lon) {
+        Swal.fire({
+          icon: "warning",
+          title: "Data tidak lengkap",
+          text: "Please fill all fields.",
+          showConfirmButton: false,
+          timer: 3000,
+        });
+        return;
+      }
 
-  this.map.on("click", async (evt) => {
-    if (!dragging) {
-      await updatePosition(evt.coordinate);
-    }
-  });
-}
+      const dataToSave = { name, interest, experience, lat, lon };
 
+      try {
+        await saveSetupData(dataToSave);
 
- _initForm() {
-  const form = document.getElementById("setup-form");
-  if (!form) return;
+        // Save user name to localStorage for consistent access
+        localStorage.setItem("user_name", name);
 
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
+        // Ensure auth token exists for navigation
+        if (!localStorage.getItem("agriedu_auth_token")) {
+          localStorage.setItem(
+            "agriedu_auth_token",
+            "demo-token-" + Date.now()
+          );
+        }
 
-    const name = document.getElementById("name").value;
-    const interest = document.getElementById("interest").value;
-    const experience = form.experience.value;
-    const lat = document.getElementById("lat").value;
-    const lon = document.getElementById("lon").value;
-
-    if (!name || !interest || !experience || !lat || !lon) {
-      alert("Please fill all fields.");
-      return;
-    }
-
-    const dataToSave = { name, interest, experience, lat, lon };
-
-    try {
-      await saveSetupData(dataToSave);
-      alert("Setup complete and saved!");
-      this.nextStep();
-    } catch (error) {
-      alert("Error saving data: " + error);
-    }
-  });
-}
-
+        Swal.fire({
+          icon: "success",
+          title: "Setup berhasil",
+          text: "Setup complete and saved!",
+          showConfirmButton: false,
+          timer: 3000,
+        });
+        this.nextStep();
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Error saving data",
+          text: error.toString(),
+          showConfirmButton: false,
+          timer: 3000,
+        });
+      }
+    });
+  }
 }

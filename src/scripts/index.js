@@ -1,6 +1,10 @@
 import "../styles/styles.css";
+import Swal from "sweetalert2";
 
 import App from "./pages/app";
+
+// Make SweetAlert2 globally available
+window.Swal = Swal;
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {

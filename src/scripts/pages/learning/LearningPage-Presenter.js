@@ -118,7 +118,13 @@ function toggleFavorite(index, type, button) {
 function openVideoModal(video) {
   const embedUrl = convertToEmbedUrl(video.url);
   if (!embedUrl) {
-    alert("Video URL tidak valid dan tidak bisa diputar."); // FIXED: alert kalau embed URL gagal
+    Swal.fire({
+      icon: "error",
+      title: "Video tidak valid",
+      text: "Video URL tidak valid dan tidak bisa diputar.",
+      showConfirmButton: false,
+      timer: 3000,
+    });
     return;
   }
 

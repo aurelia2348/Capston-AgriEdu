@@ -20,7 +20,7 @@ export default class DiagnoseForm {
     <div class="Diagnosis-page-container">
       ${navbar.render()}
       <div id="typingAnimation" class="typing-animation"></div>
-      
+
       <section class="container-form hidden-form">
         <h1>Diagnosis Tanaman</h1>
         <hr />
@@ -106,7 +106,8 @@ export default class DiagnoseForm {
       const textElement = document.getElementById("typingAnimation");
       const formSection = document.querySelector(".container-form");
 
-      const message = "Scan tanaman kamu sekarang dan temukan solusi dari masalahnya!";
+      const message =
+        "Scan tanaman kamu sekarang dan temukan solusi dari masalahnya!";
 
       await typeWriter(message, textElement);
 
@@ -142,19 +143,18 @@ export default class DiagnoseForm {
     });
 
     // FAB toggle
-const fabBtn = document.getElementById("main-fab");
-const fabMenu = document.getElementById("fab-menu");
+    const fabBtn = document.getElementById("main-fab");
+    const fabMenu = document.getElementById("fab-menu");
 
-fabBtn.addEventListener("click", () => {
-  fabMenu.classList.toggle("hidden");
-});
+    fabBtn.addEventListener("click", () => {
+      fabMenu.classList.toggle("hidden");
+    });
 
-// Go to community
-const goCommunityBtn = document.getElementById("go-community-btn");
-goCommunityBtn.addEventListener("click", () => {
-  window.location.href = "/#/community";
-});
-
+    // Go to community
+    const goCommunityBtn = document.getElementById("go-community-btn");
+    goCommunityBtn.addEventListener("click", () => {
+      window.location.href = "/#/community";
+    });
   }
 
   setupNavigation() {
@@ -171,7 +171,13 @@ goCommunityBtn.addEventListener("click", () => {
   }
 
   showMessage(message) {
-    alert(message);
+    Swal.fire({
+      icon: "info",
+      title: "Informasi",
+      text: message,
+      showConfirmButton: false,
+      timer: 3000,
+    });
   }
 
   getElements() {
