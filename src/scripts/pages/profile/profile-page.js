@@ -70,10 +70,6 @@ export default class ProfilePage {
             </section>
           </main>
         </div>
-
-        <footer class="profile-footer">
-          <p>&copy; 2025 AgriEdu. All rights reserved.</p>
-        </footer>
       </div>
     `;
   }

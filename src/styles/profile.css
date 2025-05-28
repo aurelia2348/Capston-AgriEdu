@@ -26,9 +26,8 @@
 
 
 main {
-  flex-grow: 1;
-  background-color: #fff;
   padding: 20px;
+  width:100%!important;
 }
 .profile-avatar-wrapper {
   display: flex;
@@ -223,21 +222,42 @@ main {
   max-width: 60%;
 }
 
+
+/* Profile Container Layout */
 .profile-container {
   display: flex;
-    height: 100%!important;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto!important;
+  padding: 0 !important;
+  padding-right: 10px;
+  align-items: flex-start;
+  margin-left: 0!important;
 }
 
 .profile-sidebar {
-  width: 250px;
+  flex: 0 0 250px;
+  width: 280px;
+  min-width: 280px;
   background-color: #ffffff;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 7rem !important;
-  height: 100%!important;
+  padding: 1rem;
+  padding: 1rem 2rem!important;
+  height: 100vh;
+  border-radius: 0 12px 12px 0; /* sudut kiri dibikin kotak */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  border: 1px solid #e9ecef;
+  margin-right: 20px;
 }
+
+.sidebar-avatar{
+  justify-content: center!important;
+  align-items: center!important;
+  gap:0!important;
+}
+
+
 
 .sidebar-avatar img.avatar {
   width: 150px!important;
@@ -245,6 +265,7 @@ main {
   border-radius: 50%;
   object-fit: cover;
   align-items: center;
+  margin-bottom: 30px!important;
 }
 
 .sidebar-avatar p {
@@ -262,13 +283,20 @@ main {
 
 .sidebar-button {
   margin-top: 10px;
-  background-color: #222;
-  color: white;
+  background-color: #222!important;
+  color: white!important;
   padding: 10px 15px;
-  border: none;
+  border: none!important;
   border-radius: 6px;
   cursor: pointer;
+  box-shadow: none!important;
+  font-weight: normal!important;
+  
 }
+
+
+
+
 
 /* ========== RESPONSIVE ========== */
 @media (max-width: 1550px) {
@@ -358,17 +386,12 @@ main {
   }
 }
 
-/* ========== TABLET (768px – 1023px) ========== */
 @media (min-width: 768px) {
   .profile-container {
     flex-direction: row;
     align-items: flex-start;
   }
 
-  main{
-    width: 100%!important;
-    max-width: none!important;
-  }
 
   .profile-sidebar {
     width: 100%;
@@ -476,3 +499,67 @@ main {
     max-width: 100%;
   }
 }
+
+@media (min-width: 768px) and (max-width: 1027px) {
+  .home-nav {
+    display: none;
+  }
+
+  .home-menu-toggle {
+    display: block;
+  }
+
+  .profile-sidebar {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    padding-top: 2rem !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .sidebar-avatar {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  .sidebar-avatar img.avatar {
+    width: 200px !important;
+    height: 200px !important;
+  }
+
+  .sidebar-button {
+    width: 100% !important;
+    margin-top: 1rem !important;
+  }
+
+  .container-profile {
+    width: 95% !important;
+    padding: 1rem !important;
+  }
+
+  .profile-avatar-wrapper {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  .input-group input[type="text"] {
+    font-size: 0.9rem !important;
+  }
+
+  #editAvatarBtn,
+  #saveProfileBtn {
+    width: 100% !important;
+  }
+
+  .avatar-note {
+    text-align: center !important;
+    max-width: 100% !important;
+  }
+
+  main {
+    width: 100% !important;
+    max-width: none !important;
+  }
+}
+
