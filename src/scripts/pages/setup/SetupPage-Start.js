@@ -55,7 +55,7 @@ export default class SetupPageStart {
   }
 
   async afterRender() {
-    const module = await import('./SetupPage-Presenter.js');
+    const module = await import("./SetupPage-Presenter.js");
     const presenter = new module.default();
     presenter.init();
   }

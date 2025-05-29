@@ -1,24 +1,31 @@
 import { NavigationBar } from "../../components/NavigationBar.js";
 import DiagnosePresenter from "./DiagnosePage-Presenter.js";
+import authService from "../../data/auth-service.js";
 
 export default class DiagnosePage {
   constructor() {
     this.presenter = new DiagnosePresenter(this);
   }
 
-async render() {
-  const userInitial = this.presenter.getUserInitial();
+  async render() {
+    // Get user data from auth service for navbar
+    const userData = authService.getUserData();
+    const userName =
+      userData?.username || localStorage.getItem("user_name") || "User";
+    const userInitial = userName.charAt(0).toUpperCase();
 
-  const navbar = new NavigationBar({
-    currentPath: window.location.hash.slice(1),
-    userInitial: userInitial,
-    showProfile: true,
-  });
+    const navbar = new NavigationBar({
+      currentPath: window.location.hash.slice(1),
+      userInitial: userInitial,
+      username: userName,
+      profilePictureUrl: userData?.profilePictureUrl,
+      showProfile: true,
+    });
 
-  return `
+    return `
     <div class="diagnose-page-container">
       ${navbar.render()}
-      
+
       <section class="diagnose-hero-carousel" data-aos="fade-down">
         <div class="carousel-container">
           <div class="carousel-slide">
@@ -100,55 +107,62 @@ async render() {
       <p>&copy; 2025 AgriEdu. All rights reserved.</p>
     </footer>
   `;
-}
-
-
-async afterRender() {
-  const userInitial = this.presenter.getUserInitial();
-  const currentPath = window.location.hash.slice(1);
-  this.presenter.bindNavbarEvents(currentPath, userInitial);
-  this.presenter.startCarousel();
-
-  const analyzeButton = document.querySelector('.diagnose-button');
-  analyzeButton.addEventListener('click', () => {
-    window.location.hash = '/diagnosisForm';
-  });
-
-  const mainFab = document.getElementById('main-fab');
-  const fabMenu = document.getElementById('fab-menu');
-  const howToDesc = document.getElementById('how-to-desc');
-  const scanNowBtn = document.getElementById('scan-now-btn');
-  const howToBtn = document.getElementById('how-to-btn');
-
-  if (mainFab && fabMenu && howToDesc && scanNowBtn && howToBtn) {
-    mainFab.addEventListener('click', () => {
-      fabMenu.classList.toggle('hidden');
-      howToDesc.classList.add('hidden');
-    });
-
-    scanNowBtn.addEventListener('click', () => {
-      window.location.hash = '/diagnosisForm'; 
-    });
-
-    howToBtn.addEventListener('click', () => {
-      howToDesc.classList.toggle('hidden');
-    });
   }
 
-  // 🔥 Inisialisasi ulang AOS (wajib untuk SPA)
-  if (typeof AOS !== 'undefined') {
-    AOS.init({ duration: 800, once: true });
+  async afterRender() {
+    // Get user data from auth service for navbar
+    const userData = authService.getUserData();
+    const userName =
+      userData?.username || localStorage.getItem("user_name") || "User";
+    const userInitial = userName.charAt(0).toUpperCase();
+    const currentPath = window.location.hash.slice(1);
+
+    this.presenter.bindNavbarEvents(currentPath, userInitial);
+    this.presenter.startCarousel();
+
+    const analyzeButton = document.querySelector(".diagnose-button");
+    analyzeButton.addEventListener("click", () => {
+      window.location.hash = "/diagnosisForm";
+    });
+
+    const mainFab = document.getElementById("main-fab");
+    const fabMenu = document.getElementById("fab-menu");
+    const howToDesc = document.getElementById("how-to-desc");
+    const scanNowBtn = document.getElementById("scan-now-btn");
+    const howToBtn = document.getElementById("how-to-btn");
+
+    if (mainFab && fabMenu && howToDesc && scanNowBtn && howToBtn) {
+      mainFab.addEventListener("click", () => {
+        fabMenu.classList.toggle("hidden");
+        howToDesc.classList.add("hidden");
+      });
+
+      scanNowBtn.addEventListener("click", () => {
+        window.location.hash = "/diagnosisForm";
+      });
+
+      howToBtn.addEventListener("click", () => {
+        howToDesc.classList.toggle("hidden");
+      });
+    }
+
+    // 🔥 Inisialisasi ulang AOS (wajib untuk SPA)
+    if (typeof AOS !== "undefined") {
+      AOS.init({ duration: 800, once: true });
+    }
   }
-}
-
-
-
-
 
   bindNavigationEvents(currentPath, userInitial) {
+    // Get user data from auth service for navbar
+    const userData = authService.getUserData();
+    const userName =
+      userData?.username || localStorage.getItem("user_name") || "User";
+
     const navbar = new NavigationBar({
       currentPath: currentPath,
       userInitial: userInitial,
+      username: userName,
+      profilePictureUrl: userData?.profilePictureUrl,
       showProfile: true,
     });
 
@@ -156,22 +170,22 @@ async afterRender() {
   }
 
   setupCarousel(texts) {
-    const slides = document.querySelectorAll('.carousel-slide img');
-    const title = document.getElementById('carousel-title');
-    const desc = document.getElementById('carousel-desc');
+    const slides = document.querySelectorAll(".carousel-slide img");
+    const title = document.getElementById("carousel-title");
+    const desc = document.getElementById("carousel-desc");
 
     let currentIndex = 0;
     const totalSlides = slides.length;
 
     slides.forEach((slide, i) => {
-      slide.style.opacity = i === 0 ? '1' : '0';
-      slide.style.position = 'absolute';
-      slide.style.top = '0';
-      slide.style.left = '0';
-      slide.style.width = '100%';
-      slide.style.height = '100%';
-      slide.style.objectFit = 'cover';
-      slide.style.transition = 'opacity 1.5s ease-in-out';
+      slide.style.opacity = i === 0 ? "1" : "0";
+      slide.style.position = "absolute";
+      slide.style.top = "0";
+      slide.style.left = "0";
+      slide.style.width = "100%";
+      slide.style.height = "100%";
+      slide.style.objectFit = "cover";
+      slide.style.transition = "opacity 1.5s ease-in-out";
     });
 
     const updateCaption = () => {
@@ -180,13 +194,12 @@ async afterRender() {
     };
 
     setInterval(() => {
-      slides[currentIndex].style.opacity = '0';
+      slides[currentIndex].style.opacity = "0";
       currentIndex = (currentIndex + 1) % totalSlides;
-      slides[currentIndex].style.opacity = '1';
+      slides[currentIndex].style.opacity = "1";
       updateCaption();
     }, 5000);
 
     updateCaption();
   }
 }
-

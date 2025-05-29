@@ -1,6 +1,8 @@
 import { NavigationBar } from "../../components/NavigationBar.js";
 import CommunityModel from "./ComunityPage-Model.js";
 import authService from "../../data/auth-service.js";
+import profilePictureService from "../../data/profile-picture-service.js";
+import ProfileModel from "../profile/profile-model.js";
 import CONFIG from "../../config.js";
 
 export default class CommunityPage {
@@ -8,12 +10,17 @@ export default class CommunityPage {
     this.posts = [];
   }
   async render() {
-    const userName = localStorage.getItem("user_name") || "User";
+    // Get user data from auth service for navbar
+    const userData = authService.getUserData();
+    const userName =
+      userData?.username || localStorage.getItem("user_name") || "User";
     const userInitial = userName.charAt(0).toUpperCase();
 
     const navbar = new NavigationBar({
       currentPath: window.location.hash.slice(1),
       userInitial: userInitial,
+      username: userName,
+      profilePictureUrl: userData?.profilePictureUrl,
       showProfile: true,
     });
 
@@ -75,12 +82,17 @@ export default class CommunityPage {
   }
 
   setupNavigationEvents() {
-    const userName = localStorage.getItem("user_name") || "User";
+    // Get user data from auth service for navbar
+    const userData = authService.getUserData();
+    const userName =
+      userData?.username || localStorage.getItem("user_name") || "User";
     const userInitial = userName.charAt(0).toUpperCase();
 
     const navbar = new NavigationBar({
       currentPath: window.location.hash.slice(1),
       userInitial: userInitial,
+      username: userName,
+      profilePictureUrl: userData?.profilePictureUrl,
       showProfile: true,
     });
     navbar.bindEvents();
@@ -111,25 +123,55 @@ export default class CommunityPage {
       if (token) {
         // Try to get fresh user data from API
         try {
-          await authService.getCurrentUser();
+          const userData = await authService.getCurrentUser();
+          if (userData) {
+            // Update username
+            if (userData.username) {
+              const sidebarUsername =
+                document.getElementById("sidebarUsername");
+              if (sidebarUsername) {
+                sidebarUsername.textContent = userData.username;
+              }
+              console.log("Updated sidebar username to:", userData.username);
+            }
+
+            // Update profile picture using the profile picture service
+            const sidebarAvatar = document.getElementById("sidebarAvatar");
+            if (sidebarAvatar) {
+              await profilePictureService.updateImageElement(
+                sidebarAvatar,
+                userData.profilePictureUrl,
+                userData.username
+              );
+              console.log("Updated sidebar profile picture");
+            }
+          }
         } catch (apiError) {
           console.warn("Failed to refresh user data from API:", apiError);
         }
-
-        const userData = authService.getUserData();
-        console.log("User data from storage:", userData);
-
-        if (userData && userData.username) {
-          const sidebarUsername = document.getElementById("sidebarUsername");
-          if (sidebarUsername) {
-            sidebarUsername.textContent = userData.username;
-          }
-          console.log("Updated sidebar username to:", userData.username);
-        } else {
-          console.warn("No username found in user data");
-        }
       } else {
         console.warn("No token available");
+      }
+
+      // Get experience level using ProfileModel (same method as ProfilePage)
+      try {
+        const profile = await ProfileModel.getUserProfile();
+        const experienceLevel = profile.experience || "Belum diatur";
+
+        const sidebarExperience = document.getElementById("sidebarExperience");
+        if (sidebarExperience) {
+          sidebarExperience.textContent = experienceLevel;
+        }
+        console.log("Updated sidebar experience to:", experienceLevel);
+      } catch (profileError) {
+        console.error(
+          "Failed to get experience from ProfileModel:",
+          profileError
+        );
+        const sidebarExperience = document.getElementById("sidebarExperience");
+        if (sidebarExperience) {
+          sidebarExperience.textContent = "Gagal ambil experience";
+        }
       }
     } catch (err) {
       console.error("Gagal ambil user info:", err);
@@ -154,6 +196,17 @@ export default class CommunityPage {
       } else if (Array.isArray(response)) {
         postsData = response;
       }
+
+      // Get current user data for post ownership checks
+      const currentUser = authService.getUserData();
+
+      // Process posts to include author information based on API schema
+      postsData = postsData.map((post) => ({
+        ...post,
+        author:
+          post.userId ||
+          (currentUser && post.userId === currentUser.id ? currentUser : null),
+      }));
 
       console.log("Processed posts data:", postsData);
       this.posts = postsData;
@@ -191,10 +244,10 @@ export default class CommunityPage {
       text: "Apakah Anda yakin ingin menghapus diskusi ini?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Ya, Hapus",
-      cancelButtonText: "Batal",
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
+      confirmButtonText: "Ya, Hapus!",
+      cancelButtonText: "Batal",
     });
 
     if (!result.isConfirmed) {
@@ -207,7 +260,7 @@ export default class CommunityPage {
       await this.loadPosts();
       Swal.fire({
         icon: "success",
-        title: "Berhasil",
+        title: "Berhasil!",
         text: "Diskusi berhasil dihapus!",
         showConfirmButton: false,
         timer: 3000,
@@ -216,10 +269,9 @@ export default class CommunityPage {
       console.error("Error deleting post:", error);
       Swal.fire({
         icon: "error",
-        title: "Gagal menghapus diskusi",
-        text: error.message,
-        showConfirmButton: false,
-        timer: 3000,
+        title: "Gagal!",
+        text: `Gagal menghapus diskusi: ${error.message}`,
+        confirmButtonText: "OK",
       });
     }
   }
@@ -249,64 +301,31 @@ export default class CommunityPage {
         if (this.posts.indexOf(post) === 0) {
           console.log("=== FIRST POST STRUCTURE ===");
           console.log("Post fields:", Object.keys(post));
-          console.log("User data:", post.User || post.user);
-          console.log("Image data:", post.imageUrl || post.image);
+          console.log("User data:", post.userId || post.author);
         }
 
-        // Extract username - API returns User object with username
+        // Extract username using the correct schema
         let username = "Anonymous";
         let postUserId = null;
 
-        // Based on API schema, posts should have User object
-        if (post.User && post.User.username) {
-          username = post.User.username;
-          postUserId = post.User.id;
-        } else if (post.user && post.user.username) {
-          username = post.user.username;
-          postUserId = post.user.id;
+        // Check for author data in the post based on API schema
+        if (post.userId && typeof post.userId === "object") {
+          username = post.userId.username || "Anonymous";
+          postUserId = post.userId.id;
+        } else if (post.author) {
+          username = post.author.username || "Anonymous";
+          postUserId = post.author.id;
         } else if (post.userId === currentUserId) {
-          // If this is current user's post but no User object, use current user data
+          // If this is current user's post but no author data, use current user data
           const currentUserData = authService.getUserData();
-          if (currentUserData && currentUserData.username) {
-            username = currentUserData.username;
+          if (currentUserData) {
+            username = currentUserData.username || "Anonymous";
             postUserId = currentUserId;
           }
         }
 
-        console.log(
-          `Post ${post.id}: username="${username}", userId="${postUserId}"`
-        );
-
-        // Extract image URL - API returns imageUrl field
-        let imageUrl = "";
-
-        if (
-          post.imageUrl &&
-          typeof post.imageUrl === "string" &&
-          post.imageUrl.trim()
-        ) {
-          const field = post.imageUrl.trim();
-
-          if (field.startsWith("http://") || field.startsWith("https://")) {
-            imageUrl = field;
-          } else if (field.startsWith("/")) {
-            imageUrl = `${CONFIG.BASE_URL}${field}`;
-          } else {
-            imageUrl = `${CONFIG.BASE_URL}/${field}`;
-          }
-        }
-
-        // Check ownership for delete button - based on API schema
-        const isOwner =
-          currentUserId &&
-          (postUserId === currentUserId || post.userId === currentUserId);
-
-        if (this.posts.indexOf(post) === 0) {
-          console.log("Ownership check for first post:");
-          console.log("- Current user ID:", currentUserId);
-          console.log("- Post user ID:", postUserId || post.userId);
-          console.log("- Is owner:", isOwner);
-        }
+        // Check ownership for delete button
+        const isOwner = currentUserId && postUserId === currentUserId;
 
         // Truncate content for preview
         const maxContentLength = 150;
@@ -315,15 +334,38 @@ export default class CommunityPage {
             ? post.content.substring(0, maxContentLength) + "..."
             : post.content || "";
 
+        // Construct image URL based on API schema
+        let imageUrl = "";
+        if (post.imageUrl) {
+          if (
+            post.imageUrl.startsWith("http://") ||
+            post.imageUrl.startsWith("https://")
+          ) {
+            imageUrl = post.imageUrl;
+          } else {
+            // Remove any leading /api/posts/image/ to prevent duplication
+            const cleanImagePath = post.imageUrl.replace(
+              /^\/api\/posts\/image\//,
+              ""
+            );
+            imageUrl = `${CONFIG.BASE_URL}/api/posts/image/${cleanImagePath}`;
+          }
+        }
+
+        // Generate unique ID for this post's profile picture
+        const profilePictureId = `post-avatar-${post.id}`;
+
         return `
           <div class="post-card" onclick="window.communityPage.showPostDetail('${
             post.id
           }')" style="cursor: pointer;">
             <div class="post-header">
               <div class="post-author">
-                <div class="author-avatar">${username
-                  .charAt(0)
-                  .toUpperCase()}</div>
+                <div class="author-avatar-container" id="${profilePictureId}">
+                  <div class="author-avatar fallback-avatar">${username
+                    .charAt(0)
+                    .toUpperCase()}</div>
+                </div>
                 <div class="author-info">
                   <h4>${username}</h4>
                   <span class="post-date">${this.formatDate(
@@ -378,14 +420,66 @@ export default class CommunityPage {
       .join("");
 
     container.innerHTML = postsHTML;
+
+    // Load profile pictures for all posts after rendering
+    this.loadPostProfilePictures();
+
     console.log("=== RENDER POSTS COMPLETE ===");
+  }
+
+  /**
+   * Load profile pictures for all posts using CORS-safe method
+   */
+  async loadPostProfilePictures() {
+    for (const post of this.posts) {
+      const profilePictureId = `post-avatar-${post.id}`;
+      const container = document.getElementById(profilePictureId);
+
+      if (!container) continue;
+
+      // Extract profile picture data (same logic as in renderPosts)
+      let username = "Anonymous";
+      let profilePictureUrl = null;
+
+      if (post.userId && typeof post.userId === "object") {
+        username = post.userId.username || "Anonymous";
+        profilePictureUrl = post.userId.profilePictureUrl;
+      } else if (post.author) {
+        username = post.author.username || "Anonymous";
+        profilePictureUrl = post.author.profilePictureUrl;
+      } else {
+        const currentUser = authService.getUserData();
+        const currentUserId = currentUser?.id;
+        if (post.userId === currentUserId && currentUser) {
+          username = currentUser.username || "Anonymous";
+          profilePictureUrl = currentUser.profilePictureUrl;
+        }
+      }
+
+      // Use the profile picture service to update the container with CORS-safe method
+      if (profilePictureUrl) {
+        try {
+          await profilePictureService.updateContainerElementSafe(
+            container,
+            profilePictureUrl,
+            username,
+            "medium"
+          );
+        } catch (error) {
+          console.warn(
+            `Failed to load profile picture for post ${post.id}:`,
+            error
+          );
+        }
+      }
+    }
   }
 
   async showComments(postId) {
     try {
       console.log("Showing comments for post ID:", postId);
 
-      // Get post details and comments
+      // Get post details and comments based on API schema
       const [postResponse, commentsResponse] = await Promise.all([
         CommunityModel.getPostById(postId),
         CommunityModel.getComments(postId),
@@ -397,14 +491,12 @@ export default class CommunityPage {
       console.log("Post data:", post);
       console.log("Comments data:", comments);
 
-      // Extract post author username
+      // Extract post author username based on API schema
       let postUsername = "Anonymous";
-      if (post.User) {
-        postUsername = post.User.username || post.User.name || "Anonymous";
-      } else if (post.user) {
-        postUsername = post.user.username || post.user.name || "Anonymous";
-      } else if (post.username) {
-        postUsername = post.username;
+      if (post.userId && typeof post.userId === "object") {
+        postUsername = post.userId.username || "Anonymous";
+      } else if (post.author) {
+        postUsername = post.author.username || "Anonymous";
       }
 
       // Create modal for comments
@@ -422,9 +514,11 @@ export default class CommunityPage {
           <div class="modal-body">
             <div class="post-summary">
               <div class="post-detail-header">
-                <div class="author-avatar">${postUsername
-                  .charAt(0)
-                  .toUpperCase()}</div>
+                <div class="author-avatar-container" id="comment-post-avatar-${postId}">
+                  <div class="author-avatar">${postUsername
+                    .charAt(0)
+                    .toUpperCase()}</div>
+                </div>
                 <div class="author-info">
                   <h4>${postUsername}</h4>
                   <span class="post-date">${this.formatDate(
@@ -453,15 +547,143 @@ export default class CommunityPage {
       `;
 
       document.body.appendChild(modal);
+
+      // Load profile picture for the post summary
+      this.loadCommentPostProfilePicture(post, postId);
+
+      // Load profile pictures for comments after modal is added to DOM
+      this.loadCommentProfilePictures(comments);
     } catch (error) {
       console.error("Error showing comments:", error);
       Swal.fire({
         icon: "error",
-        title: "Gagal memuat komentar",
-        text: error.message,
-        showConfirmButton: false,
-        timer: 3000,
+        title: "Gagal!",
+        text: `Gagal memuat komentar: ${error.message}`,
+        confirmButtonText: "OK",
       });
+    }
+  }
+
+  /**
+   * Load profile picture for post summary in comments modal
+   * @param {Object} post - Post object
+   * @param {string} postId - Post ID
+   */
+  async loadCommentPostProfilePicture(post, postId) {
+    const container = document.getElementById(`comment-post-avatar-${postId}`);
+    if (!container) return;
+
+    // Extract profile picture data
+    let postUsername = "Anonymous";
+    let profilePictureUrl = null;
+
+    if (post.userId && typeof post.userId === "object") {
+      postUsername = post.userId.username || "Anonymous";
+      profilePictureUrl = post.userId.profilePictureUrl;
+    } else if (post.author) {
+      postUsername = post.author.username || "Anonymous";
+      profilePictureUrl = post.author.profilePictureUrl;
+    }
+
+    // Use the profile picture service to update the container with CORS-safe method
+    if (profilePictureUrl) {
+      try {
+        await profilePictureService.updateContainerElementSafe(
+          container,
+          profilePictureUrl,
+          postUsername,
+          "medium"
+        );
+      } catch (error) {
+        console.warn(
+          `Failed to load profile picture for comment post ${postId}:`,
+          error
+        );
+      }
+    }
+  }
+
+  /**
+   * Load profile pictures for comments using CORS-safe method
+   * @param {Array} comments - Array of comment objects
+   */
+  async loadCommentProfilePictures(comments) {
+    for (const comment of comments) {
+      const commentProfilePictureId = `comment-avatar-${comment.id}`;
+      const container = document.getElementById(commentProfilePictureId);
+
+      if (!container) {
+        console.warn(`Container not found for comment ${comment.id}`);
+        continue;
+      }
+
+      // Extract profile picture data based on API schema
+      let commentUsername = "Anonymous";
+      let profilePictureUrl = null;
+
+      if (comment.userId && typeof comment.userId === "object") {
+        commentUsername = comment.userId.username || "Anonymous";
+        profilePictureUrl = comment.userId.profilePictureUrl;
+      } else if (comment.author) {
+        commentUsername = comment.author.username || "Anonymous";
+        profilePictureUrl = comment.author.profilePictureUrl;
+      } else {
+        // If no userId object, check if it's the current user's comment
+        const currentUser = authService.getUserData();
+        const currentUserId = currentUser?.id;
+        if (comment.userId === currentUserId && currentUser) {
+          commentUsername = currentUser.username || "Anonymous";
+          profilePictureUrl = currentUser.profilePictureUrl;
+        }
+      }
+
+      // Only use the profile picture if it's a non-empty string
+      if (
+        typeof profilePictureUrl === "string" &&
+        profilePictureUrl.trim() !== "" &&
+        profilePictureUrl !== "null"
+      ) {
+        try {
+          await profilePictureService.updateContainerElementSafe(
+            container,
+            profilePictureUrl,
+            commentUsername,
+            "small"
+          );
+          console.log(`Updated profile picture for comment ${comment.id}`);
+        } catch (error) {
+          console.warn(
+            `Failed to load profile picture for comment ${comment.id}:`,
+            error
+          );
+          // Show default avatar with initial
+          container.innerHTML = `
+            <div class="author-avatar small fallback-avatar">
+              <img src="images/avatar.jpg" alt="${commentUsername}" onerror="this.style.display='none'; this.parentElement.innerHTML='${commentUsername
+            .charAt(0)
+            .toUpperCase()}'">
+              <span class="fallback-text">${commentUsername
+                .charAt(0)
+                .toUpperCase()}</span>
+            </div>
+          `;
+        }
+      } else {
+        // Always show default avatar with initial if no valid profile picture URL
+        container.innerHTML = `
+          <div class="author-avatar small fallback-avatar">
+            <img src="images/avatar.jpg" alt="${commentUsername}" onerror="this.style.display='none'; this.parentElement.innerHTML='${commentUsername
+          .charAt(0)
+          .toUpperCase()}'">
+            <span class="fallback-text">${commentUsername
+              .charAt(0)
+              .toUpperCase()}</span>
+          </div>
+        `;
+        console.log(
+          `No valid profile picture URL for comment ${comment.id}, using default avatar`
+        );
+      }
     }
   }
 
@@ -475,36 +697,38 @@ export default class CommunityPage {
 
     return comments
       .map((comment) => {
-        // Extract comment author username - based on API schema
+        // Extract comment author data based on API schema
         let commentUsername = "Anonymous";
         let commentUserId = null;
 
-        if (comment.User && comment.User.username) {
-          commentUsername = comment.User.username;
-          commentUserId = comment.User.id;
-        } else if (comment.user && comment.user.username) {
-          commentUsername = comment.user.username;
-          commentUserId = comment.user.id;
+        if (comment.userId && typeof comment.userId === "object") {
+          commentUsername = comment.userId.username || "Anonymous";
+          commentUserId = comment.userId.id;
+        } else if (comment.author) {
+          commentUsername = comment.author.username || "Anonymous";
+          commentUserId = comment.author.id;
         } else if (comment.userId === currentUserId) {
-          // If this is current user's comment, use current user data
           const currentUserData = authService.getUserData();
-          if (currentUserData && currentUserData.username) {
-            commentUsername = currentUserData.username;
+          if (currentUserData) {
+            commentUsername = currentUserData.username || "Anonymous";
             commentUserId = currentUserId;
           }
         }
 
-        const isCommentOwner =
-          currentUserId &&
-          (commentUserId === currentUserId || comment.userId === currentUserId);
+        const isCommentOwner = currentUserId && commentUserId === currentUserId;
+
+        // Generate unique ID for this comment's profile picture
+        const commentProfilePictureId = `comment-avatar-${comment.id}`;
 
         return `
         <div class="comment-item">
           <div class="comment-header">
             <div class="comment-author">
-              <div class="author-avatar small">${commentUsername
-                .charAt(0)
-                .toUpperCase()}</div>
+              <div class="author-avatar-container" id="${commentProfilePictureId}">
+                <div class="author-avatar small fallback-avatar">${commentUsername
+                  .charAt(0)
+                  .toUpperCase()}</div>
+              </div>
               <div class="author-info">
                 <h5>${commentUsername}</h5>
                 <span class="comment-date">${this.formatDate(
@@ -539,10 +763,9 @@ export default class CommunityPage {
       if (!content) {
         Swal.fire({
           icon: "warning",
-          title: "Komentar kosong",
+          title: "Komentar Kosong",
           text: "Silakan tulis komentar terlebih dahulu.",
-          showConfirmButton: false,
-          timer: 3000,
+          confirmButtonText: "OK",
         });
         return;
       }
@@ -562,11 +785,13 @@ export default class CommunityPage {
       const commentsList = document.getElementById(`comments-list-${postId}`);
       if (commentsList) {
         commentsList.innerHTML = this.renderComments(comments, postId);
+        // Load profile pictures for the updated comments
+        this.loadCommentProfilePictures(comments);
       }
 
       Swal.fire({
         icon: "success",
-        title: "Berhasil",
+        title: "Berhasil!",
         text: "Komentar berhasil ditambahkan!",
         showConfirmButton: false,
         timer: 3000,
@@ -575,10 +800,9 @@ export default class CommunityPage {
       console.error("Error adding comment:", error);
       Swal.fire({
         icon: "error",
-        title: "Gagal menambah komentar",
-        text: error.message,
-        showConfirmButton: false,
-        timer: 3000,
+        title: "Gagal!",
+        text: `Gagal menambah komentar: ${error.message}`,
+        confirmButtonText: "OK",
       });
     }
   }
@@ -589,10 +813,10 @@ export default class CommunityPage {
       text: "Apakah Anda yakin ingin menghapus komentar ini?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Ya, Hapus",
-      cancelButtonText: "Batal",
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
+      confirmButtonText: "Ya, Hapus!",
+      cancelButtonText: "Batal",
     });
 
     if (!result.isConfirmed) {
@@ -611,11 +835,13 @@ export default class CommunityPage {
       const commentsList = document.getElementById(`comments-list-${postId}`);
       if (commentsList) {
         commentsList.innerHTML = this.renderComments(comments, postId);
+        // Load profile pictures for the updated comments
+        this.loadCommentProfilePictures(comments);
       }
 
       Swal.fire({
         icon: "success",
-        title: "Berhasil",
+        title: "Berhasil!",
         text: "Komentar berhasil dihapus!",
         showConfirmButton: false,
         timer: 3000,
@@ -624,10 +850,9 @@ export default class CommunityPage {
       console.error("Error deleting comment:", error);
       Swal.fire({
         icon: "error",
-        title: "Gagal menghapus komentar",
-        text: error.message,
-        showConfirmButton: false,
-        timer: 3000,
+        title: "Gagal!",
+        text: `Gagal menghapus komentar: ${error.message}`,
+        confirmButtonText: "OK",
       });
     }
   }
@@ -640,14 +865,16 @@ export default class CommunityPage {
 
       console.log("Post detail data:", post);
 
-      // Extract username with same logic as renderPosts
+      // Extract username with same logic as loadPostDetailProfilePicture for consistency
       let username = "Anonymous";
-      if (post.User) {
+      if (post.userId && typeof post.userId === "object") {
+        username = post.userId.username || "Anonymous";
+      } else if (post.author) {
+        username = post.author.username || "Anonymous";
+      } else if (post.User) {
         username = post.User.username || post.User.name || "Anonymous";
       } else if (post.user) {
         username = post.user.username || post.user.name || "Anonymous";
-      } else if (post.username) {
-        username = post.username;
       }
 
       // Extract image URL
@@ -666,8 +893,9 @@ export default class CommunityPage {
             imageUrl = field;
             break;
           } else {
-            const cleanPath = field.startsWith("/") ? field : `/${field}`;
-            imageUrl = `${CONFIG.BASE_URL}${cleanPath}`;
+            // Remove any leading /api/posts/image/ to prevent duplication
+            const cleanImagePath = field.replace(/^\/api\/posts\/image\//, "");
+            imageUrl = `${CONFIG.BASE_URL}/api/posts/image/${cleanImagePath}`;
             break;
           }
         }
@@ -686,9 +914,11 @@ export default class CommunityPage {
           </div>
           <div class="modal-body">
             <div class="post-detail-header">
-              <div class="author-avatar">${username
-                .charAt(0)
-                .toUpperCase()}</div>
+              <div class="author-avatar-container" id="post-detail-avatar-${postId}">
+                <div class="author-avatar">${username
+                  .charAt(0)
+                  .toUpperCase()}</div>
+              </div>
               <div class="author-info">
                 <h4>${username}</h4>
                 <span class="post-date">${this.formatDate(
@@ -720,14 +950,101 @@ export default class CommunityPage {
       `;
 
       document.body.appendChild(modal);
+
+      // Load profile picture for the post detail
+      this.loadPostDetailProfilePicture(post, postId);
     } catch (error) {
       console.error("Error showing post detail:", error);
       Swal.fire({
         icon: "error",
-        title: "Gagal memuat detail diskusi",
-        text: error.message,
+        title: "Gagal!",
+        text: `Gagal memuat detail diskusi: ${error.message}`,
+        confirmButtonText: "OK",
+      });
+    }
+  }
+
+  /**
+   * Load profile picture for post detail modal
+   * @param {Object} post - Post object
+   * @param {string} postId - Post ID
+   */
+  async loadPostDetailProfilePicture(post, postId) {
+    const container = document.getElementById(`post-detail-avatar-${postId}`);
+    if (!container) return;
+
+    // Extract profile picture data
+    let username = "Anonymous";
+    let profilePictureUrl = null;
+
+    if (post.userId && typeof post.userId === "object") {
+      username = post.userId.username || "Anonymous";
+      profilePictureUrl = post.userId.profilePictureUrl;
+    } else if (post.author) {
+      username = post.author.username || "Anonymous";
+      profilePictureUrl = post.author.profilePictureUrl;
+    } else if (post.User) {
+      username = post.User.username || post.User.name || "Anonymous";
+      profilePictureUrl = post.User.profilePictureUrl;
+    } else if (post.user) {
+      username = post.user.username || post.user.name || "Anonymous";
+      profilePictureUrl = post.user.profilePictureUrl;
+    }
+
+    // Use the profile picture service to update the container with CORS-safe method
+    if (profilePictureUrl) {
+      try {
+        await profilePictureService.updateContainerElementSafe(
+          container,
+          profilePictureUrl,
+          username,
+          "medium"
+        );
+      } catch (error) {
+        console.warn(
+          `Failed to load profile picture for post detail ${postId}:`,
+          error
+        );
+      }
+    }
+  }
+
+  async deletePost(postId) {
+    const result = await Swal.fire({
+      title: "Hapus Diskusi",
+      text: "Apakah Anda yakin ingin menghapus diskusi ini? Tindakan ini tidak dapat dibatalkan.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Ya, Hapus!",
+      cancelButtonText: "Batal",
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    try {
+      console.log("Deleting post:", postId);
+
+      await CommunityModel.deletePost(postId);
+      await this.loadPosts();
+
+      Swal.fire({
+        icon: "success",
+        title: "Berhasil!",
+        text: "Diskusi berhasil dihapus!",
         showConfirmButton: false,
         timer: 3000,
+      });
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal!",
+        text: `Gagal menghapus diskusi: ${error.message}`,
+        confirmButtonText: "OK",
       });
     }
   }

@@ -70,9 +70,10 @@ export default class DiagnosePresenter {
       el.cameraSection.style.display = "block";
       el.showCameraBtn.style.display = "none";
 
-      navigator.mediaDevices.enumerateDevices()
+      navigator.mediaDevices
+        .enumerateDevices()
         .then((devices) => {
-          const videoDevices = devices.filter(d => d.kind === "videoinput");
+          const videoDevices = devices.filter((d) => d.kind === "videoinput");
           el.cameraSelect.innerHTML = "";
           videoDevices.forEach((device, i) => {
             const option = document.createElement("option");
@@ -93,75 +94,76 @@ export default class DiagnosePresenter {
       el.showCameraBtn.style.display = "inline-block";
     });
 
-   el.capturePhoto.addEventListener("click", () => {
-  if (!this.isCaptured) {
-    const ctx = el.capturedCanvas.getContext("2d");
-    el.capturedCanvas.width = el.cameraStream.videoWidth;
-    el.capturedCanvas.height = el.cameraStream.videoHeight;
-    ctx.drawImage(el.cameraStream, 0, 0, el.capturedCanvas.width, el.capturedCanvas.height);
+    el.capturePhoto.addEventListener("click", () => {
+      if (!this.isCaptured) {
+        const ctx = el.capturedCanvas.getContext("2d");
+        el.capturedCanvas.width = el.cameraStream.videoWidth;
+        el.capturedCanvas.height = el.cameraStream.videoHeight;
+        ctx.drawImage(
+          el.cameraStream,
+          0,
+          0,
+          el.capturedCanvas.width,
+          el.capturedCanvas.height
+        );
 
-    el.capturedCanvas.toBlob((blob) => {
-      const file = new File([blob], "captured.png", { type: "image/png" });
-      const dataTransfer = new DataTransfer();
-      dataTransfer.items.add(file);
-      el.photoInput.files = dataTransfer.files;
+        el.capturedCanvas.toBlob((blob) => {
+          const file = new File([blob], "captured.png", { type: "image/png" });
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(file);
+          el.photoInput.files = dataTransfer.files;
+        });
+
+        this.stopCamera(el);
+
+        el.capturedCanvas.style.display = "block";
+        el.cameraStream.style.display = "none";
+        el.capturePhoto.style.display = "none";
+        el.retakePhoto.style.display = "inline-block";
+        el.stopCamera.style.display = "none";
+        this.isCaptured = true;
+      }
     });
 
-    this.stopCamera(el);
-
-    el.capturedCanvas.style.display = "block";
-    el.cameraStream.style.display = "none";
-    el.capturePhoto.style.display = "none";
-    el.retakePhoto.style.display = "inline-block";
-    el.stopCamera.style.display = "none";
-    this.isCaptured = true;
-  }
-});
-
-
-el.retakePhoto.addEventListener("click", () => {
-  this.startCamera(el);
-
-  el.cameraStream.style.display = "block";
-  el.capturedCanvas.style.display = "none";
-  el.capturePhoto.style.display = "inline-block";
-  el.retakePhoto.style.display = "none";
-  this.isCaptured = false;
-});
-
-
-document.addEventListener("visibilitychange", () => {
-  const el = this.view.getElements();
-
-  if (document.visibilityState === "hidden") {
-    if (this.cameraStream) {
-      this.wasCameraOn = true;
-      this.stopCamera(el);
-
-      // Tutup UI kamera
-      el.cameraSection.style.display = "none";
-      el.showCameraBtn.style.display = "inline-block";
-    }
-  } else if (document.visibilityState === "visible") {
-    if (this.wasCameraOn) {
-      el.cameraSection.style.display = "block";
-      el.showCameraBtn.style.display = "none";
+    el.retakePhoto.addEventListener("click", () => {
       this.startCamera(el);
-      this.wasCameraOn = false;
-    }
-  }
-});
 
+      el.cameraStream.style.display = "block";
+      el.capturedCanvas.style.display = "none";
+      el.capturePhoto.style.display = "inline-block";
+      el.retakePhoto.style.display = "none";
+      this.isCaptured = false;
+    });
 
-// Matikan kamera saat keluar dari halaman atau reload
-window.addEventListener("popstate", () => {
-  this.stopCamera(this.view.getElements());
-});
-window.addEventListener("beforeunload", () => {
-  this.stopCamera(this.view.getElements());
-});
+    document.addEventListener("visibilitychange", () => {
+      const el = this.view.getElements();
 
+      if (document.visibilityState === "hidden") {
+        if (this.cameraStream) {
+          this.wasCameraOn = true;
+          this.stopCamera(el);
 
+          // Tutup UI kamera
+          el.cameraSection.style.display = "none";
+          el.showCameraBtn.style.display = "inline-block";
+        }
+      } else if (document.visibilityState === "visible") {
+        if (this.wasCameraOn) {
+          el.cameraSection.style.display = "block";
+          el.showCameraBtn.style.display = "none";
+          this.startCamera(el);
+          this.wasCameraOn = false;
+        }
+      }
+    });
+
+    // Matikan kamera saat keluar dari halaman atau reload
+    window.addEventListener("popstate", () => {
+      this.stopCamera(this.view.getElements());
+    });
+    window.addEventListener("beforeunload", () => {
+      this.stopCamera(this.view.getElements());
+    });
   }
 
   async startCamera(el) {
@@ -191,6 +193,4 @@ window.addEventListener("beforeunload", () => {
       el.cameraStream.srcObject = null;
     }
   }
-
-
 }

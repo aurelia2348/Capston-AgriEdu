@@ -1,6 +1,7 @@
 import authService from "../../data/auth-service";
 import CONFIG from "../../config";
-import { openDB } from "idb";
+import ProfileModel from "../profile/profile-model.js";
+import profilePictureService from "../../data/profile-picture-service.js";
 import { NavigationBar } from "../../components/NavigationBar.js";
 
 export default class CommunityForm {
@@ -9,13 +10,18 @@ export default class CommunityForm {
     this.updateCameraDevices = this.updateCameraDevices.bind(this);
   }
 
-  async render(state) {
-    const userName = localStorage.getItem("user_name") || "User";
+  async render() {
+    // Get user data from auth service for navbar
+    const userData = authService.getUserData();
+    const userName =
+      userData?.username || localStorage.getItem("user_name") || "User";
     const userInitial = userName.charAt(0).toUpperCase();
 
     const navbar = new NavigationBar({
       currentPath: window.location.hash.slice(1),
       userInitial: userInitial,
+      username: userName,
+      profilePictureUrl: userData?.profilePictureUrl,
       showProfile: true,
     });
 
@@ -24,14 +30,15 @@ export default class CommunityForm {
       ${navbar.render()}
 
       <section class="community-banner">
-        <div class="banner-content">
-          <img src="logo/Comunity-Main.png" alt="Community Icon" class="banner-icon" />
-          <div class="banner-text">
-            <h2>Selamat datang di Komunitas AgriEdu!</h2>
-            <p>Komunitas untuk saling berbagi solusi dan pengalaman bercocok tanam. Mulai berbagi pengalaman Anda.</p>
-          </div>
-        </div>
-      </section>
+  <div class="banner-content">
+    <img src="logo/Comunity-Main.png" alt="Community Icon" class="banner-icon" />
+    <div class="banner-text">
+      <h2>Selamat datang di Komunitas AgriEdu!</h2>
+      <p>Komunitas untuk saling berbagi solusi dan pengalaman bercocok tanam. Mulai berbagi pengalaman Anda.</p>
+    </div>
+  </div>
+</section>
+
 
       <div class="profile-container">
         <aside class="profile-sidebar">
@@ -100,12 +107,17 @@ export default class CommunityForm {
   }
 
   setupNavigationEvents() {
-    const userName = localStorage.getItem("user_name") || "User";
+    // Get user data from auth service for navbar
+    const userData = authService.getUserData();
+    const userName =
+      userData?.username || localStorage.getItem("user_name") || "User";
     const userInitial = userName.charAt(0).toUpperCase();
 
     const navbar = new NavigationBar({
       currentPath: window.location.hash.slice(1),
       userInitial: userInitial,
+      username: userName,
+      profilePictureUrl: userData?.profilePictureUrl,
       showProfile: true,
     });
 
@@ -127,8 +139,22 @@ export default class CommunityForm {
 
         if (response.ok) {
           const data = await response.json();
-          const username = data?.data?.username || data?.username || "Pengguna";
+          const userData = data?.data || data;
+          const username = userData?.username || "Pengguna";
+
+          // Update username
           document.getElementById("sidebarUsername").textContent = username;
+
+          // Update profile picture using the profile picture service
+          const sidebarAvatar = document.getElementById("sidebarAvatar");
+          if (sidebarAvatar) {
+            await profilePictureService.updateImageElement(
+              sidebarAvatar,
+              userData.profilePictureUrl,
+              username
+            );
+            console.log("Updated sidebar profile picture");
+          }
         } else {
           // Token tidak valid, redirect ke login
           console.warn("Token tidak valid, redirect ke login");
@@ -142,24 +168,25 @@ export default class CommunityForm {
         return;
       }
     } catch (err) {
-      console.error("Gagal ambil username:", err);
+      console.error("Gagal ambil user info:", err);
       // Jika error, redirect ke login
       window.location.hash = "#/login";
       return;
     }
 
+    // Get experience level using ProfileModel (same method as ProfilePage and CommunityPage)
     try {
-      const db = await openDB("agriEduDB", 1); // harus sama dengan yang di indexeddb.js
-      const tx = db.transaction("setupData", "readonly");
-      const store = tx.objectStore("setupData");
-      const allSetupData = await store.getAll(); // ambil semua data
-      const setupData = allSetupData[0]; // ambil data pertama (jika ada)
-      const experienceLevel = setupData?.experience || "Belum diatur";
+      const profile = await ProfileModel.getUserProfile();
+      const experienceLevel = profile.experience || "Belum diatur";
 
       document.getElementById("sidebarExperience").textContent =
         experienceLevel;
-    } catch (err) {
-      console.error("Gagal ambil experience dari IndexedDB:", err);
+      console.log("Updated sidebar experience to:", experienceLevel);
+    } catch (profileError) {
+      console.error(
+        "Failed to get experience from ProfileModel:",
+        profileError
+      );
       document.getElementById("sidebarExperience").textContent =
         "Gagal ambil experience";
     }
@@ -393,10 +420,9 @@ export default class CommunityForm {
       } catch (err) {
         Swal.fire({
           icon: "error",
-          title: "Gagal mengakses kamera",
-          text: err.message,
-          showConfirmButton: false,
-          timer: 3000,
+          title: "Gagal Mengakses Kamera",
+          text: "Gagal mengakses kamera: " + err.message,
+          confirmButtonText: "OK",
         });
       }
     };

@@ -1,3 +1,5 @@
+import learningService from "../../data/learning-service.js";
+
 export const articles = [
   {
     type: "article",
@@ -98,6 +100,88 @@ export const videos = [
     isFavorite: false,
   },
 ];
+
+// Category ID mappings
+const CATEGORY_IDS = {
+  experience: {
+    pemula: "6837fe6c06bf979e73ffd611", // Beginner
+    menengah: "6837fe8c06bf979e73ffd61a", // Intermediate
+    lanjutan: "6837fe9606bf979e73ffd61f", // Experienced
+  },
+  plantType: {
+    sayuran: "6838035e06bf979e73ffd64b", // Sayuran
+    buah: "6838036d06bf979e73ffd650", // Buah
+    "tanaman-hias": "6838037e06bf979e73ffd655", // Tanaman Hias
+    lainnya: "6838038a06bf979e73ffd65a", // Jenis Lainnya
+  },
+  method: {
+    konvensional: "683803a806bf979e73ffd65f", // Konvensional
+    hidroponik: "683803c306bf979e73ffd664", // Hidroponik
+    organik: "683803d006bf979e73ffd669", // Organik
+    lainnya: "6838041b06bf979e73ffd671", // Metode Lainnya
+  },
+};
+
+// Transform API data to match our existing structure
+function transformApiData(apiData) {
+  return apiData.map((item) => {
+    // Find the first matching category for each type
+    const experienceCategory = item.categories.find((c) =>
+      Object.values(CATEGORY_IDS.experience).includes(c.id)
+    );
+    const plantTypeCategory = item.categories.find((c) =>
+      Object.values(CATEGORY_IDS.plantType).includes(c.id)
+    );
+    const methodCategory = item.categories.find((c) =>
+      Object.values(CATEGORY_IDS.method).includes(c.id)
+    );
+
+    // Get the category name based on ID
+    const getCategoryName = (categoryId, categoryType) => {
+      if (!categoryId) return "pemula"; // Default for experience
+      const mapping = CATEGORY_IDS[categoryType];
+      return (
+        Object.entries(mapping).find(([_, id]) => id === categoryId)?.[0] ||
+        (categoryType === "plantType"
+          ? "lainnya"
+          : categoryType === "method"
+          ? "konvensional"
+          : "pemula")
+      );
+    };
+
+    return {
+      type: "article",
+      title: item.title,
+      description: item.summary,
+      url: item.contentLink,
+      category: {
+        experience: getCategoryName(experienceCategory?.id, "experience"),
+        plantType: getCategoryName(plantTypeCategory?.id, "plantType"),
+        method: getCategoryName(methodCategory?.id, "method"),
+      },
+      isFavorite: false,
+    };
+  });
+}
+
+// Fetch learning data from API
+export async function fetchLearningData() {
+  try {
+    const response = await learningService.getAllLearning();
+    if (response && response.learning) {
+      const transformedData = transformApiData(response.learning);
+      // Update articles array with new data
+      articles.length = 0;
+      articles.push(...transformedData);
+      return articles;
+    }
+    return articles; // Return existing articles if API fails
+  } catch (error) {
+    console.error("Error fetching learning data:", error);
+    return articles; // Return existing articles if API fails
+  }
+}
 
 // Learning Storage Management
 export class LearningStorage {

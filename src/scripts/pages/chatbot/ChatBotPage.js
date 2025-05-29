@@ -1,18 +1,24 @@
 import { NavigationBar } from "../../components/NavigationBar.js";
 import ChatbotPresenter from "./ChatBotPage-Presenter.js";
+import authService from "../../data/auth-service.js";
 
 export default class ChatbotPage {
   async render() {
-    const userName = localStorage.getItem("user_name") || "User";
+    // Get user data from auth service for navbar
+    const userData = authService.getUserData();
+    const userName =
+      userData?.username || localStorage.getItem("user_name") || "User";
     const userInitial = userName.charAt(0).toUpperCase();
 
     const navbar = new NavigationBar({
       currentPath: window.location.hash.slice(1),
       userInitial: userInitial,
+      username: userName,
+      profilePictureUrl: userData?.profilePictureUrl,
       showProfile: true,
     });
 
-return `
+    return `
   <div class="chatbot-fullscreen-container">
     ${navbar.render()}
     <section class="chatbot-wrapper">
@@ -37,24 +43,28 @@ return `
   async afterRender() {
     this.setupNavigationEvents();
 
-    const chatContainer = document.getElementById('chat-container');
-    const chatInput = document.getElementById('chat-input');
-    const sendBtn = document.getElementById('send-btn');
+    const chatContainer = document.getElementById("chat-container");
+    const chatInput = document.getElementById("chat-input");
+    const sendBtn = document.getElementById("send-btn");
 
     this.chatbot = new ChatbotPresenter(chatContainer, chatInput, sendBtn);
   }
 
   setupNavigationEvents() {
-    const userName = localStorage.getItem("user_name") || "User";
+    // Get user data from auth service for navbar
+    const userData = authService.getUserData();
+    const userName =
+      userData?.username || localStorage.getItem("user_name") || "User";
     const userInitial = userName.charAt(0).toUpperCase();
 
     const navbar = new NavigationBar({
       currentPath: window.location.hash.slice(1),
       userInitial: userInitial,
+      username: userName,
+      profilePictureUrl: userData?.profilePictureUrl,
       showProfile: true,
     });
 
     navbar.bindEvents();
   }
 }
-

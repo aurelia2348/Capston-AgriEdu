@@ -145,7 +145,13 @@ setupNavigationEvents() {
     if (profileIcon) {
       profileIcon.addEventListener("click", () => {
         const userName = localStorage.getItem("user_name") || "User";
-        alert(`Logged in as: ${userName}\nStatus: Active`);
+        Swal.fire({
+          icon: "info",
+          title: "User Information",
+          text: `Logged in as: ${userName}\nStatus: Active`,
+          showConfirmButton: true,
+          confirmButtonText: "OK",
+        });
       });
     }
 

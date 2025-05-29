@@ -25,6 +25,18 @@ const CONFIG = {
       GET: "/api/account",
       UPDATE: "/api/account",
       DELETE: "/api/account",
+      UPLOAD_PROFILE_PICTURE: "/api/account/profile-picture",
+      GET_PROFILE_PICTURE: "/api/account/profile-picture",
+      DELETE_PROFILE_PICTURE: "/api/account/profile-picture",
+    },
+    LEARNING: {
+      GET_ALL: "/api/learning",
+      GET_BY_ID: "/api/learning/",
+      CREATE: "/api/learning",
+      UPDATE: "/api/learning/",
+      DELETE: "/api/learning/",
+      BOOKMARK: "/api/learning/",
+      MARK_AS_READ: "/api/learning/",
     },
   },
   STORAGE_KEYS: {

@@ -2,14 +2,33 @@ import ProfilePresenter from "./profile-presenter";
 import { NavigationBar } from "../../components/NavigationBar.js";
 
 export default class ProfilePage {
+  constructor() {
+    // Store selected file temporarily until form submission
+    this.pendingProfilePicture = null;
+    this.hasUnsavedChanges = false;
+  }
+
   async render() {
-    // Get user initial from localStorage
-    const userName = localStorage.getItem("user_name") || "User";
+    // Get user data from auth service
+    const authService = (await import("../../data/auth-service.js")).default;
+    const userData = authService.getUserData();
+
+    // Debug logging
+    console.log("ProfilePage render - userData from authService:", userData);
+    console.log(
+      "ProfilePage render - profilePictureUrl:",
+      userData?.profilePictureUrl
+    );
+
+    const userName =
+      userData?.username || localStorage.getItem("user_name") || "User";
     const userInitial = userName.charAt(0).toUpperCase();
 
     const navbar = new NavigationBar({
       currentPath: window.location.hash.slice(1),
       userInitial: userInitial,
+      username: userName,
+      profilePictureUrl: userData?.profilePictureUrl,
       showProfile: true,
     });
 
@@ -66,10 +85,17 @@ export default class ProfilePage {
 
               <div class="profile-save-btn-wrapper" style="margin-top: 20px;">
                 <button id="saveProfileBtn" class="btn btn-primary">Edit Profile</button>
+                <div id="unsavedChangesIndicator" style="display: none; margin-top: 10px; color: #ff6b35; font-size: 14px;">
+                  <i>⚠️ You have unsaved changes</i>
+                </div>
               </div>
             </section>
           </main>
         </div>
+
+        <footer class="profile-footer">
+          <p>&copy; 2025 AgriEdu. All rights reserved.</p>
+        </footer>
       </div>
     `;
   }
@@ -78,7 +104,7 @@ export default class ProfilePage {
     // Set up navigation bar events
     this.setupNavigationEvents();
 
-    // Set up avatar upload functionality
+    // Set up avatar preview functionality (no immediate upload)
     const editBtn = document.getElementById("editAvatarBtn");
     const avatarInput = document.getElementById("avatarInput");
     const avatarPreview = document.getElementById("avatarPreview");
@@ -91,32 +117,66 @@ export default class ProfilePage {
       avatarInput.addEventListener("change", () => {
         const file = avatarInput.files[0];
         if (file) {
-          const reader = new FileReader();
-          reader.onload = function (e) {
-            avatarPreview.src = e.target.result;
-            // Also update sidebar avatar
-            const sidebarAvatar = document.getElementById("sidebarAvatar");
-            if (sidebarAvatar) {
-              sidebarAvatar.src = e.target.result;
-            }
-          };
-          reader.readAsDataURL(file);
+          // Validate file size (2MB limit as mentioned in UI)
+          if (file.size > 2 * 1024 * 1024) {
+            Swal.fire({
+              icon: "warning",
+              title: "File Terlalu Besar",
+              text: "Ukuran file maksimal 2MB. Silakan pilih file yang lebih kecil.",
+              showConfirmButton: true,
+              confirmButtonText: "OK",
+            });
+            avatarInput.value = ""; // Clear the input
+            return;
+          }
+
+          // Validate file type
+          if (!file.type.startsWith("image/")) {
+            Swal.fire({
+              icon: "warning",
+              title: "Format File Tidak Valid",
+              text: "File harus berupa gambar (JPG, PNG, GIF, dll).",
+              showConfirmButton: true,
+              confirmButtonText: "OK",
+            });
+            avatarInput.value = ""; // Clear the input
+            return;
+          }
+
+          // Store the file for later upload
+          this.pendingProfilePicture = file;
+
+          // Show preview of selected image
+          this.showImagePreview(file);
+
+          // Mark as having unsaved changes
+          this.markAsUnsaved();
+
+          console.log("Profile picture selected for preview:", file.name);
         }
       });
     }
+
+    // Set up form change tracking
+    this.setupFormChangeTracking();
 
     // Initialize ProfilePresenter
     ProfilePresenter.init(this);
   }
 
-  setupNavigationEvents() {
+  async setupNavigationEvents() {
     // Set up navigation bar events using the NavigationBar component's centralized event handling
-    const userName = localStorage.getItem("user_name") || "User";
+    const authService = (await import("../../data/auth-service.js")).default;
+    const userData = authService.getUserData();
+    const userName =
+      userData?.username || localStorage.getItem("user_name") || "User";
     const userInitial = userName.charAt(0).toUpperCase();
 
     const navbar = new NavigationBar({
       currentPath: window.location.hash.slice(1),
       userInitial: userInitial,
+      username: userName,
+      profilePictureUrl: userData?.profilePictureUrl,
       showProfile: true,
     });
 
@@ -124,7 +184,34 @@ export default class ProfilePage {
     navbar.bindEvents();
   }
 
-  showProfile({ avatar, fullName, username, experience }) {
+  /**
+   * Set up tracking for form input changes
+   */
+  setupFormChangeTracking() {
+    const formInputs = [
+      document.getElementById("fullNameInput"),
+      document.getElementById("usernameInput"),
+      ...document.querySelectorAll('input[name="experience"]'),
+    ];
+
+    formInputs.forEach((input) => {
+      if (input) {
+        input.addEventListener("input", () => {
+          if (!this.hasUnsavedChanges && !this.pendingProfilePicture) {
+            this.markAsUnsaved();
+          }
+        });
+
+        input.addEventListener("change", () => {
+          if (!this.hasUnsavedChanges && !this.pendingProfilePicture) {
+            this.markAsUnsaved();
+          }
+        });
+      }
+    });
+  }
+
+  async showProfile({ fullName, username, experience }) {
     // Update main profile form
     const fullNameInput = document.getElementById("fullNameInput");
     const usernameInput = document.getElementById("usernameInput");
@@ -140,13 +227,42 @@ export default class ProfilePage {
       if (radio) radio.checked = true;
     }
 
-    // Update avatar images
-    if (avatar) {
-      const avatarPreview = document.getElementById("avatarPreview");
-      if (avatarPreview) avatarPreview.src = avatar;
+    // Update avatar images using profile picture service for consistency
+    const profilePictureService = (
+      await import("../../data/profile-picture-service.js")
+    ).default;
 
-      const sidebarAvatar = document.getElementById("sidebarAvatar");
-      if (sidebarAvatar) sidebarAvatar.src = avatar;
+    // Get user data to extract profilePictureUrl
+    const authService = (await import("../../data/auth-service.js")).default;
+    const userData = authService.getUserData();
+
+    console.log(
+      "ProfilePage showProfile - updating avatars with userData:",
+      userData
+    );
+    console.log(
+      "ProfilePage showProfile - profilePictureUrl:",
+      userData?.profilePictureUrl
+    );
+
+    const avatarPreview = document.getElementById("avatarPreview");
+    if (avatarPreview) {
+      console.log("Updating avatarPreview element");
+      await profilePictureService.updateImageElement(
+        avatarPreview,
+        userData?.profilePictureUrl,
+        username
+      );
+    }
+
+    const sidebarAvatar = document.getElementById("sidebarAvatar");
+    if (sidebarAvatar) {
+      console.log("Updating sidebarAvatar element");
+      await profilePictureService.updateImageElement(
+        sidebarAvatar,
+        userData?.profilePictureUrl,
+        username
+      );
     }
 
     // Update sidebar information
@@ -157,5 +273,117 @@ export default class ProfilePage {
       sidebarUsername.textContent = username || "Username User";
     if (sidebarExperience)
       sidebarExperience.textContent = experience || "Experience Level";
+  }
+
+  /**
+   * Show preview of selected image file
+   * @param {File} file - The selected image file
+   */
+  showImagePreview(file) {
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const imageDataUrl = e.target.result;
+
+      // Remove any existing fallback avatars
+      const existingFallbacks = document.querySelectorAll(".fallback-avatar");
+      existingFallbacks.forEach((fallback) => fallback.remove());
+
+      // Update main profile avatar preview
+      const avatarPreview = document.getElementById("avatarPreview");
+      if (avatarPreview) {
+        avatarPreview.src = imageDataUrl;
+        avatarPreview.style.display = "block";
+        avatarPreview.alt = "Profile Picture Preview";
+      }
+
+      // Update sidebar avatar preview
+      const sidebarAvatar = document.getElementById("sidebarAvatar");
+      if (sidebarAvatar) {
+        sidebarAvatar.src = imageDataUrl;
+        sidebarAvatar.style.display = "block";
+        sidebarAvatar.alt = "Profile Picture Preview";
+      }
+
+      console.log("Profile picture preview updated");
+    };
+
+    reader.onerror = () => {
+      console.error("Failed to read selected image file");
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Gagal membaca file gambar yang dipilih.",
+        showConfirmButton: true,
+        confirmButtonText: "OK",
+      });
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  /**
+   * Mark the form as having unsaved changes
+   */
+  markAsUnsaved() {
+    this.hasUnsavedChanges = true;
+
+    // Show unsaved changes indicator
+    const indicator = document.getElementById("unsavedChangesIndicator");
+    if (indicator) {
+      indicator.style.display = "block";
+    }
+
+    // Update button text to indicate pending changes
+    const saveBtn = document.getElementById("saveProfileBtn");
+    if (saveBtn) {
+      if (this.pendingProfilePicture) {
+        saveBtn.textContent = "Save Profile & Upload Picture";
+      } else {
+        saveBtn.textContent = "Save Changes";
+      }
+    }
+  }
+
+  /**
+   * Mark the form as saved (clear unsaved changes)
+   */
+  markAsSaved() {
+    this.hasUnsavedChanges = false;
+    this.pendingProfilePicture = null;
+
+    // Clear the file input
+    const avatarInput = document.getElementById("avatarInput");
+    if (avatarInput) {
+      avatarInput.value = "";
+    }
+
+    // Hide unsaved changes indicator
+    const indicator = document.getElementById("unsavedChangesIndicator");
+    if (indicator) {
+      indicator.style.display = "none";
+    }
+
+    // Reset button text
+    const saveBtn = document.getElementById("saveProfileBtn");
+    if (saveBtn) {
+      saveBtn.textContent = "Edit Profile";
+    }
+  }
+
+  /**
+   * Get the pending profile picture file
+   * @returns {File|null} The pending profile picture file or null
+   */
+  getPendingProfilePicture() {
+    return this.pendingProfilePicture;
+  }
+
+  /**
+   * Check if there are unsaved changes
+   * @returns {boolean} True if there are unsaved changes
+   */
+  hasUnsavedProfileChanges() {
+    return this.hasUnsavedChanges;
   }
 }

@@ -1,5 +1,6 @@
 import { NavigationBar } from "../../components/NavigationBar.js";
 import DiagnosePresenter from "./DiagnosePage-Presenter.js";
+import authService from "../../data/auth-service.js";
 
 export default class DiagnoseForm {
   constructor() {
@@ -7,12 +8,17 @@ export default class DiagnoseForm {
   }
 
   async render() {
-    const userName = localStorage.getItem("user_name") || "User";
+    // Get user data from auth service for navbar
+    const userData = authService.getUserData();
+    const userName =
+      userData?.username || localStorage.getItem("user_name") || "User";
     const userInitial = userName.charAt(0).toUpperCase();
 
     const navbar = new NavigationBar({
       currentPath: window.location.hash.slice(1),
       userInitial: userInitial,
+      username: userName,
+      profilePictureUrl: userData?.profilePictureUrl,
       showProfile: true,
     });
 
@@ -158,12 +164,17 @@ export default class DiagnoseForm {
   }
 
   setupNavigation() {
-    const userName = localStorage.getItem("user_name") || "User";
+    // Get user data from auth service for navbar
+    const userData = authService.getUserData();
+    const userName =
+      userData?.username || localStorage.getItem("user_name") || "User";
     const userInitial = userName.charAt(0).toUpperCase();
 
     const navbar = new NavigationBar({
       currentPath: window.location.hash.slice(1),
       userInitial: userInitial,
+      username: userName,
+      profilePictureUrl: userData?.profilePictureUrl,
       showProfile: true,
     });
 

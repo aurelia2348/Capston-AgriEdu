@@ -1,4 +1,9 @@
-import { articles, videos, LearningStorage } from "./LearningPage-Model.js";
+import {
+  articles,
+  videos,
+  LearningStorage,
+  fetchLearningData,
+} from "./LearningPage-Model.js";
 import {
   renderArticles,
   renderVideos,
@@ -8,15 +13,43 @@ import {
   renderRecentLearning,
 } from "./LearningPage-Presenter.js";
 import { NavigationBar } from "../../components/NavigationBar.js";
+import authService from "../../data/auth-service.js";
+import learningService from "../../data/learning-service.js";
+
+// Category ID mappings
+const CATEGORY_IDS = {
+  experience: {
+    pemula: "6837fe6c06bf979e73ffd611", // Beginner
+    menengah: "6837fe8c06bf979e73ffd61a", // Intermediate
+    lanjutan: "6837fe9606bf979e73ffd61f", // Experienced
+  },
+  plantType: {
+    sayuran: "6838035e06bf979e73ffd64b", // Sayuran
+    buah: "6838036d06bf979e73ffd650", // Buah
+    "tanaman-hias": "6838037e06bf979e73ffd655", // Tanaman Hias
+    lainnya: "6838038a06bf979e73ffd65a", // Jenis Lainnya
+  },
+  method: {
+    konvensional: "683803a806bf979e73ffd65f", // Konvensional
+    hidroponik: "683803c306bf979e73ffd664", // Hidroponik
+    organik: "683803d006bf979e73ffd669", // Organik
+    lainnya: "6838041b06bf979e73ffd671", // Metode Lainnya
+  },
+};
 
 export default class LearningPage {
   constructor() {
-    const userName = localStorage.getItem("user_name") || "User";
+    // Get user data from auth service for navbar
+    const userData = authService.getUserData();
+    const userName =
+      userData?.username || localStorage.getItem("user_name") || "User";
     const userInitial = userName.charAt(0).toUpperCase();
 
     this.navbar = new NavigationBar({
       currentPath: window.location.hash.slice(1),
       userInitial,
+      username: userName,
+      profilePictureUrl: userData?.profilePictureUrl,
       showProfile: true,
     });
   }
@@ -76,6 +109,9 @@ export default class LearningPage {
 
               <aside class="learning-filter-panel">
                 <h4><i class="fa fa-filter"></i> Filter Materi</h4>
+                <button id="add-learning-btn" class="add-learning-btn">
+                  <i class="fas fa-plus"></i> Tambah Materi
+                </button>
 
                 <div class="filter-group">
                   <strong>Pengalaman</strong>
@@ -120,6 +156,87 @@ export default class LearningPage {
             </section>
           </section>
         </div>
+        <div id="add-learning-modal" class="modal" style="display: none;">
+          <div class="modal-overlay"></div>
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2>Tambah Materi Pembelajaran</h2>
+              <button class="modal-close" onclick="this.closest('.modal').style.display='none'">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="add-learning-form">
+                <div class="form-group">
+                  <label for="title">Judul Materi</label>
+                  <input type="text" id="title" name="title" required placeholder="Masukkan judul materi" />
+                </div>
+
+                <div class="form-group">
+                  <label for="summary">Ringkasan</label>
+                  <textarea id="summary" name="summary" required placeholder="Masukkan ringkasan materi" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label for="contentLink">Link Konten</label>
+                  <input type="url" id="contentLink" name="contentLink" required placeholder="Masukkan link konten (URL)" />
+                </div>
+
+                <div class="form-group">
+                  <label>Kategori</label>
+                  <div class="category-options">
+                    <div class="category-section">
+                      <h4>Level Pengalaman</h4>
+                      <label><input type="checkbox" name="categories" value="pemula" data-id="${
+                        CATEGORY_IDS.experience.pemula
+                      }" /> Pemula</label>
+                      <label><input type="checkbox" name="categories" value="menengah" data-id="${
+                        CATEGORY_IDS.experience.menengah
+                      }" /> Menengah</label>
+                      <label><input type="checkbox" name="categories" value="lanjutan" data-id="${
+                        CATEGORY_IDS.experience.lanjutan
+                      }" /> Lanjutan</label>
+                    </div>
+
+                    <div class="category-section">
+                      <h4>Jenis Tanaman</h4>
+                      <label><input type="checkbox" name="categories" value="sayuran" data-id="${
+                        CATEGORY_IDS.plantType.sayuran
+                      }" /> Sayuran</label>
+                      <label><input type="checkbox" name="categories" value="buah" data-id="${
+                        CATEGORY_IDS.plantType.buah
+                      }" /> Buah</label>
+                      <label><input type="checkbox" name="categories" value="tanaman-hias" data-id="${
+                        CATEGORY_IDS.plantType["tanaman-hias"]
+                      }" /> Tanaman Hias</label>
+                      <label><input type="checkbox" name="categories" value="lainnya" data-id="${
+                        CATEGORY_IDS.plantType.lainnya
+                      }" /> Lainnya</label>
+                    </div>
+
+                    <div class="category-section">
+                      <h4>Metode</h4>
+                      <label><input type="checkbox" name="categories" value="konvensional" data-id="${
+                        CATEGORY_IDS.method.konvensional
+                      }" /> Konvensional</label>
+                      <label><input type="checkbox" name="categories" value="hidroponik" data-id="${
+                        CATEGORY_IDS.method.hidroponik
+                      }" /> Hidroponik</label>
+                      <label><input type="checkbox" name="categories" value="organik" data-id="${
+                        CATEGORY_IDS.method.organik
+                      }" /> Organik</label>
+                      <label><input type="checkbox" name="categories" value="lainnya" data-id="${
+                        CATEGORY_IDS.method.lainnya
+                      }" /> Lainnya</label>
+                    </div>
+                  </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Tambah Materi</button>
+              </form>
+            </div>
+          </div>
+        </div>
         <footer class="page-footer">
           <p>&copy; 2025 AgriEdu. All rights reserved.</p>
         </footer>
@@ -127,7 +244,7 @@ export default class LearningPage {
     `;
   }
 
-  afterRender() {
+  async afterRender() {
     // Initialize favorites from localStorage
     LearningStorage.initializeFavorites();
 
@@ -137,47 +254,162 @@ export default class LearningPage {
       "recent-learning-container"
     );
 
-    // Render initial articles and videos
-    renderArticles(articleContainer, articles);
-    renderVideos(videoContainer, videos);
+    // Show loading state
+    articleContainer.innerHTML =
+      '<div class="loading">Memuat materi pembelajaran...</div>';
 
-    // Render recent learning
-    renderRecentLearning(recentContainer);
+    try {
+      // Fetch learning data from API
+      await fetchLearningData();
 
-    // Setup favorite buttons event listeners
-    setupFavoriteListeners(articleContainer, videoContainer);
+      // Render articles and videos
+      renderArticles(articleContainer, articles);
+      renderVideos(videoContainer, videos);
 
-    // Setup search and filter listeners
-    this.setupSearchAndFilters(articleContainer, videoContainer);
+      // Render recent learning
+      renderRecentLearning(recentContainer);
 
-    // Favorite filter button with improved feedback
-    const favoriteBtn = document.getElementById("favorite-filter");
-    let showingFavorites = false;
+      // Setup favorite buttons event listeners
+      setupFavoriteListeners(articleContainer, videoContainer);
 
-    favoriteBtn.addEventListener("click", () => {
-      showingFavorites = !showingFavorites;
+      // Setup search and filter listeners
+      this.setupSearchAndFilters(articleContainer, videoContainer);
 
-      if (showingFavorites) {
-        favoriteBtn.classList.add("active");
-        favoriteBtn.innerHTML = '<i class="fa fa-heart"></i> Semua Materi';
-        this.applyFilters(articleContainer, videoContainer, {
-          showFavorites: true,
+      // Add Learning Modal Setup
+      const addLearningBtn = document.getElementById("add-learning-btn");
+      const addLearningModal = document.getElementById("add-learning-modal");
+      const addLearningForm = document.getElementById("add-learning-form");
+
+      addLearningBtn.addEventListener("click", () => {
+        addLearningModal.style.display = "flex";
+      });
+
+      // Close modal when clicking overlay
+      addLearningModal
+        .querySelector(".modal-overlay")
+        .addEventListener("click", () => {
+          addLearningModal.style.display = "none";
         });
-      } else {
-        favoriteBtn.classList.remove("active");
-        favoriteBtn.innerHTML = '<i class="fa fa-heart"></i> Lihat Favorite';
-        this.applyFilters(articleContainer, videoContainer);
-      }
-    });
 
-    // Add clear filters button
-    this.addClearFiltersButton(articleContainer, videoContainer);
+      // Handle form submission
+      addLearningForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-    // Setup gallery carousel
-    this.setupGalleryCarousel();
+        // Get selected categories and map them to their IDs
+        const selectedCategories = Array.from(
+          document.querySelectorAll('input[name="categories"]:checked')
+        ).map((cb) => cb.dataset.id);
 
-    // Bind navigation bar events
-    this.navbar.bindEvents();
+        const formData = {
+          title: document.getElementById("title").value,
+          summary: document.getElementById("summary").value,
+          contentLink: document.getElementById("contentLink").value,
+          categories: selectedCategories, // Send array of category IDs as per API schema
+        };
+
+        try {
+          const result = await learningService.createLearning(formData);
+
+          // Add the new learning material to the articles array
+          articles.unshift({
+            type: "article",
+            title: result.learning.title,
+            description: result.learning.summary,
+            url: result.learning.contentLink,
+            category: {
+              experience:
+                Object.entries(CATEGORY_IDS.experience).find(([_, id]) =>
+                  result.learning.categories.some((c) => c.id === id)
+                )?.[0] || "pemula",
+              plantType:
+                Object.entries(CATEGORY_IDS.plantType).find(([_, id]) =>
+                  result.learning.categories.some((c) => c.id === id)
+                )?.[0] || "lainnya",
+              method:
+                Object.entries(CATEGORY_IDS.method).find(([_, id]) =>
+                  result.learning.categories.some((c) => c.id === id)
+                )?.[0] || "konvensional",
+            },
+            isFavorite: false,
+          });
+
+          // Re-render articles
+          renderArticles(articleContainer, articles);
+
+          // Close modal and reset form
+          addLearningModal.style.display = "none";
+          addLearningForm.reset();
+
+          // Show success message
+          Swal.fire({
+            icon: "success",
+            title: "Berhasil!",
+            text: "Materi pembelajaran berhasil ditambahkan!",
+            showConfirmButton: false,
+            timer: 3000,
+          });
+        } catch (error) {
+          console.error("Error adding learning material:", error);
+          let errorMessage = "Gagal menambahkan materi pembelajaran. ";
+
+          if (error.message.includes("401")) {
+            errorMessage += "Sesi Anda telah berakhir. Silakan login kembali.";
+          } else if (error.message.includes("404")) {
+            errorMessage +=
+              "API endpoint tidak ditemukan. Silakan hubungi administrator.";
+          } else if (error.message.includes("500")) {
+            errorMessage +=
+              "Terjadi kesalahan pada server. Silakan coba lagi nanti.";
+          } else {
+            errorMessage += "Silakan coba lagi.";
+          }
+
+          Swal.fire({
+            icon: "error",
+            title: "Gagal!",
+            text: errorMessage,
+            confirmButtonText: "OK",
+          });
+        }
+      });
+
+      // Favorite filter button with improved feedback
+      const favoriteBtn = document.getElementById("favorite-filter");
+      let showingFavorites = false;
+
+      favoriteBtn.addEventListener("click", () => {
+        showingFavorites = !showingFavorites;
+
+        if (showingFavorites) {
+          favoriteBtn.classList.add("active");
+          favoriteBtn.innerHTML = '<i class="fa fa-heart"></i> Semua Materi';
+          this.applyFilters(articleContainer, videoContainer, {
+            showFavorites: true,
+          });
+        } else {
+          favoriteBtn.classList.remove("active");
+          favoriteBtn.innerHTML = '<i class="fa fa-heart"></i> Lihat Favorite';
+          this.applyFilters(articleContainer, videoContainer);
+        }
+      });
+
+      // Add clear filters button
+      this.addClearFiltersButton(articleContainer, videoContainer);
+
+      // Setup gallery carousel
+      this.setupGalleryCarousel();
+
+      // Bind navigation bar events
+      this.navbar.bindEvents();
+    } catch (error) {
+      console.error("Error loading learning data:", error);
+      articleContainer.innerHTML = `
+        <div class="error-message">
+          <p>Gagal memuat materi pembelajaran: ${error.message}</p>
+          <button onclick="location.reload()">Coba Lagi</button>
+        </div>
+      `;
+    }
   }
 
   setupSearchAndFilters(articleContainer, videoContainer) {

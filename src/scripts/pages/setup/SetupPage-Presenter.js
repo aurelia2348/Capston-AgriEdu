@@ -1,21 +1,23 @@
 import "ol/ol.css";
 import Map from "ol/Map";
 import View from "ol/View";
+import CONFIG from "../../config";
 import TileLayer from "ol/layer/Tile";
 import OSM from "ol/source/OSM";
 import Overlay from "ol/Overlay";
 import { fromLonLat, toLonLat } from "ol/proj";
 import Zoom from "ol/control/Zoom";
 import SetupModel from "./SetupPage-Model";
-import { saveSetupData } from "../../utils/indexeddb";
+import { saveSetupData, markSetupCompleted } from "../../utils/indexeddb";
+import authService from "../../data/auth-service";
 
 export default class SetupPagePresenter {
   constructor() {
     this.currentStep = 0;
     this.titles = [
-      `Let’s <span style="color:#A9E652">get</span> your <strong>set up first!</strong>`,
+      `Let's <span style="color:#A9E652">get</span> your <strong>set up first!</strong>`,
       `Set Up`,
-      `You’re <span style="color:#A9E652">ready</span> to go!`,
+      `You're <span style="color:#A9E652">ready</span> to go!`,
     ];
     this.descriptions = [
       "Just a few steps to create your AgriEdu account and start exploring smarter farming tools and learning resources.",
@@ -32,7 +34,23 @@ export default class SetupPagePresenter {
     this.marker = null;
   }
 
-  init() {
+  async init() {
+    // Check if user is logged in
+    const userData = authService.getUserData();
+    if (!userData || !userData.id) {
+      console.warn("No user data found, redirecting to login");
+      window.location.hash = "#/login";
+      return;
+    }
+
+    // Check if setup has been completed
+    const hasCompleted = await this.checkSetupStatus(userData.id);
+    if (hasCompleted) {
+      console.log("Setup already completed, redirecting to home");
+      window.location.hash = "#/home";
+      return;
+    }
+
     this.titleEl = document.getElementById("step-title");
     this.descEl = document.getElementById("step-desc");
     this.iconEl = document.getElementById("step-icon");
@@ -49,19 +67,41 @@ export default class SetupPagePresenter {
     this._initForm();
   }
 
-  nextStep() {
+  async checkSetupStatus(userId) {
+    try {
+      const { hasCompletedSetup } = await import("../../utils/indexeddb");
+      return await hasCompletedSetup(userId);
+    } catch (error) {
+      console.error("Error checking setup status:", error);
+      return false;
+    }
+  }
+
+  async nextStep() {
     if (this.currentStep < this.titles.length - 1) {
       this.currentStep++;
       this.updateStep();
     } else {
+      // Mark setup as completed for the current user
+      const userData = authService.getUserData();
+      if (userData && userData.id) {
+        try {
+          await markSetupCompleted(userData.id);
+          console.log("Setup marked as completed for user:", userData.id);
+        } catch (error) {
+          console.error("Error marking setup as completed:", error);
+        }
+      }
+
       Swal.fire({
         icon: "success",
         title: "Setup selesai!",
-        text: "Pengaturan awal telah berhasil diselesaikan.",
+        text: "Selamat! Setup akun Anda telah berhasil diselesaikan.",
         showConfirmButton: false,
         timer: 3000,
+      }).then(() => {
+        window.location.hash = "#/home";
       });
-      window.location.hash = "#/home?welcome=true";
     }
   }
 
@@ -204,59 +244,108 @@ export default class SetupPagePresenter {
 
   _initForm() {
     const form = document.getElementById("setup-form");
-    if (!form) return;
+    if (!form) {
+      console.error("Setup form not found");
+      return;
+    }
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
+      console.log("Form submitted");
 
-      const name = document.getElementById("name").value;
-      const interest = document.getElementById("interest").value;
-      const experience = form.experience.value;
-      const lat = document.getElementById("lat").value;
-      const lon = document.getElementById("lon").value;
+      // Get form values
+      const name = document.getElementById("name")?.value?.trim();
+      const interest = document.getElementById("interest")?.value?.trim();
+      const experience = form.experience?.value?.trim();
+      const lat = document.getElementById("lat")?.value?.trim();
+      const lon = document.getElementById("lon")?.value?.trim();
 
+      // Validate all required fields
       if (!name || !interest || !experience || !lat || !lon) {
         Swal.fire({
           icon: "warning",
-          title: "Data tidak lengkap",
-          text: "Please fill all fields.",
-          showConfirmButton: false,
-          timer: 3000,
+          title: "Form Tidak Lengkap",
+          text: "Mohon lengkapi semua field yang diperlukan.",
+          showConfirmButton: true,
+          confirmButtonText: "OK",
         });
         return;
       }
 
-      const dataToSave = { name, interest, experience, lat, lon };
-
       try {
-        await saveSetupData(dataToSave);
-
-        // Save user name to localStorage for consistent access
-        localStorage.setItem("user_name", name);
-
-        // Ensure auth token exists for navigation
-        if (!localStorage.getItem("agriedu_auth_token")) {
-          localStorage.setItem(
-            "agriedu_auth_token",
-            "demo-token-" + Date.now()
-          );
+        // Get token from auth service
+        const token = authService.getToken();
+        if (!token) {
+          throw new Error("No authentication token found");
         }
 
+        // Fetch user data from API
+        const response = await fetch(
+          `${CONFIG.BASE_URL}${CONFIG.API_ENDPOINTS.AUTH.GET_USER}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch user data");
+        }
+
+        const userData = await response.json();
+        console.log("Fetched user data:", userData);
+
+        // Handle different response structures
+        const user = userData.data || userData.user || userData;
+        console.log("Processed user data:", user);
+
+        if (!user || !user.id) {
+          console.error("Invalid user data structure:", userData);
+          throw new Error("Invalid user data received from API");
+        }
+
+        // Prepare data to save
+        const dataToSave = {
+          userId: user.id,
+          name,
+          interest,
+          experience,
+          lat,
+          lon,
+          completedAt: new Date().toISOString(),
+        };
+
+        console.log("Saving setup data:", dataToSave);
+
+        // Save the setup data
+        await saveSetupData(dataToSave);
+        console.log("Setup data saved successfully");
+
+        // Mark setup as completed
+        await markSetupCompleted(user.id);
+        console.log("Setup marked as completed");
+
+        // Show success message and proceed
         Swal.fire({
           icon: "success",
-          title: "Setup berhasil",
-          text: "Setup complete and saved!",
+          title: "Setup Berhasil!",
+          text: "Data setup telah berhasil disimpan.",
           showConfirmButton: false,
           timer: 3000,
+        }).then(() => {
+          this.nextStep();
         });
-        this.nextStep();
       } catch (error) {
+        console.error("Error in setup form submission:", error);
         Swal.fire({
           icon: "error",
-          title: "Error saving data",
-          text: error.toString(),
-          showConfirmButton: false,
-          timer: 3000,
+          title: "Error",
+          text: "Gagal menyimpan data: " + (error.message || "Unknown error"),
+          showConfirmButton: true,
+          confirmButtonText: "OK",
         });
       }
     });

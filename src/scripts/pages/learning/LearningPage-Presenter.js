@@ -4,6 +4,7 @@ import {
   LearningStorage,
   getRecentLearning,
 } from "./LearningPage-Model.js";
+import learningService from "../../data/learning-service.js";
 
 function convertToEmbedUrl(url) {
   // Support untuk berbagai format youtube
@@ -120,10 +121,9 @@ function openVideoModal(video) {
   if (!embedUrl) {
     Swal.fire({
       icon: "error",
-      title: "Video tidak valid",
+      title: "Video Tidak Valid",
       text: "Video URL tidak valid dan tidak bisa diputar.",
-      showConfirmButton: false,
-      timer: 3000,
+      confirmButtonText: "OK",
     });
     return;
   }
@@ -273,25 +273,117 @@ function formatTimestamp(timestamp) {
 }
 
 // FIXED: Event delegation untuk favorite button, pasang event listener sekali saja
-export function setupFavoriteListeners(articleContainer, videoContainer) {
-  articleContainer.addEventListener("click", (e) => {
-    if (e.target.closest(".favorite-btn")) {
-      const btn = e.target.closest(".favorite-btn");
-      const index = parseInt(btn.dataset.index);
-      const type = btn.dataset.type;
-      toggleFavorite(index, type, btn);
-    }
+export const setupFavoriteListeners = (articleContainer, videoContainer) => {
+  // Setup favorite buttons for articles
+  const favoriteButtons = articleContainer.querySelectorAll(".favorite-btn");
+  favoriteButtons.forEach((button) => {
+    button.addEventListener("click", async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const index = button.dataset.index;
+      const type = button.dataset.type;
+      const articleId = articles[index].id; // Get the article ID from the API data
+
+      try {
+        const result = await learningService.bookmarkLearning(articleId);
+
+        // Update the button appearance
+        if (result.isBookmarked) {
+          button.innerHTML = '<i class="fa fa-heart"></i>';
+          button.classList.add("active");
+        } else {
+          button.innerHTML = '<i class="fa fa-heart-o"></i>';
+          button.classList.remove("active");
+        }
+
+        // Update the article's favorite status
+        articles[index].isFavorite = result.isBookmarked;
+
+        // Update localStorage
+        LearningStorage.toggleFavorite(index, type);
+      } catch (error) {
+        console.error("Error toggling bookmark:", error);
+        let errorMessage = "Gagal mengubah status bookmark. ";
+
+        if (error.message.includes("401")) {
+          errorMessage += "Sesi Anda telah berakhir. Silakan login kembali.";
+        } else if (error.message.includes("404")) {
+          errorMessage += "Materi pembelajaran tidak ditemukan.";
+        } else if (error.message.includes("500")) {
+          errorMessage +=
+            "Terjadi kesalahan pada server. Silakan coba lagi nanti.";
+        } else {
+          errorMessage += "Silakan coba lagi.";
+        }
+
+        Swal.fire({
+          icon: "error",
+          title: "Gagal!",
+          text: errorMessage,
+          confirmButtonText: "OK",
+        });
+      }
+    });
   });
 
-  videoContainer.addEventListener("click", (e) => {
-    if (e.target.closest(".favorite-btn")) {
+  // Setup read buttons for articles
+  const readButtons = articleContainer.querySelectorAll(".read-btn");
+  readButtons.forEach((button) => {
+    button.addEventListener("click", async (e) => {
+      e.preventDefault();
       e.stopPropagation();
-      const btn = e.target.closest(".favorite-btn");
-      const index = parseInt(btn.dataset.index);
-      toggleFavorite(index, "video", btn);
-    }
+
+      const index = button.dataset.index;
+      const articleId = articles[index].id; // Get the article ID from the API data
+
+      try {
+        const result = await learningService.markAsRead(articleId);
+
+        // Update the button appearance
+        if (result.hasRead) {
+          button.innerHTML = '<i class="fa fa-check-circle"></i>';
+          button.classList.add("active");
+        } else {
+          button.innerHTML = '<i class="fa fa-circle-o"></i>';
+          button.classList.remove("active");
+        }
+
+        // Add to recent learning
+        LearningStorage.addToRecentLearning(articles[index]);
+
+        // Update recent learning display
+        const recentContainer = document.getElementById(
+          "recent-learning-container"
+        );
+        if (recentContainer) {
+          renderRecentLearning(recentContainer);
+        }
+      } catch (error) {
+        console.error("Error marking as read:", error);
+        let errorMessage = "Gagal mengubah status baca. ";
+
+        if (error.message.includes("401")) {
+          errorMessage += "Sesi Anda telah berakhir. Silakan login kembali.";
+        } else if (error.message.includes("404")) {
+          errorMessage += "Materi pembelajaran tidak ditemukan.";
+        } else if (error.message.includes("500")) {
+          errorMessage +=
+            "Terjadi kesalahan pada server. Silakan coba lagi nanti.";
+        } else {
+          errorMessage += "Silakan coba lagi.";
+        }
+
+        Swal.fire({
+          icon: "error",
+          title: "Gagal!",
+          text: errorMessage,
+          confirmButtonText: "OK",
+        });
+      }
+    });
   });
-}
+};
 
 export function getFilteredArticles(keyword, filters = {}) {
   let filteredArticles = articles.filter((article) =>

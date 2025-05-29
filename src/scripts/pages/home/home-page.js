@@ -1,5 +1,6 @@
 import { HomePresenter } from "./home-page-presenter.js";
 import { NavigationBar } from "../../components/NavigationBar.js";
+import authService from "../../data/auth-service.js";
 
 class HomePage {
   constructor() {
@@ -25,9 +26,17 @@ class HomePage {
       },
       templates: {
         home: (state) => {
+          // Get user data from auth service for navbar
+          const userData = authService.getUserData();
+          const userName =
+            userData?.username || localStorage.getItem("user_name") || "User";
+          const userInitial = userName.charAt(0).toUpperCase();
+
           const navbar = new NavigationBar({
             currentPath: window.location.hash.slice(1),
-            userInitial: state.user.initial,
+            userInitial: userInitial,
+            username: userName,
+            profilePictureUrl: userData?.profilePictureUrl,
             showProfile: true,
           });
 
@@ -156,9 +165,17 @@ class HomePage {
       console.log("HomePage afterRender called");
       this.Presenter.bindEvents();
 
+      // Get user data from auth service for navbar
+      const userData = authService.getUserData();
+      const userName =
+        userData?.username || localStorage.getItem("user_name") || "User";
+      const userInitial = userName.charAt(0).toUpperCase();
+
       const navbar = new NavigationBar({
         currentPath: window.location.hash.slice(1),
-        userInitial: this.Model.state.user.initial,
+        userInitial: userInitial,
+        username: userName,
+        profilePictureUrl: userData?.profilePictureUrl,
         showProfile: true,
       });
 
