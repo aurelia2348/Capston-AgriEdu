@@ -640,7 +640,6 @@
   font-size: 16px;
 }
 
-/* Modal Styles */
 .modal {
   position: fixed;
   top: 0;
@@ -866,7 +865,6 @@
   box-shadow: 0 2px 8px rgba(43, 147, 72, 0.3);
 }
 
-/* Medium desktop screens */
 @media (min-width: 900px) and (max-width: 1199px) {
   .video-grid {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -998,7 +996,6 @@
     font-size: 1.25rem;
   }
 
-  /* Modal responsive styles for tablets */
   .modal-content {
     max-width: 90%;
   }
@@ -1087,7 +1084,6 @@
     font-size: 13px;
   }
 
-  /* Video modal responsive for mobile */
   .video-modal-content {
     width: 92%;
     max-width: 500px;
@@ -1104,7 +1100,6 @@
     padding: 4px;
   }
 
-  /* Modal responsive styles */
   .modal-content {
     max-width: 95%;
     margin: 10px;
@@ -1148,7 +1143,6 @@
   }
 }
 
-/* Extra small screens (portrait phones) */
 @media (max-width: 360px) {
   .video-modal-content {
     width: 95%;
@@ -1166,7 +1160,6 @@
   }
 }
 
-/* Landscape orientation adjustments */
 @media (max-height: 500px) and (orientation: landscape) {
   .video-modal-content {
     width: 80%;

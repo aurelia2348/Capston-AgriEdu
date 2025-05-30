@@ -40,8 +40,6 @@
   margin-top: 1rem;
 }
 
-
-/* Untuk tablet (≤ 768px) */
 @media (max-width: 768px) {
   .typing-animation {
     font-size: 1.5rem;
@@ -49,7 +47,6 @@
   }
 }
 
-/* Untuk hp kecil (≤ 480px) */
 @media (max-width: 480px) {
   .typing-animation {
     font-size: 1.2rem;

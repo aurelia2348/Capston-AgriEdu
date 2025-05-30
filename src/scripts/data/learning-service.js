@@ -4,9 +4,8 @@ import { postData, getData, updateData, deleteData } from "./api.js";
 
 class LearningService {
   /**
-   * Create a new learning material
-   * @param {Object} learningData - The learning material data
-   * @returns {Promise<Object>} - The created learning material
+   * @param {Object} learningData 
+   * @returns {Promise<Object>} 
    */
   async createLearning(learningData) {
     try {
@@ -23,9 +22,8 @@ class LearningService {
   }
 
   /**
-   * Get all learning materials
-   * @param {Object} params - Query parameters
-   * @returns {Promise<Object>} - The learning materials
+   * @param {Object} params s
+   * @returns {Promise<Object>} 
    */
   async getAllLearning(params = {}) {
     try {
@@ -42,9 +40,8 @@ class LearningService {
   }
 
   /**
-   * Get a specific learning material by ID
-   * @param {string} id - The learning material ID
-   * @returns {Promise<Object>} - The learning material
+   * @param {string} id 
+   * @returns {Promise<Object>} 
    */
   async getLearning(id) {
     try {
@@ -60,9 +57,8 @@ class LearningService {
   }
 
   /**
-   * Bookmark a learning material
-   * @param {string} id - The learning material ID
-   * @returns {Promise<Object>} - The updated learning material
+   * @param {string} id 
+   * @returns {Promise<Object>} 
    */
   async bookmarkLearning(id) {
     try {
@@ -79,9 +75,8 @@ class LearningService {
   }
 
   /**
-   * Mark a learning material as read
-   * @param {string} id - The learning material ID
-   * @returns {Promise<Object>} - The updated learning material
+   * @param {string} id 
+   * @returns {Promise<Object>} 
    */
   async markAsRead(id) {
     try {

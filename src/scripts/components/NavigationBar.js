@@ -4,8 +4,7 @@ export class NavigationBar {
     this.userInitial = options.userInitial || "A";
     this.username = options.username || "User";
     this.profilePictureUrl = options.profilePictureUrl || null;
-    this.showProfile = options.showProfile !== false; // Default to true
-    this.customNavItems = options.navItems || null;
+    this.showProfile = options.showProfile !== false; 
 
     this.defaultNavItems = [
       { href: "#/home", text: "Home", className: "nav-link" },
@@ -346,9 +345,8 @@ export class NavigationBar {
   }
 
   /**
-   * Update the profile picture in the navigation bar
-   * @param {string} profilePictureUrl - The new profile picture URL
-   * @param {string} username - The username for fallback
+   * @param {string} profilePictureUrl 
+   * @param {string} username 
    */
   updateProfilePicture(profilePictureUrl, username) {
     this.profilePictureUrl = profilePictureUrl;
@@ -381,10 +379,9 @@ export class NavigationBar {
   }
 
   /**
-   * Update user data in the navigation bar
-   * @param {Object} userData - User data object
-   * @param {string} userData.username - Username
-   * @param {string} userData.profilePictureUrl - Profile picture URL
+   * @param {Object} userData 
+   * @param {string} userData.username 
+   * @param {string} userData.profilePictureUrl 
    */
   updateUserData(userData) {
     if (userData) {

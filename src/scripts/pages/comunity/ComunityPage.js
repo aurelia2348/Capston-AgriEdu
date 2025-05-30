@@ -602,7 +602,6 @@ export default class CommunityPage {
   }
 
   /**
-   
    * @param {Array} comments 
    */
   async loadCommentProfilePictures(comments) {
@@ -779,7 +778,6 @@ export default class CommunityPage {
       
       const commentsResponse = await CommunityModel.getComments(postId);
       const comments = commentsResponse.data || [];
-
       const commentsList = document.getElementById(`comments-list-${postId}`);
       if (commentsList) {
         commentsList.innerHTML = this.renderComments(comments, postId);
@@ -825,11 +823,9 @@ export default class CommunityPage {
       console.log("Deleting comment:", commentId, "from post:", postId);
 
       await CommunityModel.deleteComment(postId, commentId);
-
-      
+     
       const commentsResponse = await CommunityModel.getComments(postId);
       const comments = commentsResponse.data || [];
-
       const commentsList = document.getElementById(`comments-list-${postId}`);
       if (commentsList) {
         commentsList.innerHTML = this.renderComments(comments, postId);
@@ -890,8 +886,7 @@ export default class CommunityPage {
           if (field.startsWith("http://") || field.startsWith("https://")) {
             imageUrl = field;
             break;
-          } else {
-           
+          } else {           
             const cleanImagePath = field.replace(/^\/api\/posts\/image\//, "");
             imageUrl = `${CONFIG.BASE_URL}/api/posts/image/${cleanImagePath}`;
             break;
@@ -962,8 +957,7 @@ export default class CommunityPage {
     }
   }
 
-  /**
-   
+  /**   
    * @param {Object} post 
    * @param {string} postId 
    */

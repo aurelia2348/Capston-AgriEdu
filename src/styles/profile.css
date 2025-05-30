@@ -223,7 +223,6 @@ main {
 }
 
 
-/* Profile Container Layout */
 .profile-container {
   display: flex;
   gap: 2rem;
@@ -298,7 +297,7 @@ main {
 
 
 
-/* ========== RESPONSIVE ========== */
+
 @media (max-width: 1550px) {
   .profile-container {
     flex-direction: column;

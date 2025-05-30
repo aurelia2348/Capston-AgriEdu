@@ -3,7 +3,6 @@ import authService from "./auth-service.js";
 
 class ProfilePictureService {
   /**
-   * Upload a profile picture to the API
    * @param {File} file 
    * @returns {Promise<Object>} 
    */
@@ -56,7 +55,6 @@ class ProfilePictureService {
   }
 
   /**
-   * Delete the current user's profile picture
    * @returns {Promise<Object>} 
    */
   async deleteProfilePicture() {
@@ -103,7 +101,6 @@ class ProfilePictureService {
   }
 
   /**
-   * Fetch a profile picture by filename (for any user)
    * @param {string} filename 
    * @returns {Promise<Blob>} 
    */
@@ -133,7 +130,6 @@ class ProfilePictureService {
   }
 
   /**
-   * Get the full URL for a profile picture
    * @param {string} profilePictureUrl 
    * @returns {string|null} 
    */
@@ -158,7 +154,6 @@ class ProfilePictureService {
   }
 
   /**
-   * Check if a profile picture URL is accessible
    * @param {string} profilePictureUrl 
    * @returns {Promise<boolean>} 
    */
@@ -178,7 +173,6 @@ class ProfilePictureService {
   }
 
   /**
-   * Create a fallback avatar element with user's initial
    * @param {string} username 
    * @param {string} size 
    * @returns {string} 
@@ -205,7 +199,6 @@ class ProfilePictureService {
   }
 
   /**
-   * Create a complete profile picture element (img or fallback)
    * @param {string} profilePictureUrl 
    * @param {string} username 
    * @param {string} size 
@@ -234,7 +227,6 @@ class ProfilePictureService {
   }
 
   /**
-   * Update an image element with profile picture or fallback
    * @param {HTMLImageElement} imgElement 
    * @param {string} profilePictureUrl 
    * @param {string} username 
@@ -303,7 +295,6 @@ class ProfilePictureService {
   }
 
   /**
-   * Fetch image with authentication headers to bypass CORS
    * @param {string} imageUrl 
    * @returns {Promise<Blob|null>} 
    */
@@ -334,7 +325,6 @@ class ProfilePictureService {
   }
 
   /**
-   * Show fallback avatar for an image element
    * @param {HTMLImageElement} imgElement 
    * @param {string} username 
    */
@@ -352,7 +342,6 @@ class ProfilePictureService {
   }
 
   /**
-   * Update a container element with profile picture or fallback
    * @param {HTMLElement} containerElement 
    * @param {string} profilePictureUrl 
    * @param {string} username 
@@ -375,7 +364,6 @@ class ProfilePictureService {
   }
 
   /**
-   * Update a container element with profile picture using CORS-safe method
    * @param {HTMLElement} containerElement 
    * @param {string} profilePictureUrl 
    * @param {string} username 

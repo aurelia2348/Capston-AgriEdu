@@ -36,7 +36,6 @@ html, body {
   font-size: 0.9rem;
 }
 
-/* Tablet */
 @media (min-width: 600px) {
   .chatbot-welcome {
     font-size: 1.3rem;
@@ -47,7 +46,6 @@ html, body {
   }
 }
 
-/* Laptop */
 @media (min-width: 1024px) {
   .chatbot-welcome {
     font-size: 1.5rem;
@@ -262,7 +260,6 @@ html, body {
   }
 }
 
-/* Responsive untuk Mobile (max-width: 600px) */
 @media (max-width: 600px) {
   .chatbot-wrapper {
     padding: 10px;
@@ -309,7 +306,6 @@ html, body {
   }
 }
 
-/* Responsive untuk Tablet (min-width: 601px) and (max-width: 1024px) */
 @media (min-width: 601px) and (max-width: 1024px) {
   .chatbot-wrapper {
     padding: 15px 20px;
@@ -355,7 +351,6 @@ html, body {
   }
 }
 
-/* Responsive untuk Laptop Besar & Desktop (min-width: 1025px) sampai 1440px */
 @media (min-width: 1025px) and (max-width: 1440px) {
   .chatbot-wrapper {
     padding: 20px 30px;
@@ -401,7 +396,6 @@ html, body {
   }
 }
 
-/* Khusus untuk layar sangat kecil di bawah 550px */
 @media (max-width: 549px) {
   .chatbot-wrapper {
     padding: 8px 10px;
