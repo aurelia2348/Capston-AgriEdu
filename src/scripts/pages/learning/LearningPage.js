@@ -16,30 +16,29 @@ import { NavigationBar } from "../../components/NavigationBar.js";
 import authService from "../../data/auth-service.js";
 import learningService from "../../data/learning-service.js";
 
-// Category ID mappings
+
 const CATEGORY_IDS = {
   experience: {
-    pemula: "6837fe6c06bf979e73ffd611", // Beginner
-    menengah: "6837fe8c06bf979e73ffd61a", // Intermediate
-    lanjutan: "6837fe9606bf979e73ffd61f", // Experienced
+    pemula: "6837fe6c06bf979e73ffd611", 
+    menengah: "6837fe8c06bf979e73ffd61a", 
+    lanjutan: "6837fe9606bf979e73ffd61f", 
   },
   plantType: {
-    sayuran: "6838035e06bf979e73ffd64b", // Sayuran
-    buah: "6838036d06bf979e73ffd650", // Buah
-    "tanaman-hias": "6838037e06bf979e73ffd655", // Tanaman Hias
-    lainnya: "6838038a06bf979e73ffd65a", // Jenis Lainnya
+    sayuran: "6838035e06bf979e73ffd64b",
+    buah: "6838036d06bf979e73ffd650", 
+    "tanaman-hias": "6838037e06bf979e73ffd655", 
+    lainnya: "6838038a06bf979e73ffd65a", 
   },
   method: {
-    konvensional: "683803a806bf979e73ffd65f", // Konvensional
-    hidroponik: "683803c306bf979e73ffd664", // Hidroponik
-    organik: "683803d006bf979e73ffd669", // Organik
-    lainnya: "6838041b06bf979e73ffd671", // Metode Lainnya
+    konvensional: "683803a806bf979e73ffd65f",
+    hidroponik: "683803c306bf979e73ffd664", 
+    organik: "683803d006bf979e73ffd669", 
+    lainnya: "6838041b06bf979e73ffd671", 
   },
 };
 
 export default class LearningPage {
   constructor() {
-    // Get user data from auth service for navbar
     const userData = authService.getUserData();
     const userName =
       userData?.username || localStorage.getItem("user_name") || "User";
@@ -245,7 +244,6 @@ export default class LearningPage {
   }
 
   async afterRender() {
-    // Initialize favorites from localStorage
     LearningStorage.initializeFavorites();
 
     const articleContainer = document.getElementById("article-grid");
@@ -254,28 +252,22 @@ export default class LearningPage {
       "recent-learning-container"
     );
 
-    // Show loading state
+    
     articleContainer.innerHTML =
       '<div class="loading">Memuat materi pembelajaran...</div>';
 
     try {
-      // Fetch learning data from API
       await fetchLearningData();
 
-      // Render articles and videos
       renderArticles(articleContainer, articles);
       renderVideos(videoContainer, videos);
 
-      // Render recent learning
       renderRecentLearning(recentContainer);
 
-      // Setup favorite buttons event listeners
       setupFavoriteListeners(articleContainer, videoContainer);
 
-      // Setup search and filter listeners
       this.setupSearchAndFilters(articleContainer, videoContainer);
 
-      // Add Learning Modal Setup
       const addLearningBtn = document.getElementById("add-learning-btn");
       const addLearningModal = document.getElementById("add-learning-modal");
       const addLearningForm = document.getElementById("add-learning-form");
@@ -284,18 +276,18 @@ export default class LearningPage {
         addLearningModal.style.display = "flex";
       });
 
-      // Close modal when clicking overlay
+     
       addLearningModal
         .querySelector(".modal-overlay")
         .addEventListener("click", () => {
           addLearningModal.style.display = "none";
         });
 
-      // Handle form submission
+   
       addLearningForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        // Get selected categories and map them to their IDs
+        
         const selectedCategories = Array.from(
           document.querySelectorAll('input[name="categories"]:checked')
         ).map((cb) => cb.dataset.id);
@@ -304,13 +296,13 @@ export default class LearningPage {
           title: document.getElementById("title").value,
           summary: document.getElementById("summary").value,
           contentLink: document.getElementById("contentLink").value,
-          categories: selectedCategories, // Send array of category IDs as per API schema
+          categories: selectedCategories, 
         };
 
         try {
           const result = await learningService.createLearning(formData);
 
-          // Add the new learning material to the articles array
+          
           articles.unshift({
             type: "article",
             title: result.learning.title,
@@ -333,14 +325,14 @@ export default class LearningPage {
             isFavorite: false,
           });
 
-          // Re-render articles
+          
           renderArticles(articleContainer, articles);
 
-          // Close modal and reset form
+          
           addLearningModal.style.display = "none";
           addLearningForm.reset();
 
-          // Show success message
+         
           Swal.fire({
             icon: "success",
             title: "Berhasil!",
@@ -373,7 +365,7 @@ export default class LearningPage {
         }
       });
 
-      // Favorite filter button with improved feedback
+      
       const favoriteBtn = document.getElementById("favorite-filter");
       let showingFavorites = false;
 
@@ -393,13 +385,13 @@ export default class LearningPage {
         }
       });
 
-      // Add clear filters button
+      
       this.addClearFiltersButton(articleContainer, videoContainer);
 
-      // Setup gallery carousel
+      
       this.setupGalleryCarousel();
 
-      // Bind navigation bar events
+    
       this.navbar.bindEvents();
     } catch (error) {
       console.error("Error loading learning data:", error);
@@ -413,12 +405,11 @@ export default class LearningPage {
   }
 
   setupSearchAndFilters(articleContainer, videoContainer) {
-    // Search input listener
     document.getElementById("search").addEventListener("input", () => {
       this.applyFilters(articleContainer, videoContainer);
     });
 
-    // Filter checkboxes listener
+    
     const filterCheckboxes = document.querySelectorAll(
       '.learning-filter-panel input[type="checkbox"]'
     );
@@ -433,20 +424,18 @@ export default class LearningPage {
     const keyword = document.getElementById("search").value || "";
     const filters = this.getActiveFilters();
 
-    // Merge extra filters (e.g., showFavorites)
+   
     Object.assign(filters, extraFilters);
 
     const filteredArticles = getFilteredArticles(keyword, filters);
     const filteredVideos = getFilteredVideos(keyword, filters);
 
-    // Render filtered content
+    
     renderArticles(articleContainer, filteredArticles);
     renderVideos(videoContainer, filteredVideos);
 
-    // Re-bind favorite buttons event listeners after re-rendering
     setupFavoriteListeners(articleContainer, videoContainer);
 
-    // Refresh recent learning in case favorites changed
     const recentContainer = document.getElementById(
       "recent-learning-container"
     );
@@ -459,13 +448,11 @@ export default class LearningPage {
     const filterPanel = document.querySelector(".learning-filter-panel");
     if (!filterPanel) return;
 
-    // Add clear filters button after the favorite filter button
     const clearFiltersBtn = document.createElement("button");
     clearFiltersBtn.className = "clear-filters-btn";
     clearFiltersBtn.innerHTML =
       '<i class="fa fa-times"></i> Hapus Semua Filter';
 
-    // Insert after the hr element
     const hr = filterPanel.querySelector("hr");
     if (hr && hr.nextSibling) {
       hr.parentNode.insertBefore(clearFiltersBtn, hr.nextSibling.nextSibling);
@@ -474,22 +461,18 @@ export default class LearningPage {
     }
 
     clearFiltersBtn.addEventListener("click", () => {
-      // Clear search
       document.getElementById("search").value = "";
 
-      // Uncheck all filter checkboxes
       document
         .querySelectorAll('.learning-filter-panel input[type="checkbox"]')
         .forEach((checkbox) => {
           checkbox.checked = false;
         });
 
-      // Reset favorite filter button
       const favoriteBtn = document.getElementById("favorite-filter");
       favoriteBtn.classList.remove("active");
       favoriteBtn.innerHTML = '<i class="fa fa-heart"></i> Lihat Favorite';
 
-      // Apply empty filters
       this.applyFilters(articleContainer, videoContainer);
     });
   }
@@ -525,7 +508,7 @@ export default class LearningPage {
       return;
     }
 
-    let currentIndex = 2; // Start with the 3rd slide active (index 2)
+    let currentIndex = 2; 
     const totalSlides = slides.length;
 
     const updateGallery = () => {
@@ -541,10 +524,10 @@ export default class LearningPage {
         } else if (Math.abs(relativePosition) <= 2) {
           slide.classList.add("dimmed");
         }
-        // Slides farther than 2 positions from active remain normal
+        
       });
 
-      // Calculate offset to center active slide
+      
       const firstSlide = slides[0];
       const slideStyle = window.getComputedStyle(firstSlide);
       const slideWidth =

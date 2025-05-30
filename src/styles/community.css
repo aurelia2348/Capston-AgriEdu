@@ -122,9 +122,9 @@ textarea::placeholder {
 }
 
 #cameraSection {
-  max-width: 100%; /* supaya gak melebihi container induk */
-  overflow: hidden; /* sembunyikan yang kelewat */
-  border: 1px solid #ccc; /* opsional, supaya kelihatan batasnya */
+  max-width: 100%; 
+  overflow: hidden; 
+  border: 1px solid #ccc; 
   padding: 8px;
   box-sizing: border-box;
   background: #fafafa;
@@ -150,10 +150,10 @@ textarea::placeholder {
 
 #capturePhoto,
 #stopCamera {
-  display: block; /* supaya bisa diatur margin auto */
-  margin: 0 auto 8px auto; /* atas 0, kanan & kiri auto, bawah 8px */
-  width: 100%; /* samakan dengan select, bisa disesuaikan */
-  text-align: center; /* biar teks tombol juga di tengah */
+  display: block; 
+  margin: 0 auto 8px auto; 
+  width: 100%; 
+  text-align: center; 
 }
 
 #capturePhoto {
@@ -186,7 +186,7 @@ textarea::placeholder {
   margin-left: 0px !important;
 }
 
-/* Profile Container Layout */
+
 .profile-container {
   display: flex;
   gap: 2rem;
@@ -273,7 +273,7 @@ textarea::placeholder {
   background: #89e00e;
 }
 
-/* Community Content */
+
 .community-content {
   flex: 1;
   min-width: 0;
@@ -308,7 +308,7 @@ textarea::placeholder {
   margin: 0 0;
 }
 
-/* Community Page Styles */
+
 .community-header {
   display: flex;
   justify-content: space-between;
@@ -563,7 +563,7 @@ textarea::placeholder {
   transform: scale(1.05);
 }
 
-/* Modal Styles - Full Screen Design */
+
 .post-detail-modal {
   position: fixed;
   top: 0;
@@ -779,7 +779,6 @@ textarea::placeholder {
   transform: scale(1.02);
 }
 
-/* Comments Styles - Enhanced Design */
 .post-summary {
   background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
   border: 1px solid #e9ecef;
@@ -983,7 +982,7 @@ textarea::placeholder {
   background-color: #c0392b;
 }
 
-/* Delete Button Styles */
+
 .delete-btn {
   background-color: #dc3545 !important;
   color: white !important;
@@ -1011,7 +1010,7 @@ textarea::placeholder {
   transform: translateY(-1px);
 }
 
-/* Responsive Design for Community Layout */
+
 @media (max-width: 1024px) {
   .profile-container {
     flex-direction: column;
@@ -1201,8 +1200,8 @@ textarea::placeholder {
 
 @media screen and (max-width: 600px) {
   .banner-content {
-    flex-direction: column; /* ubah jadi kolom, logo jadi di atas */
-    align-items: center;    /* supaya center */
+    flex-direction: column; 
+    align-items: center;   
     text-align: center;
     gap:0;
   }

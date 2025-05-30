@@ -610,7 +610,7 @@
   font-size: 12px;
 }
 
-/* Add Learning Button */
+
 .add-learning-btn {
   width: 100%;
   background: linear-gradient(135deg, #2b9348 0%, #34a853 100%);
@@ -754,7 +754,7 @@
   flex: 1;
 }
 
-/* Form Styles */
+
 .form-group {
   margin-bottom: 20px;
 }
@@ -793,7 +793,7 @@
   min-height: 80px;
 }
 
-/* Category Options */
+
 .category-options {
   display: grid;
   gap: 20px;
@@ -839,7 +839,7 @@
   height: 16px;
 }
 
-/* Submit Button */
+
 .submit-btn {
   width: 100%;
   background: linear-gradient(135deg, #2b9348 0%, #34a853 100%);
@@ -882,7 +882,7 @@
   }
 }
 
-/* Desktop optimizations for larger screens */
+
 @media (min-width: 1200px) {
   .video-grid {
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -921,7 +921,7 @@
   font-size: 14px;
 }
 
-/* Responsive Styles */
+
 @media (max-width: 768px) {
   .gallery-carousel {
     margin: 15px 0;
@@ -1019,7 +1019,7 @@
     padding: 14px;
   }
 
-  /* Video modal responsive for tablets */
+  
   .video-modal-content {
     width: 90%;
     max-width: 700px;
@@ -1092,7 +1092,7 @@
     width: 92%;
     max-width: 500px;
     margin: 20px 15px;
-    aspect-ratio: 16/10; /* Slightly taller ratio for mobile */
+    aspect-ratio: 16/10; 
   }
 
   .video-modal-close {
@@ -1134,7 +1134,7 @@
   .form-group input,
   .form-group textarea {
     padding: 10px 12px;
-    font-size: 16px; /* Prevents zoom on iOS */
+    font-size: 16px; 
   }
 
   .submit-btn {
@@ -1154,7 +1154,7 @@
     width: 95%;
     max-width: 320px;
     margin: 15px 10px;
-    aspect-ratio: 4/3; /* More square ratio for very small screens */
+    aspect-ratio: 4/3; 
   }
 
   .video-modal-close {

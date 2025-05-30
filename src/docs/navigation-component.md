@@ -47,17 +47,17 @@ The Navigation Component is a reusable navigation bar component for the AgriEdu 
 ```javascript
 import { NavigationBar } from "../../components/NavigationBar.js";
 
-// Create navigation bar instance
+
 const navbar = new NavigationBar({
   currentPath: window.location.hash.slice(1),
   userInitial: "A",
   showProfile: true,
 });
 
-// Render navigation HTML
+
 const navbarHTML = navbar.render();
 
-// Set up event listeners (call after rendering to DOM)
+
 navbar.bindEvents();
 ```
 
@@ -65,11 +65,11 @@ navbar.bindEvents();
 
 ```javascript
 const navbar = new NavigationBar({
-  currentPath: "/home", // Current page path for active link highlighting
-  userInitial: "A", // User's initial for profile icon
-  showProfile: true, // Whether to show profile section (default: true)
+  currentPath: "/home", 
+  userInitial: "A", 
+  showProfile: true, 
   navItems: [
-    // Custom navigation items (optional)
+
     { href: "#/home", text: "Home", className: "nav-link" },
     { href: "#/learning", text: "Learning", className: "nav-link" },
   ],
@@ -98,7 +98,7 @@ import { NavigationBar } from "../../components/NavigationBar.js";
 
 ```javascript
 render() {
-  // Get user initial from localStorage
+
   const userName = localStorage.getItem("user_name") || "User";
   const userInitial = userName.charAt(0).toUpperCase();
 
@@ -121,18 +121,18 @@ render() {
 
 ```javascript
 async afterRender() {
-  // Set up navigation bar events
+
   this.setupNavigationEvents();
 }
 
 setupNavigationEvents() {
   const mainContent = document.querySelector("#main-content");
   if (mainContent) {
-    // Navigation link events
+
     const navLinks = mainContent.querySelectorAll(".app-nav a");
     navLinks.forEach((link) => {
       link.addEventListener("click", () => {
-        // Close mobile menu if open
+
         const appNav = mainContent.querySelector(".app-nav");
         if (appNav) {
           appNav.classList.remove("show");
@@ -140,7 +140,7 @@ setupNavigationEvents() {
       });
     });
 
-    // Profile icon events
+
     const profileIcon = mainContent.querySelector(".app-profile-icon");
     if (profileIcon) {
       profileIcon.addEventListener("click", () => {
@@ -155,7 +155,7 @@ setupNavigationEvents() {
       });
     }
 
-    // Mobile navigation setup
+
     const menuToggle = mainContent.querySelector("#appMenuToggle");
     const appNav = mainContent.querySelector(".app-nav");
 
@@ -167,7 +167,7 @@ setupNavigationEvents() {
         const isOpen = appNav.classList.contains("show");
 
         if (isOpen) {
-          // Close menu
+         
           appNav.classList.remove("show");
           menuToggle.classList.remove("active");
           const icon = menuToggle.querySelector("i");
@@ -177,7 +177,7 @@ setupNavigationEvents() {
           }
           document.body.style.overflow = "";
         } else {
-          // Open menu
+         
           appNav.classList.add("show");
           menuToggle.classList.add("active");
           const icon = menuToggle.querySelector("i");
@@ -189,7 +189,7 @@ setupNavigationEvents() {
         }
       });
 
-      // Close menu when clicking outside
+     
       document.addEventListener("click", (e) => {
         if (!menuToggle.contains(e.target) && !appNav.contains(e.target)) {
           appNav.classList.remove("show");

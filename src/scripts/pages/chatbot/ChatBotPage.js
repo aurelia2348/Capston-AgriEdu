@@ -4,7 +4,7 @@ import authService from "../../data/auth-service.js";
 
 export default class ChatbotPage {
   async render() {
-    // Get user data from auth service for navbar
+    
     const userData = authService.getUserData();
     const userName =
       userData?.username || localStorage.getItem("user_name") || "User";
@@ -51,7 +51,7 @@ export default class ChatbotPage {
   }
 
   setupNavigationEvents() {
-    // Get user data from auth service for navbar
+    
     const userData = authService.getUserData();
     const userName =
       userData?.username || localStorage.getItem("user_name") || "User";

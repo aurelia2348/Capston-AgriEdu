@@ -11,7 +11,7 @@ export default class CommunityForm {
   }
 
   async render() {
-    // Get user data from auth service for navbar
+   
     const userData = authService.getUserData();
     const userName =
       userData?.username || localStorage.getItem("user_name") || "User";
@@ -107,7 +107,7 @@ export default class CommunityForm {
   }
 
   setupNavigationEvents() {
-    // Get user data from auth service for navbar
+    
     const userData = authService.getUserData();
     const userName =
       userData?.username || localStorage.getItem("user_name") || "User";
@@ -126,11 +126,11 @@ export default class CommunityForm {
 
   async loadUserInfo() {
     try {
-      // Hanya gunakan token dari authService (real token)
+     
       const token = authService.getToken();
 
       if (token) {
-        // Jika ada real token, ambil dari API
+       
         const response = await fetch(`${CONFIG.BASE_URL}/api/auth/user`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -142,10 +142,10 @@ export default class CommunityForm {
           const userData = data?.data || data;
           const username = userData?.username || "Pengguna";
 
-          // Update username
+          
           document.getElementById("sidebarUsername").textContent = username;
 
-          // Update profile picture using the profile picture service
+          
           const sidebarAvatar = document.getElementById("sidebarAvatar");
           if (sidebarAvatar) {
             await profilePictureService.updateImageElement(
@@ -156,25 +156,25 @@ export default class CommunityForm {
             console.log("Updated sidebar profile picture");
           }
         } else {
-          // Token tidak valid, redirect ke login
+          
           console.warn("Token tidak valid, redirect ke login");
           window.location.hash = "#/login";
           return;
         }
       } else {
-        // Tidak ada token, redirect ke login
+        
         console.warn("Tidak ada token, redirect ke login");
         window.location.hash = "#/login";
         return;
       }
     } catch (err) {
       console.error("Gagal ambil user info:", err);
-      // Jika error, redirect ke login
+      
       window.location.hash = "#/login";
       return;
     }
 
-    // Get experience level using ProfileModel (same method as ProfilePage and CommunityPage)
+    
     try {
       const profile = await ProfileModel.getUserProfile();
       const experienceLevel = profile.experience || "Belum diatur";
@@ -204,14 +204,14 @@ export default class CommunityForm {
       console.log("Submit button style:", submitButton.style.cssText);
     }
 
-    // Check if submit-post event listener is registered
+    
     console.log("Checking for submit-post event listeners...");
 
     form.addEventListener("submit", (e) => {
       console.log("Form submit event triggered!");
       e.preventDefault();
 
-      // Validate form before submission
+      
       if (!this.validateForm(form)) {
         console.log("Form validation failed");
         return;
@@ -219,13 +219,13 @@ export default class CommunityForm {
 
       console.log("Form validation passed, preparing to submit...");
 
-      // Disable submit button to prevent multiple submissions
+      
       submitButton.disabled = true;
       submitButton.textContent = "Mengirim...";
 
       const formData = new FormData(form);
 
-      // Log form data for debugging
+      
       console.log("FormData contents:");
       for (let [key, value] of formData.entries()) {
         console.log(`${key}:`, value);
@@ -239,7 +239,7 @@ export default class CommunityForm {
       document.dispatchEvent(event);
     });
 
-    // Test click handler langsung pada tombol
+    
     if (submitButton) {
       submitButton.addEventListener("click", () => {
         console.log("Submit button clicked directly!");
@@ -252,10 +252,10 @@ export default class CommunityForm {
     const content = form.querySelector("#content").value.trim();
     const resultDiv = document.getElementById("post-result");
 
-    // Clear previous error messages
+    
     resultDiv.innerHTML = "";
 
-    // Validate required fields
+    
     if (!title) {
       this.showError("Judul diskusi harus diisi.");
       return false;
@@ -276,10 +276,10 @@ export default class CommunityForm {
       return false;
     }
 
-    // Validate image file if provided
+    
     const imageFile = form.querySelector("#image").files[0];
     if (imageFile) {
-      const maxSize = 5 * 1024 * 1024; // 5MB
+      const maxSize = 5 * 1024 * 1024; 
       const allowedTypes = [
         "image/jpeg",
         "image/jpg",
@@ -305,7 +305,7 @@ export default class CommunityForm {
     const resultDiv = document.getElementById("post-result");
     resultDiv.innerHTML = `<p style="color: red; margin-top: 10px;">${message}</p>`;
 
-    // Re-enable submit button
+    
     const submitButton = document.querySelector(
       '#create-post-form button[type="submit"]'
     );
@@ -320,7 +320,7 @@ export default class CommunityForm {
     if (form) {
       form.reset();
 
-      // Clear any captured camera image
+     
       const canvas = document.getElementById("capturedCanvas");
       const video = document.getElementById("cameraStream");
       const cameraSection = document.getElementById("cameraSection");
@@ -331,14 +331,14 @@ export default class CommunityForm {
       if (cameraSection) cameraSection.style.display = "none";
       if (showCameraBtn) showCameraBtn.style.display = "inline-block";
 
-      // Stop any active camera stream
+      
       if (this.cameraStream) {
         this.cameraStream.getTracks().forEach((track) => track.stop());
         this.cameraStream = null;
       }
     }
 
-    // Re-enable submit button
+    
     const submitButton = document.querySelector(
       '#create-post-form button[type="submit"]'
     );
@@ -375,7 +375,7 @@ export default class CommunityForm {
     this.cameraStream = null;
     let isCaptured = false;
 
-    // Enumerate devices awal
+    
     navigator.mediaDevices
       .enumerateDevices()
       .then((devices) => {

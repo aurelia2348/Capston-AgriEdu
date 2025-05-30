@@ -10,7 +10,7 @@ export default class CommunityPage {
     this.posts = [];
   }
   async render() {
-    // Get user data from auth service for navbar
+   
     const userData = authService.getUserData();
     const userName =
       userData?.username || localStorage.getItem("user_name") || "User";
@@ -65,15 +65,15 @@ export default class CommunityPage {
   }
 
   async afterRender() {
-    // Make this instance globally accessible for delete functionality
+    
     window.communityPage = this;
 
     this.setupNavigationEvents();
 
-    // Inisialisasi AOS setelah elemen dirender
+    
     if (typeof AOS !== "undefined") {
       AOS.init({
-        once: true, // animasi hanya terjadi sekali
+        once: true, 
       });
     }
     this.setupCreatePostButtons();
@@ -82,7 +82,7 @@ export default class CommunityPage {
   }
 
   setupNavigationEvents() {
-    // Get user data from auth service for navbar
+   
     const userData = authService.getUserData();
     const userName =
       userData?.username || localStorage.getItem("user_name") || "User";
@@ -121,11 +121,11 @@ export default class CommunityPage {
       console.log("Token available:", !!token);
 
       if (token) {
-        // Try to get fresh user data from API
+        
         try {
           const userData = await authService.getCurrentUser();
           if (userData) {
-            // Update username
+            
             if (userData.username) {
               const sidebarUsername =
                 document.getElementById("sidebarUsername");
@@ -135,7 +135,7 @@ export default class CommunityPage {
               console.log("Updated sidebar username to:", userData.username);
             }
 
-            // Update profile picture using the profile picture service
+            
             const sidebarAvatar = document.getElementById("sidebarAvatar");
             if (sidebarAvatar) {
               await profilePictureService.updateImageElement(
@@ -153,7 +153,7 @@ export default class CommunityPage {
         console.warn("No token available");
       }
 
-      // Get experience level using ProfileModel (same method as ProfilePage)
+      
       try {
         const profile = await ProfileModel.getUserProfile();
         const experienceLevel = profile.experience || "Belum diatur";
@@ -183,7 +183,7 @@ export default class CommunityPage {
       const response = await CommunityModel.getAllPosts();
       console.log("Raw posts response:", response);
 
-      // Handle different response structures
+      
       let postsData = [];
       if (response && response.data) {
         if (Array.isArray(response.data)) {
@@ -197,10 +197,10 @@ export default class CommunityPage {
         postsData = response;
       }
 
-      // Get current user data for post ownership checks
+      
       const currentUser = authService.getUserData();
 
-      // Process posts to include author information based on API schema
+      
       postsData = postsData.map((post) => ({
         ...post,
         author:
@@ -216,7 +216,7 @@ export default class CommunityPage {
 
       let errorMessage = error.message;
 
-      // Check for specific error types
+      
       if (
         error.message.includes("Failed to fetch") ||
         error.message.includes("CORS") ||
@@ -256,7 +256,7 @@ export default class CommunityPage {
 
     try {
       await CommunityModel.deletePost(postId);
-      // Reload posts after successful deletion
+     
       await this.loadPosts();
       Swal.fire({
         icon: "success",
@@ -297,18 +297,18 @@ export default class CommunityPage {
 
     const postsHTML = this.posts
       .map((post) => {
-        // Debug first post only to avoid console spam
+        
         if (this.posts.indexOf(post) === 0) {
           console.log("=== FIRST POST STRUCTURE ===");
           console.log("Post fields:", Object.keys(post));
           console.log("User data:", post.userId || post.author);
         }
 
-        // Extract username using the correct schema
+        
         let username = "Anonymous";
         let postUserId = null;
 
-        // Check for author data in the post based on API schema
+        
         if (post.userId && typeof post.userId === "object") {
           username = post.userId.username || "Anonymous";
           postUserId = post.userId.id;
@@ -316,7 +316,7 @@ export default class CommunityPage {
           username = post.author.username || "Anonymous";
           postUserId = post.author.id;
         } else if (post.userId === currentUserId) {
-          // If this is current user's post but no author data, use current user data
+          
           const currentUserData = authService.getUserData();
           if (currentUserData) {
             username = currentUserData.username || "Anonymous";
@@ -324,17 +324,17 @@ export default class CommunityPage {
           }
         }
 
-        // Check ownership for delete button
+        
         const isOwner = currentUserId && postUserId === currentUserId;
 
-        // Truncate content for preview
+        
         const maxContentLength = 150;
         const truncatedContent =
           post.content && post.content.length > maxContentLength
             ? post.content.substring(0, maxContentLength) + "..."
             : post.content || "";
 
-        // Construct image URL based on API schema
+        
         let imageUrl = "";
         if (post.imageUrl) {
           if (
@@ -343,7 +343,7 @@ export default class CommunityPage {
           ) {
             imageUrl = post.imageUrl;
           } else {
-            // Remove any leading /api/posts/image/ to prevent duplication
+            
             const cleanImagePath = post.imageUrl.replace(
               /^\/api\/posts\/image\//,
               ""
@@ -352,7 +352,7 @@ export default class CommunityPage {
           }
         }
 
-        // Generate unique ID for this post's profile picture
+        
         const profilePictureId = `post-avatar-${post.id}`;
 
         return `
@@ -421,15 +421,13 @@ export default class CommunityPage {
 
     container.innerHTML = postsHTML;
 
-    // Load profile pictures for all posts after rendering
+   
     this.loadPostProfilePictures();
 
     console.log("=== RENDER POSTS COMPLETE ===");
   }
 
-  /**
-   * Load profile pictures for all posts using CORS-safe method
-   */
+ 
   async loadPostProfilePictures() {
     for (const post of this.posts) {
       const profilePictureId = `post-avatar-${post.id}`;
@@ -437,7 +435,7 @@ export default class CommunityPage {
 
       if (!container) continue;
 
-      // Extract profile picture data (same logic as in renderPosts)
+      
       let username = "Anonymous";
       let profilePictureUrl = null;
 
@@ -456,7 +454,7 @@ export default class CommunityPage {
         }
       }
 
-      // Use the profile picture service to update the container with CORS-safe method
+      
       if (profilePictureUrl) {
         try {
           await profilePictureService.updateContainerElementSafe(
@@ -479,7 +477,7 @@ export default class CommunityPage {
     try {
       console.log("Showing comments for post ID:", postId);
 
-      // Get post details and comments based on API schema
+     
       const [postResponse, commentsResponse] = await Promise.all([
         CommunityModel.getPostById(postId),
         CommunityModel.getComments(postId),
@@ -491,7 +489,7 @@ export default class CommunityPage {
       console.log("Post data:", post);
       console.log("Comments data:", comments);
 
-      // Extract post author username based on API schema
+      
       let postUsername = "Anonymous";
       if (post.userId && typeof post.userId === "object") {
         postUsername = post.userId.username || "Anonymous";
@@ -499,7 +497,7 @@ export default class CommunityPage {
         postUsername = post.author.username || "Anonymous";
       }
 
-      // Create modal for comments
+      
       const modal = document.createElement("div");
       modal.className = "post-detail-modal";
       modal.innerHTML = `
@@ -548,10 +546,10 @@ export default class CommunityPage {
 
       document.body.appendChild(modal);
 
-      // Load profile picture for the post summary
+     
       this.loadCommentPostProfilePicture(post, postId);
 
-      // Load profile pictures for comments after modal is added to DOM
+      
       this.loadCommentProfilePictures(comments);
     } catch (error) {
       console.error("Error showing comments:", error);
@@ -565,15 +563,15 @@ export default class CommunityPage {
   }
 
   /**
-   * Load profile picture for post summary in comments modal
-   * @param {Object} post - Post object
-   * @param {string} postId - Post ID
+  
+   * @param {Object} post 
+   * @param {string} postId 
    */
   async loadCommentPostProfilePicture(post, postId) {
     const container = document.getElementById(`comment-post-avatar-${postId}`);
     if (!container) return;
 
-    // Extract profile picture data
+   
     let postUsername = "Anonymous";
     let profilePictureUrl = null;
 
@@ -585,7 +583,7 @@ export default class CommunityPage {
       profilePictureUrl = post.author.profilePictureUrl;
     }
 
-    // Use the profile picture service to update the container with CORS-safe method
+   
     if (profilePictureUrl) {
       try {
         await profilePictureService.updateContainerElementSafe(
@@ -604,8 +602,8 @@ export default class CommunityPage {
   }
 
   /**
-   * Load profile pictures for comments using CORS-safe method
-   * @param {Array} comments - Array of comment objects
+   
+   * @param {Array} comments 
    */
   async loadCommentProfilePictures(comments) {
     for (const comment of comments) {
@@ -617,7 +615,7 @@ export default class CommunityPage {
         continue;
       }
 
-      // Extract profile picture data based on API schema
+      
       let commentUsername = "Anonymous";
       let profilePictureUrl = null;
 
@@ -628,7 +626,7 @@ export default class CommunityPage {
         commentUsername = comment.author.username || "Anonymous";
         profilePictureUrl = comment.author.profilePictureUrl;
       } else {
-        // If no userId object, check if it's the current user's comment
+        
         const currentUser = authService.getUserData();
         const currentUserId = currentUser?.id;
         if (comment.userId === currentUserId && currentUser) {
@@ -637,7 +635,7 @@ export default class CommunityPage {
         }
       }
 
-      // Only use the profile picture if it's a non-empty string
+     
       if (
         typeof profilePictureUrl === "string" &&
         profilePictureUrl.trim() !== "" &&
@@ -656,7 +654,7 @@ export default class CommunityPage {
             `Failed to load profile picture for comment ${comment.id}:`,
             error
           );
-          // Show default avatar with initial
+          
           container.innerHTML = `
             <div class="author-avatar small fallback-avatar">
               <img src="images/avatar.jpg" alt="${commentUsername}" onerror="this.style.display='none'; this.parentElement.innerHTML='${commentUsername
@@ -669,7 +667,7 @@ export default class CommunityPage {
           `;
         }
       } else {
-        // Always show default avatar with initial if no valid profile picture URL
+        
         container.innerHTML = `
           <div class="author-avatar small fallback-avatar">
             <img src="images/avatar.jpg" alt="${commentUsername}" onerror="this.style.display='none'; this.parentElement.innerHTML='${commentUsername
@@ -697,7 +695,7 @@ export default class CommunityPage {
 
     return comments
       .map((comment) => {
-        // Extract comment author data based on API schema
+        
         let commentUsername = "Anonymous";
         let commentUserId = null;
 
@@ -717,7 +715,7 @@ export default class CommunityPage {
 
         const isCommentOwner = currentUserId && commentUserId === currentUserId;
 
-        // Generate unique ID for this comment's profile picture
+        
         const commentProfilePictureId = `comment-avatar-${comment.id}`;
 
         return `
@@ -775,17 +773,17 @@ export default class CommunityPage {
       const response = await CommunityModel.createComment(postId, content);
       console.log("Comment created:", response);
 
-      // Clear textarea
+     
       textarea.value = "";
 
-      // Refresh comments
+      
       const commentsResponse = await CommunityModel.getComments(postId);
       const comments = commentsResponse.data || [];
 
       const commentsList = document.getElementById(`comments-list-${postId}`);
       if (commentsList) {
         commentsList.innerHTML = this.renderComments(comments, postId);
-        // Load profile pictures for the updated comments
+        
         this.loadCommentProfilePictures(comments);
       }
 
@@ -828,14 +826,14 @@ export default class CommunityPage {
 
       await CommunityModel.deleteComment(postId, commentId);
 
-      // Refresh comments
+      
       const commentsResponse = await CommunityModel.getComments(postId);
       const comments = commentsResponse.data || [];
 
       const commentsList = document.getElementById(`comments-list-${postId}`);
       if (commentsList) {
         commentsList.innerHTML = this.renderComments(comments, postId);
-        // Load profile pictures for the updated comments
+        
         this.loadCommentProfilePictures(comments);
       }
 
@@ -865,7 +863,7 @@ export default class CommunityPage {
 
       console.log("Post detail data:", post);
 
-      // Extract username with same logic as loadPostDetailProfilePicture for consistency
+     
       let username = "Anonymous";
       if (post.userId && typeof post.userId === "object") {
         username = post.userId.username || "Anonymous";
@@ -877,7 +875,7 @@ export default class CommunityPage {
         username = post.user.username || post.user.name || "Anonymous";
       }
 
-      // Extract image URL
+      
       let imageUrl = "";
       const imageFields = [
         post.imageUrl,
@@ -893,7 +891,7 @@ export default class CommunityPage {
             imageUrl = field;
             break;
           } else {
-            // Remove any leading /api/posts/image/ to prevent duplication
+           
             const cleanImagePath = field.replace(/^\/api\/posts\/image\//, "");
             imageUrl = `${CONFIG.BASE_URL}/api/posts/image/${cleanImagePath}`;
             break;
@@ -951,7 +949,7 @@ export default class CommunityPage {
 
       document.body.appendChild(modal);
 
-      // Load profile picture for the post detail
+      
       this.loadPostDetailProfilePicture(post, postId);
     } catch (error) {
       console.error("Error showing post detail:", error);
@@ -965,15 +963,15 @@ export default class CommunityPage {
   }
 
   /**
-   * Load profile picture for post detail modal
-   * @param {Object} post - Post object
-   * @param {string} postId - Post ID
+   
+   * @param {Object} post 
+   * @param {string} postId 
    */
   async loadPostDetailProfilePicture(post, postId) {
     const container = document.getElementById(`post-detail-avatar-${postId}`);
     if (!container) return;
 
-    // Extract profile picture data
+   
     let username = "Anonymous";
     let profilePictureUrl = null;
 
@@ -991,7 +989,7 @@ export default class CommunityPage {
       profilePictureUrl = post.user.profilePictureUrl;
     }
 
-    // Use the profile picture service to update the container with CORS-safe method
+    
     if (profilePictureUrl) {
       try {
         await profilePictureService.updateContainerElementSafe(

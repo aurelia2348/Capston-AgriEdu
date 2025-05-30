@@ -66,7 +66,7 @@ class CommunityPagePresenter {
 
       this.formComponent?.resetForm?.();
 
-      // Langsung pindah ke halaman community dan refresh posts
+      
       setTimeout(() => {
         window.location.hash = "#/community";
       }, 1000);

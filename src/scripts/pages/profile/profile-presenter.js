@@ -6,7 +6,6 @@ const ProfilePresenter = {
     this.view = view;
 
     try {
-      // Refresh user data from API to get latest profile picture
       await authService.getCurrentUser();
     } catch (error) {
       console.warn("Gagal update user data dari API:", error);
@@ -40,7 +39,7 @@ const ProfilePresenter = {
       if (radio.checked) experience = radio.value;
     });
 
-    // Get pending profile picture from the view
+   
     const pendingProfilePicture = this.view.getPendingProfilePicture();
 
     console.log({
@@ -50,7 +49,6 @@ const ProfilePresenter = {
       hasPendingPicture: !!pendingProfilePicture,
     });
 
-    // Show loading state
     const saveBtn = document.getElementById("saveProfileBtn");
     const originalBtnText = saveBtn.textContent;
     saveBtn.disabled = true;
@@ -67,7 +65,7 @@ const ProfilePresenter = {
       await ProfileModel.saveSetupData({ name: fullName, experience });
       console.log("saveSetupData selesai");
 
-      // Upload profile picture if there's a pending one
+     
       if (pendingProfilePicture) {
         console.log("Memulai upload profile picture");
         const updatedUserData = await ProfileModel.uploadProfilePicture(
@@ -78,7 +76,7 @@ const ProfilePresenter = {
           updatedUserData
         );
 
-        // Refresh user data from API to get the latest profile picture URL
+        
         try {
           await authService.getCurrentUser();
           console.log(
@@ -88,15 +86,15 @@ const ProfilePresenter = {
           console.warn("Failed to refresh user data from API:", error);
         }
 
-        // Refresh the profile display to show the uploaded picture
+        
         const profile = await ProfileModel.getUserProfile();
         await this.view.showProfile(profile);
 
-        // Update the navigation bar with the new profile picture
+        
         this.updateNavigationBarProfilePicture();
       }
 
-      // Mark as saved and clear pending changes
+      
       this.view.markAsSaved();
 
       Swal.fire({
@@ -118,26 +116,22 @@ const ProfilePresenter = {
         confirmButtonText: "OK",
       });
     } finally {
-      // Reset button state
       saveBtn.disabled = false;
       saveBtn.textContent = originalBtnText;
     }
   },
 
-  /**
-   * Update the navigation bar with the current user's profile picture
-   */
+  
   updateNavigationBarProfilePicture() {
     try {
       const userData = authService.getUserData();
       console.log("Updating navigation bar with user data:", userData);
 
-      // Find the navigation bar profile icon container
+     
       const profileContainer = document.querySelector(
         ".app-profile-icon-container"
       );
       if (profileContainer) {
-        // Import NavigationBar dynamically to avoid circular dependencies
         import("../../components/NavigationBar.js").then(
           ({ NavigationBar }) => {
             const navbar = new NavigationBar({
@@ -150,7 +144,7 @@ const ProfilePresenter = {
               showProfile: true,
             });
 
-            // Update the profile picture
+
             navbar.updateProfilePicture(
               userData?.profilePictureUrl,
               userData?.username

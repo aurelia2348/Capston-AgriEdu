@@ -76,7 +76,6 @@ class Router {
   getPathFromHash() {
     const hash = window.location.hash.substring(1);
 
-    // Remove query parameters from path for routing
     const pathWithoutQuery = hash.split("?")[0];
 
     return pathWithoutQuery || "/";

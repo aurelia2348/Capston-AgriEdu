@@ -8,7 +8,7 @@ export default class DiagnosePage {
   }
 
   async render() {
-    // Get user data from auth service for navbar
+    
     const userData = authService.getUserData();
     const userName =
       userData?.username || localStorage.getItem("user_name") || "User";
@@ -110,7 +110,7 @@ export default class DiagnosePage {
   }
 
   async afterRender() {
-    // Get user data from auth service for navbar
+    
     const userData = authService.getUserData();
     const userName =
       userData?.username || localStorage.getItem("user_name") || "User";
@@ -146,14 +146,14 @@ export default class DiagnosePage {
       });
     }
 
-    // 🔥 Inisialisasi ulang AOS (wajib untuk SPA)
+    
     if (typeof AOS !== "undefined") {
       AOS.init({ duration: 800, once: true });
     }
   }
 
   bindNavigationEvents(currentPath, userInitial) {
-    // Get user data from auth service for navbar
+   
     const userData = authService.getUserData();
     const userName =
       userData?.username || localStorage.getItem("user_name") || "User";

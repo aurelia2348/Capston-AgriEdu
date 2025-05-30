@@ -447,18 +447,18 @@ hr {
 .card-home button {
   padding: 8px 40px;
   font-size: 0.8rem;
-  background-color: #1e1e1e; /* hitam */
+  background-color: #1e1e1e; 
   color: #ffffff;
   border: none;
   border-radius: 6px;
   margin-top: 1rem;
   cursor: pointer;
-  align-self: flex-end; /* tombol tidak full lebar, hanya selebar konten */
+  align-self: flex-end; 
   transition: background-color 0.2s ease;
 }
 
 .card-home button:hover {
-  background-color: #333333; /* lebih terang sedikit saat hover */
+  background-color: #333333; 
 }
 
 @media (max-width: 480px) {
@@ -472,7 +472,7 @@ hr {
 }
 
     .grid-container-home {
-    grid-template-columns: 1fr; /* 1 kolom di layar kecil */
+    grid-template-columns: 1fr; 
   }
 
   .home-nav {
@@ -571,7 +571,7 @@ hr {
   }
 
     .card-home button {
-    width: 100%;        /* tombol selebar card */
+    width: 100%;        
     align-self: center; }
 
 }
@@ -582,7 +582,7 @@ hr {
     position: relative;
   }
     .grid-container-home {
-    grid-template-columns: 1fr; /* 1 kolom di layar kecil */
+    grid-template-columns: 1fr; 
   }
 
   .hero-content {

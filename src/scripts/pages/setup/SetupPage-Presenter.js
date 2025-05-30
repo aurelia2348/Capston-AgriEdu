@@ -35,7 +35,6 @@ export default class SetupPagePresenter {
   }
 
   async init() {
-    // Check if user is logged in
     const userData = authService.getUserData();
     if (!userData || !userData.id) {
       console.warn("No user data found, redirecting to login");
@@ -43,7 +42,6 @@ export default class SetupPagePresenter {
       return;
     }
 
-    // Check if setup has been completed
     const hasCompleted = await this.checkSetupStatus(userData.id);
     if (hasCompleted) {
       console.log("Setup already completed, redirecting to home");
@@ -62,7 +60,6 @@ export default class SetupPagePresenter {
 
     this.updateStep();
 
-    // Init peta dan form hanya sekali saat init
     this._initMap();
     this._initForm();
   }
@@ -82,7 +79,6 @@ export default class SetupPagePresenter {
       this.currentStep++;
       this.updateStep();
     } else {
-      // Mark setup as completed for the current user
       const userData = authService.getUserData();
       if (userData && userData.id) {
         try {
@@ -145,7 +141,6 @@ export default class SetupPagePresenter {
       controls: [new Zoom()],
     });
 
-    // === Marker Setup ===
     const markerElement = document.createElement("img");
     markerElement.src = "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
     markerElement.style.width = "32px";
@@ -162,7 +157,6 @@ export default class SetupPagePresenter {
 
     this.map.addOverlay(this.marker);
 
-    // === Popup Setup ===
     this.popupOverlay = new Overlay({
       element: popupElement,
       positioning: "bottom-center",
@@ -182,11 +176,10 @@ export default class SetupPagePresenter {
       const truncatedName =
         placeName.length > 80 ? placeName.slice(0, 80) + "..." : placeName;
       popupElement.innerHTML = truncatedName;
-      popupElement.title = placeName; // untuk tooltip saat hover
+      popupElement.title = placeName; 
       this.popupOverlay.setPosition(coordinate);
     };
 
-    // === Lokasi awal: user atau default ===
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (pos) => {
@@ -213,7 +206,6 @@ export default class SetupPagePresenter {
       await updatePosition(defaultCoords);
     }
 
-    // === Drag & click handler ===
     let dragging = false;
 
     markerElement.addEventListener("mousedown", (evt) => {
@@ -253,14 +245,14 @@ export default class SetupPagePresenter {
       event.preventDefault();
       console.log("Form submitted");
 
-      // Get form values
+      
       const name = document.getElementById("name")?.value?.trim();
       const interest = document.getElementById("interest")?.value?.trim();
       const experience = form.experience?.value?.trim();
       const lat = document.getElementById("lat")?.value?.trim();
       const lon = document.getElementById("lon")?.value?.trim();
 
-      // Validate all required fields
+      
       if (!name || !interest || !experience || !lat || !lon) {
         Swal.fire({
           icon: "warning",
@@ -273,13 +265,11 @@ export default class SetupPagePresenter {
       }
 
       try {
-        // Get token from auth service
         const token = authService.getToken();
         if (!token) {
           throw new Error("No authentication token found");
         }
 
-        // Fetch user data from API
         const response = await fetch(
           `${CONFIG.BASE_URL}${CONFIG.API_ENDPOINTS.AUTH.GET_USER}`,
           {
@@ -298,7 +288,6 @@ export default class SetupPagePresenter {
         const userData = await response.json();
         console.log("Fetched user data:", userData);
 
-        // Handle different response structures
         const user = userData.data || userData.user || userData;
         console.log("Processed user data:", user);
 
@@ -307,7 +296,6 @@ export default class SetupPagePresenter {
           throw new Error("Invalid user data received from API");
         }
 
-        // Prepare data to save
         const dataToSave = {
           userId: user.id,
           name,
@@ -320,15 +308,15 @@ export default class SetupPagePresenter {
 
         console.log("Saving setup data:", dataToSave);
 
-        // Save the setup data
+
         await saveSetupData(dataToSave);
         console.log("Setup data saved successfully");
 
-        // Mark setup as completed
+
         await markSetupCompleted(user.id);
         console.log("Setup marked as completed");
 
-        // Show success message and proceed
+
         Swal.fire({
           icon: "success",
           title: "Setup Berhasil!",

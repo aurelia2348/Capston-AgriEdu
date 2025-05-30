@@ -8,7 +8,7 @@ export default class DiagnoseForm {
   }
 
   async render() {
-    // Get user data from auth service for navbar
+   
     const userData = authService.getUserData();
     const userName =
       userData?.username || localStorage.getItem("user_name") || "User";
@@ -143,12 +143,12 @@ export default class DiagnoseForm {
       }
     });
 
-    // Event listener untuk tombol Analisis Ulang
+   
     reanalyzeBtn.addEventListener("click", () => {
       this.resetFormAndAnalysis();
     });
 
-    // FAB toggle
+    
     const fabBtn = document.getElementById("main-fab");
     const fabMenu = document.getElementById("fab-menu");
 
@@ -156,7 +156,7 @@ export default class DiagnoseForm {
       fabMenu.classList.toggle("hidden");
     });
 
-    // Go to community
+   
     const goCommunityBtn = document.getElementById("go-community-btn");
     goCommunityBtn.addEventListener("click", () => {
       window.location.href = "/#/community";
@@ -164,7 +164,7 @@ export default class DiagnoseForm {
   }
 
   setupNavigation() {
-    // Get user data from auth service for navbar
+    
     const userData = authService.getUserData();
     const userName =
       userData?.username || localStorage.getItem("user_name") || "User";
@@ -218,7 +218,7 @@ export default class DiagnoseForm {
     analysisDiv.innerHTML = "Hasil analisis akan muncul di sini.";
     reanalyzeBtn.style.display = "none";
 
-    // Jika menggunakan kamera, matikan juga kamera
+    
     if (this.presenter && this.presenter.stopCamera) {
       this.presenter.stopCamera();
     }

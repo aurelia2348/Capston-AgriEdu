@@ -40,7 +40,7 @@ export class HomePresenter {
       });
     }
 
-    // Perbaikan di sini: .card-home bukan .card
+    
     const cardButtons = mainContent.querySelectorAll(".card-home button");
     cardButtons.forEach((button) => {
       const card = button.closest(".card-home");
@@ -69,7 +69,7 @@ export class HomePresenter {
       });
     });
 
-    // Tambahkan fitur klik di seluruh kartu jika bukan tombol
+    
     const cards = mainContent.querySelectorAll(".card-home");
     cards.forEach((card) => {
       const button = card.querySelector("button");

@@ -4,8 +4,8 @@ import authService from "./auth-service.js";
 class ProfilePictureService {
   /**
    * Upload a profile picture to the API
-   * @param {File} file - The image file to upload
-   * @returns {Promise<Object>} - Updated user data with new profile picture URL
+   * @param {File} file 
+   * @returns {Promise<Object>} 
    */
   async uploadProfilePicture(file) {
     try {
@@ -14,7 +14,7 @@ class ProfilePictureService {
         throw new Error("Authentication required");
       }
 
-      // Create FormData for multipart upload
+
       const formData = new FormData();
       formData.append("profilePicture", file);
 
@@ -38,7 +38,7 @@ class ProfilePictureService {
 
       const userData = await response.json();
 
-      // Update stored user data while preserving existing tokens
+      
       const existingToken = authService.getToken();
       const existingRefreshToken = authService.getRefreshToken();
 
@@ -57,7 +57,7 @@ class ProfilePictureService {
 
   /**
    * Delete the current user's profile picture
-   * @returns {Promise<Object>} - Updated user data without profile picture
+   * @returns {Promise<Object>} 
    */
   async deleteProfilePicture() {
     try {
@@ -85,7 +85,7 @@ class ProfilePictureService {
 
       const userData = await response.json();
 
-      // Update stored user data while preserving existing tokens
+     
       const existingToken = authService.getToken();
       const existingRefreshToken = authService.getRefreshToken();
 
@@ -104,8 +104,8 @@ class ProfilePictureService {
 
   /**
    * Fetch a profile picture by filename (for any user)
-   * @param {string} filename - The profile picture filename
-   * @returns {Promise<Blob>} - The image blob data
+   * @param {string} filename 
+   * @returns {Promise<Blob>} 
    */
   async fetchProfilePictureByFilename(filename) {
     try {
@@ -117,7 +117,7 @@ class ProfilePictureService {
         `${CONFIG.BASE_URL}/api/account/profile-picture/${filename}`,
         {
           method: "GET",
-          // No authentication required for public profile pictures
+         
         }
       );
 
@@ -134,15 +134,15 @@ class ProfilePictureService {
 
   /**
    * Get the full URL for a profile picture
-   * @param {string} profilePictureUrl - The profile picture URL from user data
-   * @returns {string|null} - Full URL to the profile picture or null if none
+   * @param {string} profilePictureUrl 
+   * @returns {string|null} 
    */
   getProfilePictureUrl(profilePictureUrl) {
     if (!profilePictureUrl) {
       return null;
     }
 
-    // If it's already a full URL, return as is
+    
     if (
       profilePictureUrl.startsWith("http://") ||
       profilePictureUrl.startsWith("https://")
@@ -150,17 +150,17 @@ class ProfilePictureService {
       return profilePictureUrl;
     }
 
-    // Extract filename from the URL if it contains the full path
+    
     const filename = profilePictureUrl.split("/").pop();
 
-    // Construct full URL using the API schema
+    
     return `${CONFIG.BASE_URL}/api/account/profile-picture/${filename}`;
   }
 
   /**
    * Check if a profile picture URL is accessible
-   * @param {string} profilePictureUrl - The profile picture URL to check
-   * @returns {Promise<boolean>} - True if accessible, false otherwise
+   * @param {string} profilePictureUrl 
+   * @returns {Promise<boolean>} 
    */
   async isProfilePictureAccessible(profilePictureUrl) {
     try {
@@ -179,9 +179,9 @@ class ProfilePictureService {
 
   /**
    * Create a fallback avatar element with user's initial
-   * @param {string} username - User's username
-   * @param {string} size - Size class ('small', 'medium', 'large')
-   * @returns {string} - HTML string for fallback avatar
+   * @param {string} username 
+   * @param {string} size 
+   * @returns {string} 
    */
   createFallbackAvatar(username, size = "medium") {
     const initial = (username || "U").charAt(0).toUpperCase();
@@ -206,11 +206,11 @@ class ProfilePictureService {
 
   /**
    * Create a complete profile picture element (img or fallback)
-   * @param {string} profilePictureUrl - The profile picture URL from user data
-   * @param {string} username - User's username for fallback
-   * @param {string} size - Size class ('small', 'medium', 'large')
-   * @param {string} additionalClasses - Additional CSS classes to apply
-   * @returns {string} - HTML string for profile picture element
+   * @param {string} profilePictureUrl 
+   * @param {string} username 
+   * @param {string} size 
+   * @param {string} additionalClasses 
+   * @returns {string} 
    */
   createProfilePictureElement(
     profilePictureUrl,
@@ -235,9 +235,9 @@ class ProfilePictureService {
 
   /**
    * Update an image element with profile picture or fallback
-   * @param {HTMLImageElement} imgElement - The image element to update
-   * @param {string} profilePictureUrl - The profile picture URL from user data
-   * @param {string} username - User's username for fallback
+   * @param {HTMLImageElement} imgElement 
+   * @param {string} profilePictureUrl 
+   * @param {string} username 
    */
   async updateImageElement(imgElement, profilePictureUrl, username) {
     if (!imgElement) {
@@ -247,7 +247,7 @@ class ProfilePictureService {
       return;
     }
 
-    // Remove any existing fallback avatars first
+    
     const existingFallbacks =
       imgElement.parentNode.querySelectorAll(".fallback-avatar");
     existingFallbacks.forEach((fallback) => fallback.remove());
@@ -256,17 +256,17 @@ class ProfilePictureService {
 
     if (fullUrl) {
       try {
-        // Try to fetch the image with authentication to bypass CORS issues
+        
         const imageBlob = await this.fetchImageWithAuth(fullUrl);
 
         if (imageBlob) {
-          // Create a local blob URL
+          
           const blobUrl = URL.createObjectURL(imageBlob);
 
-          // Clear any previous error handlers
+         
           imgElement.onerror = null;
           imgElement.onload = () => {
-            // Clean up the blob URL after the image loads
+            
             URL.revokeObjectURL(blobUrl);
           };
 
@@ -285,7 +285,7 @@ class ProfilePictureService {
           error
         );
 
-        // Fallback to direct image loading (might fail due to CORS)
+        
         imgElement.onerror = () => {
           console.warn("Direct image load also failed, using fallback avatar");
           this.showFallbackAvatar(imgElement, username);
@@ -298,14 +298,14 @@ class ProfilePictureService {
       }
     }
 
-    // No profile picture available or failed to load, show fallback
+   
     this.showFallbackAvatar(imgElement, username);
   }
 
   /**
    * Fetch image with authentication headers to bypass CORS
-   * @param {string} imageUrl - The image URL to fetch
-   * @returns {Promise<Blob|null>} - The image blob or null if failed
+   * @param {string} imageUrl 
+   * @returns {Promise<Blob|null>} 
    */
   async fetchImageWithAuth(imageUrl) {
     try {
@@ -335,8 +335,8 @@ class ProfilePictureService {
 
   /**
    * Show fallback avatar for an image element
-   * @param {HTMLImageElement} imgElement - The image element
-   * @param {string} username - Username for the fallback
+   * @param {HTMLImageElement} imgElement 
+   * @param {string} username 
    */
   showFallbackAvatar(imgElement, username) {
     imgElement.style.display = "none";
@@ -353,10 +353,10 @@ class ProfilePictureService {
 
   /**
    * Update a container element with profile picture or fallback
-   * @param {HTMLElement} containerElement - The container element to update
-   * @param {string} profilePictureUrl - The profile picture URL from user data
-   * @param {string} username - User's username for fallback
-   * @param {string} size - Size class ('small', 'medium', 'large')
+   * @param {HTMLElement} containerElement 
+   * @param {string} profilePictureUrl 
+   * @param {string} username 
+   * @param {string} size 
    */
   updateContainerElement(
     containerElement,
@@ -376,10 +376,10 @@ class ProfilePictureService {
 
   /**
    * Update a container element with profile picture using CORS-safe method
-   * @param {HTMLElement} containerElement - The container element to update
-   * @param {string} profilePictureUrl - The profile picture URL from user data
-   * @param {string} username - User's username for fallback
-   * @param {string} size - Size class ('small', 'medium', 'large')
+   * @param {HTMLElement} containerElement 
+   * @param {string} profilePictureUrl 
+   * @param {string} username 
+   * @param {string} size 
    */
   async updateContainerElementSafe(
     containerElement,
@@ -389,23 +389,23 @@ class ProfilePictureService {
   ) {
     if (!containerElement) return;
 
-    // Create initial structure with fallback
+    
     const fallbackHtml = this.createFallbackAvatar(username, size);
     containerElement.innerHTML = fallbackHtml;
 
-    // If there's a profile picture URL, try to load it
+    
     if (profilePictureUrl) {
       try {
         const fullUrl = this.getProfilePictureUrl(profilePictureUrl);
         const imageBlob = await this.fetchImageWithAuth(fullUrl);
 
         if (imageBlob) {
-          // Create image element with blob URL
+         
           const img = document.createElement("img");
           const blobUrl = URL.createObjectURL(imageBlob);
 
           img.onload = () => {
-            // Replace fallback with actual image
+            
             containerElement.innerHTML = "";
             containerElement.appendChild(img);
             URL.revokeObjectURL(blobUrl);
@@ -422,7 +422,7 @@ class ProfilePictureService {
         }
       } catch (error) {
         console.warn("Failed to fetch profile picture:", error);
-        // Keep the fallback that's already there
+        
       }
     }
   }

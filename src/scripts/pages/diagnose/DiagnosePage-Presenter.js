@@ -59,7 +59,7 @@ export default class DiagnosePresenter {
 
       console.log("Kirim gambar ke API (placeholder):", image);
       this.view.showMessage("Gambar berhasil dikirim untuk dianalisis!");
-      // TODO: panggil API diagnosis di sini
+      
     });
   }
 
@@ -143,7 +143,7 @@ export default class DiagnosePresenter {
           this.wasCameraOn = true;
           this.stopCamera(el);
 
-          // Tutup UI kamera
+         
           el.cameraSection.style.display = "none";
           el.showCameraBtn.style.display = "inline-block";
         }
@@ -157,7 +157,6 @@ export default class DiagnosePresenter {
       }
     });
 
-    // Matikan kamera saat keluar dari halaman atau reload
     window.addEventListener("popstate", () => {
       this.stopCamera(this.view.getElements());
     });

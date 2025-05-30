@@ -21,7 +21,7 @@ const CommunityModel = {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
-          // Don't set Content-Type for FormData - browser will set it automatically with boundary
+          
         },
         body: formData,
       });
@@ -104,7 +104,7 @@ const CommunityModel = {
       const data = await response.json();
       console.log("Posts API response:", data);
 
-      // Handle different response structures based on API schema
+      
       let postsArray = [];
       if (data.data && Array.isArray(data.data)) {
         postsArray = data.data;
@@ -234,7 +234,7 @@ const CommunityModel = {
         }
       }
 
-      // For DELETE request, response might be empty
+      
       const responseText = await response.text();
       let data = { success: true };
       if (responseText) {
@@ -253,7 +253,7 @@ const CommunityModel = {
     }
   },
 
-  // Comments API functions
+  
   async getComments(postId) {
     const url = `${
       CONFIG.BASE_URL

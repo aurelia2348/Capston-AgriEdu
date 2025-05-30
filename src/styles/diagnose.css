@@ -89,7 +89,7 @@ html, body {
   width: 100%;
   height: 100%;
   color: #fff;
-  background: rgba(0, 0, 0, 0.564); /* bisa disesuaikan tingkat transparansinya */
+  background: rgba(0, 0, 0, 0.564); 
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -97,7 +97,7 @@ html, body {
   text-align: center;
   z-index: 2;
   animation: fadeText 1.5s ease-in-out;
-  padding: 0 20px; /* biar nggak mepet di pinggir */
+  padding: 0 20px; 
 }
 .carousel-caption h2 {
   font-size: 2rem; 
@@ -105,7 +105,7 @@ html, body {
 }
 
 .carousel-caption p {
-  font-size: 1rem; /* Deskripsi agak besar */
+  font-size: 1rem; 
   max-width: 50%;
 }
 
@@ -154,7 +154,7 @@ html, body {
   padding: 20px;
   background-color: #ffffff;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Tambahkan shadow */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
 }
 
 
@@ -196,10 +196,10 @@ html, body {
   font-size: 16px;
   color: #444;
   margin-bottom: 40px;
-  max-width: 1000px; /* misal maksimal 600px */
+  max-width: 1000px;
   margin-left: auto;
   margin-right: auto;
-  text-align: center; /* optional, biar teksnya rata tengah */
+  text-align: center; 
 }
 
 
@@ -234,7 +234,7 @@ html, body {
   background-color: #ffffff;
   padding: 3rem;
   border-radius: 0.6rem;
-  border: 1px solid #ddd; /* garis tipis abu-abu */
+  border: 1px solid #ddd; 
 }
 
 

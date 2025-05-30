@@ -22,13 +22,13 @@ class AuthService {
 
   async login(credentials) {
     try {
-      // Kirim data login ke backend
+      
       const response = await postData(
         CONFIG.API_ENDPOINTS.AUTH.LOGIN,
         credentials
       );
 
-      // Simpan token dan user data ke localStorage
+    
       this.saveAuthData(response);
 
       return response;
@@ -40,12 +40,12 @@ class AuthService {
 
   async logout() {
     try {
-      // Kirim request logout ke backend (pakai token)
+     
       await postData(CONFIG.API_ENDPOINTS.AUTH.LOGOUT, {}, true);
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
-      // Bersihkan data lokal apapun yang terjadi
+     
       this.clearAuthData();
     }
   }
@@ -63,22 +63,22 @@ class AuthService {
         token.substring(0, 20) + "..."
       );
 
-      // Ambil data user dari backend
+     
       const response = await getData(CONFIG.API_ENDPOINTS.AUTH.GET_USER, true);
 
       console.log("getCurrentUser API response:", response);
 
-      // Handle different response structures
+     
       let userData = null;
 
       if (response && response.data && response.data.id) {
-        // Response has data wrapper
+        
         userData = response.data;
       } else if (response && response.id) {
-        // Response is direct user object
+       
         userData = response;
       } else if (response && response.user) {
-        // Response has user property
+        
         userData = response.user;
       }
 
