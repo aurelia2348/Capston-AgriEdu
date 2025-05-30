@@ -80,7 +80,6 @@ export const getFromStorage = (key, defaultValue = null) => {
     const item = localStorage.getItem(key);
     return item ? JSON.parse(item) : defaultValue;
   } catch (error) {
-    console.error(`Error getting ${key} from localStorage:`, error);
     return defaultValue;
   }
 };

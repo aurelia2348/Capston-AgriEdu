@@ -33,10 +33,6 @@ export default class LandingPresenter {
 
   async render() {
     try {
-      console.log(
-        "LandingPresenter render called, container:",
-        this.container ? "exists" : "missing"
-      );
       const view = new LandingPage(this.container);
       const html = await view.render(this.services);
       return html;
@@ -50,14 +46,9 @@ export default class LandingPresenter {
   }
 
   async afterRender() {
-    console.log("LandingPresenter afterRender called");
-
     try {
-      console.log("Creating LandingPage view instance");
       const view = new LandingPage(this.container);
-      console.log("Calling view.afterRender()");
       await view.afterRender();
-      console.log("View afterRender completed");
     } catch (error) {
       console.error("Error in LandingPresenter afterRender:", error);
     }

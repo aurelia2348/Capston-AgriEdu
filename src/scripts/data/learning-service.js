@@ -3,11 +3,6 @@ import authService from "./auth-service.js";
 import { postData, getData, updateData, deleteData } from "./api.js";
 
 class LearningService {
-  /**
-   * Create a new learning material
-   * @param {Object} learningData - The learning material data
-   * @returns {Promise<Object>} - The created learning material
-   */
   async createLearning(learningData) {
     try {
       const response = await postData(
@@ -22,11 +17,6 @@ class LearningService {
     }
   }
 
-  /**
-   * Get all learning materials
-   * @param {Object} params - Query parameters
-   * @returns {Promise<Object>} - The learning materials
-   */
   async getAllLearning(params = {}) {
     try {
       const queryString = new URLSearchParams(params).toString();
@@ -41,11 +31,6 @@ class LearningService {
     }
   }
 
-  /**
-   * Get a specific learning material by ID
-   * @param {string} id - The learning material ID
-   * @returns {Promise<Object>} - The learning material
-   */
   async getLearning(id) {
     try {
       const response = await getData(
@@ -59,11 +44,6 @@ class LearningService {
     }
   }
 
-  /**
-   * Bookmark a learning material
-   * @param {string} id - The learning material ID
-   * @returns {Promise<Object>} - The updated learning material
-   */
   async bookmarkLearning(id) {
     try {
       const response = await postData(
@@ -78,11 +58,6 @@ class LearningService {
     }
   }
 
-  /**
-   * Mark a learning material as read
-   * @param {string} id - The learning material ID
-   * @returns {Promise<Object>} - The updated learning material
-   */
   async markAsRead(id) {
     try {
       const response = await postData(

@@ -8,13 +8,12 @@ export default class DiagnoseForm {
   }
 
   async render() {
-    // Get user data from auth service for navbar
     const userData = authService.getUserData();
     const userName =
       userData?.username || localStorage.getItem("user_name") || "User";
     const userInitial = userName.charAt(0).toUpperCase();
 
-    const navbar = new NavigationBar({
+    const navbar = NavigationBar.getInstance({
       currentPath: window.location.hash.slice(1),
       userInitial: userInitial,
       username: userName,
@@ -70,19 +69,19 @@ export default class DiagnoseForm {
         </div>
       </section>
       <div class="floating-button-container">
-  <button id="main-fab" class="fab">+</button>
-  <div id="fab-menu" class="fab-menu hidden">
-    <button id="go-community-btn" class="fab-menu-item">
-      <img src="logo/community.png" alt="Community Icon" class="icon-scan" />
-      go Ask to Community
-    </button>
-        <button id="go-chatbot-btn" class="fab-menu-item" onclick="location.href='#/chatbot'">
-      <img src="logo/chatbot.png" alt="Chatbot Icon" class="icon-scan" />
-      go Ask to Chatbot
-    </button>
-  </div>
-</div>
-
+        <button id="main-fab" class="fab">+</button>
+        <div id="fab-menu" class="fab-menu hidden">
+          <button id="go-community-btn" class="fab-menu-item">
+            <img src="logo/community.png" alt="Community Icon" class="icon-scan" />
+            go Ask to Community
+          </button>
+          <button id="go-chatbot-btn" class="fab-menu-item" onclick="location.href='#/chatbot'">
+            <img src="logo/chatbot.png" alt="Chatbot Icon" class="icon-scan" />
+            go Ask to Chatbot
+          </button>
+        </div>
+      </div>
+      
     </div>
     `;
   }
@@ -143,12 +142,10 @@ export default class DiagnoseForm {
       }
     });
 
-    // Event listener untuk tombol Analisis Ulang
     reanalyzeBtn.addEventListener("click", () => {
       this.resetFormAndAnalysis();
     });
 
-    // FAB toggle
     const fabBtn = document.getElementById("main-fab");
     const fabMenu = document.getElementById("fab-menu");
 
@@ -156,7 +153,6 @@ export default class DiagnoseForm {
       fabMenu.classList.toggle("hidden");
     });
 
-    // Go to community
     const goCommunityBtn = document.getElementById("go-community-btn");
     goCommunityBtn.addEventListener("click", () => {
       window.location.href = "/#/community";
@@ -164,21 +160,6 @@ export default class DiagnoseForm {
   }
 
   setupNavigation() {
-    // Get user data from auth service for navbar
-    const userData = authService.getUserData();
-    const userName =
-      userData?.username || localStorage.getItem("user_name") || "User";
-    const userInitial = userName.charAt(0).toUpperCase();
-
-    const navbar = new NavigationBar({
-      currentPath: window.location.hash.slice(1),
-      userInitial: userInitial,
-      username: userName,
-      profilePictureUrl: userData?.profilePictureUrl,
-      showProfile: true,
-    });
-
-    navbar.bindEvents();
   }
 
   showMessage(message) {
@@ -218,7 +199,6 @@ export default class DiagnoseForm {
     analysisDiv.innerHTML = "Hasil analisis akan muncul di sini.";
     reanalyzeBtn.style.display = "none";
 
-    // Jika menggunakan kamera, matikan juga kamera
     if (this.presenter && this.presenter.stopCamera) {
       this.presenter.stopCamera();
     }

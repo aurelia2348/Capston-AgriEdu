@@ -101,31 +101,28 @@ export const videos = [
   },
 ];
 
-// Category ID mappings
 const CATEGORY_IDS = {
   experience: {
-    pemula: "6837fe6c06bf979e73ffd611", // Beginner
-    menengah: "6837fe8c06bf979e73ffd61a", // Intermediate
-    lanjutan: "6837fe9606bf979e73ffd61f", // Experienced
+    pemula: "6837fe6c06bf979e73ffd611",
+    menengah: "6837fe8c06bf979e73ffd61a",
+    lanjutan: "6837fe9606bf979e73ffd61f",
   },
   plantType: {
-    sayuran: "6838035e06bf979e73ffd64b", // Sayuran
-    buah: "6838036d06bf979e73ffd650", // Buah
-    "tanaman-hias": "6838037e06bf979e73ffd655", // Tanaman Hias
-    lainnya: "6838038a06bf979e73ffd65a", // Jenis Lainnya
+    sayuran: "6838035e06bf979e73ffd64b",
+    buah: "6838036d06bf979e73ffd650",
+    "tanaman-hias": "6838037e06bf979e73ffd655",
+    lainnya: "6838038a06bf979e73ffd65a",
   },
   method: {
-    konvensional: "683803a806bf979e73ffd65f", // Konvensional
-    hidroponik: "683803c306bf979e73ffd664", // Hidroponik
-    organik: "683803d006bf979e73ffd669", // Organik
-    lainnya: "6838041b06bf979e73ffd671", // Metode Lainnya
+    konvensional: "683803a806bf979e73ffd65f",
+    hidroponik: "683803c306bf979e73ffd664",
+    organik: "683803d006bf979e73ffd669",
+    lainnya: "6838041b06bf979e73ffd671",
   },
 };
 
-// Transform API data to match our existing structure
 function transformApiData(apiData) {
   return apiData.map((item) => {
-    // Find the first matching category for each type
     const experienceCategory = item.categories.find((c) =>
       Object.values(CATEGORY_IDS.experience).includes(c.id)
     );
@@ -136,9 +133,8 @@ function transformApiData(apiData) {
       Object.values(CATEGORY_IDS.method).includes(c.id)
     );
 
-    // Get the category name based on ID
     const getCategoryName = (categoryId, categoryType) => {
-      if (!categoryId) return "pemula"; // Default for experience
+      if (!categoryId) return "pemula";
       const mapping = CATEGORY_IDS[categoryType];
       return (
         Object.entries(mapping).find(([_, id]) => id === categoryId)?.[0] ||
@@ -165,30 +161,26 @@ function transformApiData(apiData) {
   });
 }
 
-// Fetch learning data from API
 export async function fetchLearningData() {
   try {
     const response = await learningService.getAllLearning();
     if (response && response.learning) {
       const transformedData = transformApiData(response.learning);
-      // Update articles array with new data
       articles.length = 0;
       articles.push(...transformedData);
       return articles;
     }
-    return articles; // Return existing articles if API fails
+    return articles;
   } catch (error) {
     console.error("Error fetching learning data:", error);
-    return articles; // Return existing articles if API fails
+    return articles;
   }
 }
 
-// Learning Storage Management
 export class LearningStorage {
   static FAVORITES_KEY = "agriedu_favorites";
   static RECENT_LEARNING_KEY = "agriedu_recent_learning";
 
-  // Load favorites from localStorage
   static loadFavorites() {
     try {
       const favorites = localStorage.getItem(this.FAVORITES_KEY);
@@ -199,7 +191,6 @@ export class LearningStorage {
     }
   }
 
-  // Save favorites to localStorage
   static saveFavorites(favorites) {
     try {
       localStorage.setItem(this.FAVORITES_KEY, JSON.stringify(favorites));
@@ -208,7 +199,6 @@ export class LearningStorage {
     }
   }
 
-  // Load recent learning from localStorage
   static loadRecentLearning() {
     try {
       const recent = localStorage.getItem(this.RECENT_LEARNING_KEY);
@@ -219,10 +209,8 @@ export class LearningStorage {
     }
   }
 
-  // Save recent learning to localStorage
   static saveRecentLearning(recentItems) {
     try {
-      // Keep only last 5 items
       const limitedItems = recentItems.slice(0, 5);
       localStorage.setItem(
         this.RECENT_LEARNING_KEY,
@@ -233,14 +221,11 @@ export class LearningStorage {
     }
   }
 
-  // Add item to recent learning
   static addToRecentLearning(item) {
     const recent = this.loadRecentLearning();
 
-    // Remove if already exists (to move to top)
     const filtered = recent.filter((r) => r.url !== item.url);
 
-    // Add to beginning
     filtered.unshift({
       ...item,
       timestamp: Date.now(),
@@ -249,32 +234,26 @@ export class LearningStorage {
     this.saveRecentLearning(filtered);
   }
 
-  // Initialize favorites for articles and videos
   static initializeFavorites() {
     const favorites = this.loadFavorites();
 
-    // Update articles with favorite status
     articles.forEach((article, index) => {
       article.isFavorite = favorites.articles.includes(index);
     });
 
-    // Update videos with favorite status
     videos.forEach((video, index) => {
       video.isFavorite = favorites.videos.includes(index);
     });
   }
 
-  // Toggle favorite status
   static toggleFavorite(index, type) {
     const favorites = this.loadFavorites();
     const dataArray = type === "video" ? videos : articles;
     const favoriteArray =
       type === "video" ? favorites.videos : favorites.articles;
 
-    // Toggle in data
     dataArray[index].isFavorite = !dataArray[index].isFavorite;
 
-    // Update favorites array
     if (dataArray[index].isFavorite) {
       if (!favoriteArray.includes(index)) {
         favoriteArray.push(index);
@@ -290,7 +269,6 @@ export class LearningStorage {
   }
 }
 
-// Get recent learning items
 export function getRecentLearning() {
   return LearningStorage.loadRecentLearning();
 }

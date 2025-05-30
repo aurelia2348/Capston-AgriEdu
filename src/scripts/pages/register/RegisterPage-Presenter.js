@@ -51,7 +51,7 @@ export default class RegisterPresenter {
     form.addEventListener("input", (e) => {
       const data = this._getFormData(form);
       validate(data, e.target.id);
-      setError("generalError", ""); // Clear general error on input
+      setError("generalError", "");
     });
 
     form.addEventListener("focusin", (e) => {
@@ -68,10 +68,8 @@ export default class RegisterPresenter {
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      // Clear all error messages
       setError("generalError", "");
 
-      // Disable the submit button to prevent multiple submissions
       const submitButton = form.querySelector("button[type='submit']");
       submitButton.disabled = true;
       submitButton.textContent = "Signing Up...";

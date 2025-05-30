@@ -27,7 +27,6 @@ export class HomePresenter {
     const learnBtn = mainContent.querySelector("#learnBtn");
     if (learnBtn) {
       learnBtn.addEventListener("click", () => {
-        console.log("Navigating to learning page");
         window.location.hash = "#/learning";
       });
     }
@@ -35,12 +34,10 @@ export class HomePresenter {
     const communityBtn = mainContent.querySelector("#communityBtn");
     if (communityBtn) {
       communityBtn.addEventListener("click", () => {
-        console.log("Navigating to community page");
         window.location.hash = "#/community";
       });
     }
 
-    // Perbaikan di sini: .card-home bukan .card
     const cardButtons = mainContent.querySelectorAll(".card-home button");
     cardButtons.forEach((button) => {
       const card = button.closest(".card-home");
@@ -50,26 +47,21 @@ export class HomePresenter {
         const cardId = card.getAttribute("id");
         switch (cardId) {
           case "learnCard":
-            console.log("Navigating to learning page from card");
             window.location.hash = "#/learning";
             break;
           case "diagnosisCard":
-            console.log("Navigating to diagnosis page from card");
             window.location.hash = "#/diagnosis";
             break;
           case "communityCard":
-            console.log("Navigating to community page from card");
             window.location.hash = "#/community";
             break;
           case "aiCard":
-            console.log("Navigating to chatbot page from card");
             window.location.hash = "#/chatbot";
             break;
         }
       });
     });
 
-    // Tambahkan fitur klik di seluruh kartu jika bukan tombol
     const cards = mainContent.querySelectorAll(".card-home");
     cards.forEach((card) => {
       const button = card.querySelector("button");

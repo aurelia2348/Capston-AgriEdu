@@ -10,7 +10,6 @@ export default class LoginPresenter {
     this._emailError = this._form.querySelector("#emailError");
     this._passwordError = this._form.querySelector("#passwordError");
 
-    // Add a general error message element
     this._generalError = document.createElement("small");
     this._generalError.classList.add("error");
     this._generalError.setAttribute("id", "generalError");
@@ -20,8 +19,6 @@ export default class LoginPresenter {
       .before(this._generalError);
 
     this._bindEvents();
-
-    // Check if user is already logged in
     if (authService.isAuthenticated()) {
       window.location.hash = "#/home";
     }
@@ -35,12 +32,12 @@ export default class LoginPresenter {
 
     this._emailInput.addEventListener("input", () => {
       this._validateEmail();
-      this._generalError.textContent = ""; // Clear general error on input
+      this._generalError.textContent = "";
     });
 
     this._passwordInput.addEventListener("input", () => {
       this._validatePassword();
-      this._generalError.textContent = ""; // Clear general error on input
+      this._generalError.textContent = "";
     });
 
     const toggleButtons = this._form.querySelectorAll(".toggle-password");
@@ -84,7 +81,6 @@ export default class LoginPresenter {
       try {
         const response = await authService.login(loginData);
 
-        // Show welcome notification after successful login
         Swal.fire({
           icon: "success",
           title: "Selamat datang!",
@@ -93,9 +89,26 @@ export default class LoginPresenter {
           timer: 3000,
         });
 
-        // Small delay to show the notification before redirect
-        setTimeout(() => {
-          window.location.hash = "#/setup";
+        setTimeout(async () => {
+          try {
+            const userData = response.user || response;
+            const userId = userData.id;
+
+            if (userId) {
+              const { hasCompletedSetup } = await import("../../utils/indexeddb");
+              const setupCompleted = await hasCompletedSetup(userId);
+
+              if (setupCompleted) {
+                window.location.hash = "#/home";
+              } else {
+                window.location.hash = "#/setup";
+              }
+            } else {
+              window.location.hash = "#/setup";
+            }
+          } catch (error) {
+            window.location.hash = "#/setup";
+          }
         }, 1000);
       } catch (error) {
         this._generalError.textContent =

@@ -7,7 +7,6 @@ import {
 import learningService from "../../data/learning-service.js";
 
 function convertToEmbedUrl(url) {
-  // Support untuk berbagai format youtube
   const regex = /(?:youtu\.be\/|youtube\.com\/watch\?v=)([^&?/]+)/;
   const match = url.match(regex);
   return match ? `https://www.youtube.com/embed/${match[1]}` : null;
@@ -26,16 +25,20 @@ export function renderArticles(container, list) {
     articleElement.innerHTML = `
       <div class="learning-item-header">
         <h4 class="article-title" data-url="${item.url}">${item.title}</h4>
-        <button class="favorite-btn ${heartClass}" data-index="${index}" data-type="${
+        <div class="learning-item-actions">
+          <button class="read-btn" data-index="${index}" data-type="${item.type}" title="Mark as read">
+            <i class="fa fa-circle-o"></i>
+          </button>
+          <button class="favorite-btn ${heartClass}" data-index="${index}" data-type="${
       item.type
-    }">
-          <i class="${heartIcon}"></i>
-        </button>
+    }" title="Bookmark">
+            <i class="${heartIcon}"></i>
+          </button>
+        </div>
       </div>
       <p class="learning-item-description">${item.description || ""}</p>
     `;
 
-    // Add click listener for article title
     const titleElement = articleElement.querySelector(".article-title");
     titleElement.addEventListener("click", () => {
       trackArticleClick(item);
@@ -44,9 +47,6 @@ export function renderArticles(container, list) {
 
     container.appendChild(articleElement);
   });
-
-  // FIXED: jangan pasang event listener di sini supaya gak dobel saat render ulang
-  // Pindahkan event listener favorite di luar fungsi renderArticles
 }
 
 function getYoutubeThumbnail(url) {
@@ -86,7 +86,6 @@ export function renderVideos(container, videoList) {
       </div>
     `;
 
-    // Click untuk buka modal video
     videoElement.addEventListener("click", (e) => {
       if (!e.target.closest(".favorite-btn")) {
         openVideoModal(video);
@@ -95,25 +94,6 @@ export function renderVideos(container, videoList) {
 
     container.appendChild(videoElement);
   });
-
-  // FIXED: jangan pasang event listener di sini supaya gak dobel saat render ulang
-  // Pindahkan event listener favorite di luar fungsi renderVideos
-}
-
-function toggleFavorite(index, type, button) {
-  // Use LearningStorage to toggle favorite
-  LearningStorage.toggleFavorite(index, type);
-
-  const dataArray = type === "video" ? videos : articles;
-  const icon = button.querySelector("i");
-
-  if (dataArray[index].isFavorite) {
-    icon.className = "fas fa-heart";
-    button.classList.add("favorite-active");
-  } else {
-    icon.className = "far fa-heart";
-    button.classList.remove("favorite-active");
-  }
 }
 
 function openVideoModal(video) {
@@ -128,7 +108,6 @@ function openVideoModal(video) {
     return;
   }
 
-  // Add to recent learning when video is opened
   LearningStorage.addToRecentLearning({
     type: video.type,
     title: video.title,
@@ -148,7 +127,6 @@ function openVideoModal(video) {
 
   document.body.appendChild(modal);
 
-  // Close modal events
   modal.addEventListener("click", (e) => {
     if (
       e.target === modal ||
@@ -159,7 +137,6 @@ function openVideoModal(video) {
     }
   });
 
-  // FIXED: close modal juga dengan ESC key
   function escListener(e) {
     if (e.key === "Escape") {
       if (document.body.contains(modal)) {
@@ -174,7 +151,6 @@ function openVideoModal(video) {
   window.addEventListener("keydown", escListener);
 }
 
-// Add function to track article clicks
 export function trackArticleClick(article) {
   LearningStorage.addToRecentLearning({
     type: article.type,
@@ -184,7 +160,6 @@ export function trackArticleClick(article) {
   });
 }
 
-// Render recent learning section
 export function renderRecentLearning(container) {
   const recentItems = getRecentLearning();
 
@@ -238,7 +213,6 @@ export function renderRecentLearning(container) {
     })
     .join("");
 
-  // Add click listeners for recent items
   container.querySelectorAll(".recent-video-item").forEach((item) => {
     item.addEventListener("click", () => {
       const url = item.dataset.url;
@@ -257,7 +231,6 @@ export function renderRecentLearning(container) {
   });
 }
 
-// Format timestamp for display
 function formatTimestamp(timestamp) {
   const now = Date.now();
   const diff = now - timestamp;
@@ -272,115 +245,71 @@ function formatTimestamp(timestamp) {
   return new Date(timestamp).toLocaleDateString("id-ID");
 }
 
-// FIXED: Event delegation untuk favorite button, pasang event listener sekali saja
 export const setupFavoriteListeners = (articleContainer, videoContainer) => {
-  // Setup favorite buttons for articles
-  const favoriteButtons = articleContainer.querySelectorAll(".favorite-btn");
-  favoriteButtons.forEach((button) => {
-    button.addEventListener("click", async (e) => {
+  const articleFavoriteButtons = articleContainer.querySelectorAll(".favorite-btn");
+  articleFavoriteButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
       e.preventDefault();
       e.stopPropagation();
 
       const index = button.dataset.index;
       const type = button.dataset.type;
-      const articleId = articles[index].id; // Get the article ID from the API data
 
-      try {
-        const result = await learningService.bookmarkLearning(articleId);
+      LearningStorage.toggleFavorite(index, type);
 
-        // Update the button appearance
-        if (result.isBookmarked) {
-          button.innerHTML = '<i class="fa fa-heart"></i>';
-          button.classList.add("active");
-        } else {
-          button.innerHTML = '<i class="fa fa-heart-o"></i>';
-          button.classList.remove("active");
-        }
+      const article = articles[index];
 
-        // Update the article's favorite status
-        articles[index].isFavorite = result.isBookmarked;
-
-        // Update localStorage
-        LearningStorage.toggleFavorite(index, type);
-      } catch (error) {
-        console.error("Error toggling bookmark:", error);
-        let errorMessage = "Gagal mengubah status bookmark. ";
-
-        if (error.message.includes("401")) {
-          errorMessage += "Sesi Anda telah berakhir. Silakan login kembali.";
-        } else if (error.message.includes("404")) {
-          errorMessage += "Materi pembelajaran tidak ditemukan.";
-        } else if (error.message.includes("500")) {
-          errorMessage +=
-            "Terjadi kesalahan pada server. Silakan coba lagi nanti.";
-        } else {
-          errorMessage += "Silakan coba lagi.";
-        }
-
-        Swal.fire({
-          icon: "error",
-          title: "Gagal!",
-          text: errorMessage,
-          confirmButtonText: "OK",
-        });
+      if (article.isFavorite) {
+        button.innerHTML = '<i class="fas fa-heart"></i>';
+        button.classList.add("favorite-active");
+      } else {
+        button.innerHTML = '<i class="far fa-heart"></i>';
+        button.classList.remove("favorite-active");
       }
     });
   });
 
-  // Setup read buttons for articles
-  const readButtons = articleContainer.querySelectorAll(".read-btn");
-  readButtons.forEach((button) => {
-    button.addEventListener("click", async (e) => {
+  const videoFavoriteButtons = videoContainer.querySelectorAll(".favorite-btn");
+  videoFavoriteButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
       e.preventDefault();
       e.stopPropagation();
 
       const index = button.dataset.index;
-      const articleId = articles[index].id; // Get the article ID from the API data
+      const type = button.dataset.type;
 
-      try {
-        const result = await learningService.markAsRead(articleId);
+      LearningStorage.toggleFavorite(index, type);
 
-        // Update the button appearance
-        if (result.hasRead) {
-          button.innerHTML = '<i class="fa fa-check-circle"></i>';
-          button.classList.add("active");
-        } else {
-          button.innerHTML = '<i class="fa fa-circle-o"></i>';
-          button.classList.remove("active");
-        }
+      const video = videos[index];
 
-        // Add to recent learning
-        LearningStorage.addToRecentLearning(articles[index]);
-
-        // Update recent learning display
-        const recentContainer = document.getElementById(
-          "recent-learning-container"
-        );
-        if (recentContainer) {
-          renderRecentLearning(recentContainer);
-        }
-      } catch (error) {
-        console.error("Error marking as read:", error);
-        let errorMessage = "Gagal mengubah status baca. ";
-
-        if (error.message.includes("401")) {
-          errorMessage += "Sesi Anda telah berakhir. Silakan login kembali.";
-        } else if (error.message.includes("404")) {
-          errorMessage += "Materi pembelajaran tidak ditemukan.";
-        } else if (error.message.includes("500")) {
-          errorMessage +=
-            "Terjadi kesalahan pada server. Silakan coba lagi nanti.";
-        } else {
-          errorMessage += "Silakan coba lagi.";
-        }
-
-        Swal.fire({
-          icon: "error",
-          title: "Gagal!",
-          text: errorMessage,
-          confirmButtonText: "OK",
-        });
+      if (video.isFavorite) {
+        button.innerHTML = '<i class="fas fa-heart"></i>';
+        button.classList.add("favorite-active");
+      } else {
+        button.innerHTML = '<i class="far fa-heart"></i>';
+        button.classList.remove("favorite-active");
       }
+    });
+  });
+  const readButtons = articleContainer.querySelectorAll(".read-btn");
+  readButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const index = button.dataset.index;
+
+      LearningStorage.addToRecentLearning(articles[index]);
+
+      const recentContainer = document.getElementById(
+        "recent-learning-container"
+      );
+      if (recentContainer) {
+        renderRecentLearning(recentContainer);
+      }
+
+      button.innerHTML = '<i class="fa fa-check-circle"></i>';
+      button.classList.add("active");
     });
   });
 };
@@ -390,7 +319,6 @@ export function getFilteredArticles(keyword, filters = {}) {
     article.title.toLowerCase().includes(keyword.toLowerCase())
   );
 
-  // Apply category filters
   if (filters.experience && filters.experience.length > 0) {
     filteredArticles = filteredArticles.filter((article) =>
       filters.experience.includes(article.category.experience)
@@ -421,7 +349,6 @@ export function getFilteredVideos(keyword, filters = {}) {
     video.title.toLowerCase().includes(keyword.toLowerCase())
   );
 
-  // Apply category filters
   if (filters.experience && filters.experience.length > 0) {
     filteredVideos = filteredVideos.filter((video) =>
       filters.experience.includes(video.category.experience)

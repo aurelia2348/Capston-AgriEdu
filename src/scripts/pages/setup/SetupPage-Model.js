@@ -1,6 +1,6 @@
 const SetupModel = {
   async getPlaceName(lat, lon) {
-    const apiKey = '734bff584dcd48bbacb0e42139a0cca7'; // kamu bisa pindahkan ke .env jika perlu
+    const apiKey = '734bff584dcd48bbacb0e42139a0cca7';
     const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${apiKey}`;
 
     try {

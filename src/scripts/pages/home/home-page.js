@@ -26,13 +26,12 @@ class HomePage {
       },
       templates: {
         home: (state) => {
-          // Get user data from auth service for navbar
           const userData = authService.getUserData();
           const userName =
             userData?.username || localStorage.getItem("user_name") || "User";
           const userInitial = userName.charAt(0).toUpperCase();
 
-          const navbar = new NavigationBar({
+          const navbar = NavigationBar.getInstance({
             currentPath: window.location.hash.slice(1),
             userInitial: userInitial,
             username: userName,
@@ -120,7 +119,6 @@ class HomePage {
 
   async render() {
     try {
-      console.log("HomePage render called");
       this.checkAuthStatus();
       const html = this.View.render(this.Model.state);
       return html;
@@ -135,11 +133,9 @@ class HomePage {
 
   checkAuthStatus() {
     try {
-      // Use the same token key as auth service for consistency
       const authToken = localStorage.getItem("agriedu_auth_token");
       const fallbackToken = localStorage.getItem("auth_token");
 
-      // If no proper auth token exists, create a demo token
       if (!authToken && !fallbackToken) {
         localStorage.setItem("agriedu_auth_token", "demo-token-" + Date.now());
         localStorage.setItem("user_name", "AgriEdu User");
@@ -151,9 +147,7 @@ class HomePage {
       if (token) {
         const userName = localStorage.getItem("user_name") || "User";
         this.Model.state.user.initial = userName.charAt(0).toUpperCase();
-        console.log("User is authenticated:", userName);
       } else {
-        console.log("User is not authenticated");
       }
     } catch (error) {
       console.error("Error checking auth status:", error);
@@ -162,26 +156,8 @@ class HomePage {
 
   async afterRender() {
     try {
-      console.log("HomePage afterRender called");
       this.Presenter.bindEvents();
 
-      // Get user data from auth service for navbar
-      const userData = authService.getUserData();
-      const userName =
-        userData?.username || localStorage.getItem("user_name") || "User";
-      const userInitial = userName.charAt(0).toUpperCase();
-
-      const navbar = new NavigationBar({
-        currentPath: window.location.hash.slice(1),
-        userInitial: userInitial,
-        username: userName,
-        profilePictureUrl: userData?.profilePictureUrl,
-        showProfile: true,
-      });
-
-      navbar.bindEvents();
-
-      // Show welcome notification if user just completed setup
       const hashParts = window.location.hash.split("?");
       if (hashParts.length > 1) {
         const urlParams = new URLSearchParams(hashParts[1]);
@@ -195,7 +171,6 @@ class HomePage {
             timer: 4000,
           });
 
-          // Remove the welcome parameter from URL
           window.history.replaceState(null, null, "#/home");
         }
       }

@@ -1,5 +1,3 @@
-Rencana schema buat API endpoints:
-
 {
   "endpoints": {
     "authentication": {
@@ -16,6 +14,7 @@ Rencana schema buat API endpoints:
             "id": "string",
             "username": "string",
             "email": "string",
+            "profilePictureUrl": "string",
             "createdAt": "timestamp"
           },
           "token": "string"
@@ -32,24 +31,37 @@ Rencana schema buat API endpoints:
           "user": {
             "id": "string",
             "username": "string",
-            "email": "string"
+            "email": "string",
+            "profilePictureUrl": "string"
           },
           "token": "string"
         }
       },
       "logout": {
-        "method": "POST", 
+        "method": "POST",
         "url": "/api/auth/logout",
         "auth": "required"
       },
       "getUser": {
-        "method": "GET", 
+        "method": "GET",
         "url": "/api/auth/user",
         "auth": "required",
         "response": {
           "id": "string",
           "username": "string",
           "email": "string",
+          "profilePictureUrl": "string",
+          "createdAt": "timestamp"
+        }
+      },
+      "getUserProfile": {
+        "method": "GET",
+        "url": "/api/auth/user/{id}/profile",
+        "auth": "public",
+        "response": {
+          "id": "string",
+          "username": "string",
+          "profilePictureUrl": "string",
           "createdAt": "timestamp"
         }
       },
@@ -67,12 +79,19 @@ Rencana schema buat API endpoints:
     },
     "posts": {
       "getAllPosts": {
-        "method": "GET", 
+        "method": "GET",
         "url": "/api/posts",
-        "query": {
-          "page": "number",
-          "limit": "number",
-          "sort": "string"
+        "response": {
+          "data": [{
+            "id": "string",
+            "title": "string",
+            "userId": {
+              "id": "string",
+              "username": "string",
+              "profilePictureUrl": "string"
+            },
+            "imageUrl": "string"
+          }]
         }
       },
       "getPostById": {"method": "GET", "url": "/api/posts/{id}"},
@@ -80,18 +99,26 @@ Rencana schema buat API endpoints:
         "method": "POST",
         "url": "/api/posts",
         "auth": "required",
+        "contentType": "multipart/form-data",
         "body": {
-          "title": "string",
-          "content": "string",
-          "image": "application/json"
+          "title": "string (required)",
+          "content": "string (required)",
+          "image": "file (optional, max 5MB, jpg/png/gif/webp)"
         },
         "response": {
-          "id": "string",
-          "title": "string",
-          "content": "string",
-          "imageUrl": "string",
-          "userId": "string",
-          "createdAt": "timestamp"
+          "success": "boolean",
+          "data": {
+            "id": "string",
+            "title": "string",
+            "content": "string",
+            "imageUrl": "string",
+            "userId": {
+              "id": "string",
+              "username": "string"
+            },
+            "createdAt": "timestamp",
+            "updatedAt": "timestamp"
+          }
         }
       },
       "updatePost": {
@@ -99,34 +126,52 @@ Rencana schema buat API endpoints:
         "url": "/api/posts/{id}",
         "auth": "required",
         "ownerOnly": true,
+        "contentType": "multipart/form-data",
         "body": {
-          "title": "string",
-          "content": "string",
-          "image": "application/json"
+          "title": "string (optional)",
+          "content": "string (optional)",
+          "image": "file (optional, max 5MB, jpg/png/gif/webp)"
+        },
+        "response": {
+          "success": "boolean",
+          "data": {
+            "id": "string",
+            "title": "string",
+            "content": "string",
+            "imageUrl": "string",
+            "userId": "object",
+            "createdAt": "timestamp",
+            "updatedAt": "timestamp"
+          }
         }
       },
+      "getPostImage": {
+        "method": "GET",
+        "url": "/api/posts/image/{filename}",
+        "auth": "public",
+        "response": "image/binary (with proper Content-Type headers)"
+      },
       "deletePost": {
-        "method": "DELETE", 
+        "method": "DELETE",
         "url": "/api/posts/{id}",
         "auth": "required",
         "ownerOnly": true
       }
     },
     "comments": {
-      "getComments": {"method": "GET", "url": "/api/posts/{id}/comments"},
-      "createComment": {
-        "method": "POST",
+      "getComments": {
+        "method": "GET",
         "url": "/api/posts/{id}/comments",
-        "auth": "required",
-        "body": {
-          "content": "string"
-        },
         "response": {
-          "id": "string",
-          "content": "string",
-          "userId": "string",
-          "postId": "string",
-          "createdAt": "timestamp"
+          "data": [{
+            "id": "string",
+            "content": "string",
+            "userId": {
+              "id": "string",
+              "username": "string",
+              "profilePictureUrl": "string"
+            }
+          }]
         }
       },
       "updateComment": {
@@ -139,7 +184,7 @@ Rencana schema buat API endpoints:
         }
       },
       "deleteComment": {
-        "method": "DELETE", 
+        "method": "DELETE",
         "url": "/api/posts/{id}/comments/{commentId}",
         "auth": "required",
         "ownerOnly": true
@@ -147,9 +192,16 @@ Rencana schema buat API endpoints:
     },
     "account": {
       "getAccount": {
-        "method": "GET", 
+        "method": "GET",
         "url": "/api/account",
-        "auth": "required"
+        "auth": "required",
+        "response": {
+          "id": "string",
+          "username": "string",
+          "email": "string",
+          "profilePictureUrl": "string",
+          "createdAt": "timestamp"
+        }
       },
       "updateAccount": {
         "method": "PUT",
@@ -158,12 +210,374 @@ Rencana schema buat API endpoints:
         "body": {
           "username": "string",
           "email": "string"
+        },
+        "response": {
+          "id": "string",
+          "username": "string",
+          "email": "string",
+          "profilePictureUrl": "string",
+          "createdAt": "timestamp"
         }
       },
       "deleteAccount": {
-        "method": "DELETE", 
+        "method": "DELETE",
         "url": "/api/account",
         "auth": "required"
+      },
+      "uploadProfilePicture": {
+        "method": "POST",
+        "url": "/api/account/profile-picture",
+        "auth": "required",
+        "body": {
+          "profilePicture": "multipart/form-data"
+        },
+        "response": {
+          "id": "string",
+          "username": "string",
+          "email": "string",
+          "profilePictureUrl": "string",
+          "createdAt": "timestamp"
+        }
+      },
+      "getProfilePicture": {
+        "method": "GET",
+        "url": "/api/account/profile-picture/{filename}",
+        "response": "image/binary"
+      },
+      "deleteProfilePicture": {
+        "method": "DELETE",
+        "url": "/api/account/profile-picture",
+        "auth": "required",
+        "response": {
+          "id": "string",
+          "username": "string",
+          "email": "string",
+          "profilePictureUrl": "string",
+          "createdAt": "timestamp"
+        }
+      }
+    },
+    "categories": {
+      "getAllCategories": {
+        "method": "GET",
+        "url": "/api/categories",
+        "query": {
+          "active": "boolean"
+        },
+        "response": {
+          "success": "boolean",
+          "count": "number",
+          "data": [{
+            "id": "string",
+            "name": "string",
+            "description": "string",
+            "color": "string",
+            "icon": "string",
+            "isActive": "boolean",
+            "createdAt": "timestamp"
+          }]
+        }
+      },
+      "getCategory": {
+        "method": "GET",
+        "url": "/api/categories/{id}"
+      },
+      "createCategory": {
+        "method": "POST",
+        "url": "/api/categories",
+        "auth": "required",
+        "body": {
+          "name": "string",
+          "description": "string",
+          "color": "string",
+          "icon": "string"
+        }
+      },
+      "updateCategory": {
+        "method": "PUT",
+        "url": "/api/categories/{id}",
+        "auth": "required"
+      },
+      "deleteCategory": {
+        "method": "DELETE",
+        "url": "/api/categories/{id}",
+        "auth": "required"
+      }
+    },
+    "learning": {
+      "getAllLearning": {
+        "method": "GET",
+        "url": "/api/learning",
+        "query": {
+          "page": "number",
+          "limit": "number",
+          "sort": "string (newest/oldest/title)",
+          "category": "string",
+          "search": "string"
+        },
+        "response": {
+          "learning": [{
+            "id": "string",
+            "title": "string",
+            "summary": "string",
+            "contentLink": "string",
+            "categories": [{
+              "id": "string",
+              "name": "string",
+              "color": "string"
+            }],
+            "userId": {
+              "id": "string",
+              "username": "string",
+              "profilePicture": "string"
+            },
+            "bookmarks": [{
+              "id": "string",
+              "name": "string"
+            }],
+            "hasRead": [{
+              "id": "string",
+              "name": "string"
+            }],
+            "createdAt": "timestamp",
+            "updatedAt": "timestamp"
+          }],
+          "totalPages": "number",
+          "currentPage": "number",
+          "total": "number"
+        }
+      },
+      "getLearning": {
+        "method": "GET",
+        "url": "/api/learning/{id}",
+        "response": {
+          "learning": {
+            "id": "string",
+            "title": "string",
+            "summary": "string",
+            "contentLink": "string",
+            "categories": [{
+              "id": "string",
+              "name": "string",
+              "color": "string",
+              "description": "string"
+            }],
+            "userId": {
+              "id": "string",
+              "username": "string",
+              "profilePicture": "string",
+              "createdAt": "timestamp"
+            },
+            "bookmarks": [{
+              "id": "string",
+              "name": "string"
+            }],
+            "hasRead": [{
+              "id": "string",
+              "name": "string"
+            }],
+            "createdAt": "timestamp",
+            "updatedAt": "timestamp"
+          }
+        }
+      },
+      "createLearning": {
+        "method": "POST",
+        "url": "/api/learning",
+        "auth": "required",
+        "body": {
+          "title": "string (required)",
+          "summary": "string (required)",
+          "contentLink": "string (required)",
+          "categories": "array (category IDs)"
+        },
+        "response": {
+          "learning": {
+            "id": "string",
+            "title": "string",
+            "summary": "string",
+            "contentLink": "string",
+            "categories": ["object"],
+            "userId": {
+              "id": "string",
+              "username": "string",
+              "profilePicture": "string",
+              "createdAt": "timestamp"
+            },
+            "createdAt": "timestamp",
+            "updatedAt": "timestamp"
+          }
+        }
+      },
+      "updateLearning": {
+        "method": "PATCH",
+        "url": "/api/learning/{id}",
+        "auth": "required",
+        "ownerOnly": true,
+        "body": {
+          "title": "string (optional)",
+          "summary": "string (optional)",
+          "contentLink": "string (optional)",
+          "categories": "array (optional)"
+        },
+        "response": {
+          "learning": {
+            "id": "string",
+            "title": "string",
+            "summary": "string",
+            "contentLink": "string",
+            "categories": ["object"],
+            "userId": {
+              "id": "string",
+              "username": "string",
+              "profilePicture": "string",
+              "createdAt": "timestamp"
+            },
+            "createdAt": "timestamp",
+            "updatedAt": "timestamp"
+          }
+        }
+      },
+      "deleteLearning": {
+        "method": "DELETE",
+        "url": "/api/learning/{id}",
+        "auth": "required",
+        "ownerOnly": true,
+        "response": {
+          "msg": "string"
+        }
+      },
+      "bookmarkLearning": {
+        "method": "POST",
+        "url": "/api/learning/{id}/bookmark",
+        "auth": "required",
+        "response": {
+          "learning": "object",
+          "isBookmarked": "boolean"
+        }
+      },
+      "markAsRead": {
+        "method": "POST",
+        "url": "/api/learning/{id}/read",
+        "auth": "required",
+        "response": {
+          "learning": "object",
+          "hasRead": "boolean"
+        }
+      },
+      "getBookmarkedLearning": {
+        "method": "GET",
+        "url": "/api/learning/bookmarked",
+        "auth": "required",
+        "query": {
+          "page": "number",
+          "limit": "number"
+        },
+        "response": {
+          "learning": [{
+            "id": "string",
+            "title": "string",
+            "summary": "string",
+            "contentLink": "string",
+            "categories": [{
+              "id": "string",
+              "name": "string"
+            }],
+            "userId": {
+              "id": "string",
+              "name": "string",
+              "profilePicture": "string"
+            },
+            "bookmarks": [{
+              "id": "string",
+              "name": "string"
+            }],
+            "hasRead": [{
+              "id": "string",
+              "name": "string"
+            }],
+            "createdAt": "timestamp",
+            "updatedAt": "timestamp"
+          }],
+          "totalPages": "number",
+          "currentPage": "number",
+          "total": "number"
+        }
+      },
+      "getReadLearning": {
+        "method": "GET",
+        "url": "/api/learning/read",
+        "auth": "required",
+        "query": {
+          "page": "number",
+          "limit": "number"
+        },
+        "response": {
+          "learning": [{
+            "id": "string",
+            "title": "string",
+            "summary": "string",
+            "contentLink": "string",
+            "categories": [{
+              "id": "string",
+              "name": "string"
+            }],
+            "userId": {
+              "id": "string",
+              "name": "string",
+              "profilePicture": "string"
+            },
+            "bookmarks": [{
+              "id": "string",
+              "name": "string"
+            }],
+            "hasRead": [{
+              "id": "string",
+              "name": "string"
+            }],
+            "createdAt": "timestamp",
+            "updatedAt": "timestamp"
+          }],
+          "totalPages": "number",
+          "currentPage": "number",
+          "total": "number"
+        }
+      }
+    },
+    "system": {
+      "health": {
+        "method": "GET",
+        "url": "/health",
+        "auth": "public",
+        "response": {
+          "status": "string (UP/DOWN)",
+          "environment": "string",
+          "timestamp": "string"
+        }
+      },
+      "apiStatus": {
+        "method": "GET",
+        "url": "/api/status",
+        "auth": "public",
+        "response": {
+          "success": "boolean",
+          "message": "string",
+          "version": "string",
+          "environment": "string",
+          "timestamp": "string"
+        }
+      },
+      "apiInfo": {
+        "method": "GET",
+        "url": "/api",
+        "auth": "public",
+        "response": {
+          "success": "boolean",
+          "message": "string",
+          "version": "string",
+          "environment": "string",
+          "endpoints": "object (all available endpoints)"
+        }
       }
     }
   }

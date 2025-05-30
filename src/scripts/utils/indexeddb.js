@@ -4,7 +4,6 @@ const DB_NAME = "AgriEduDB";
 const DB_VERSION = 1;
 const SETUP_STORE = "setupState";
 
-// Initialize the database
 const initDB = () => {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, DB_VERSION);
@@ -15,9 +14,7 @@ const initDB = () => {
     request.onupgradeneeded = (event) => {
       const db = event.target.result;
       if (!db.objectStoreNames.contains(SETUP_STORE)) {
-        // Create object store with userId as key path
         const store = db.createObjectStore(SETUP_STORE, { keyPath: "userId" });
-        // Create indexes for other fields we might want to query
         store.createIndex("name", "name", { unique: false });
         store.createIndex("experience", "experience", { unique: false });
         store.createIndex("completedAt", "completedAt", { unique: false });
@@ -26,7 +23,6 @@ const initDB = () => {
   });
 };
 
-// Check if setup has been completed for a user
 export const hasCompletedSetup = async (userId) => {
   try {
     const db = await initDB();
@@ -44,7 +40,6 @@ export const hasCompletedSetup = async (userId) => {
   }
 };
 
-// Mark setup as completed for a user
 export const markSetupCompleted = async (userId) => {
   try {
     const db = await initDB();
@@ -65,7 +60,6 @@ export const markSetupCompleted = async (userId) => {
   }
 };
 
-// Get setup completion date for a user
 export const getSetupCompletionDate = async (userId) => {
   try {
     const db = await initDB();
@@ -94,7 +88,6 @@ export async function saveSetupData(data) {
       const transaction = db.transaction(SETUP_STORE, "readwrite");
       const store = transaction.objectStore(SETUP_STORE);
 
-      // Ensure the data has all required fields
       const setupData = {
         userId: data.userId,
         name: data.name,
@@ -108,7 +101,6 @@ export async function saveSetupData(data) {
       const request = store.put(setupData);
 
       request.onsuccess = () => {
-        console.log("Setup data saved successfully:", setupData);
         resolve();
       };
       request.onerror = () => {

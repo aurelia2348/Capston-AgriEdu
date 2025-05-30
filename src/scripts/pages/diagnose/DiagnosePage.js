@@ -8,13 +8,12 @@ export default class DiagnosePage {
   }
 
   async render() {
-    // Get user data from auth service for navbar
     const userData = authService.getUserData();
     const userName =
       userData?.username || localStorage.getItem("user_name") || "User";
     const userInitial = userName.charAt(0).toUpperCase();
 
-    const navbar = new NavigationBar({
+    const navbar = NavigationBar.getInstance({
       currentPath: window.location.hash.slice(1),
       userInitial: userInitial,
       username: userName,
@@ -43,37 +42,37 @@ export default class DiagnosePage {
         </div>
       </section>
 
-<section class="diagnose-feature" data-aos="fade-up">
-  <div class="white-container" data-aos="fade-up" data-aos-delay="150">
-  <div class="feature-intro" data-aos="fade-up" data-aos-delay="100">
-    <h2>Cara Kerja Fitur Deteksi Tanaman</h2>
-    <p>Kirim atau ambil gambar tanamanmu, dan biarkan AI kami mendeteksi gejala penyakit secara otomatis. Dapatkan hasil analisis cepat lengkap dengan saran perawatan untuk menjaga tanamanmu tetap sehat.</p>
-  </div>
-    <div class="feature-steps">
-      <div class="step" data-aos="zoom-in" data-aos-delay="100">
-        <img src="logo/Kamera.png" alt="Unggah Gambar" />
-        <h3>Unggah atau Ambil Gambar</h3>
-        <p>Gunakan kamera langsung atau unggah dari galeri untuk mulai proses diagnosis.</p>
-      </div>
-      <div class="step" data-aos="zoom-in" data-aos-delay="200">
-        <img src="logo/Ai.png" alt="Deteksi AI" />
-        <h3>Analisis Otomatis oleh AI</h3>
-        <p>Gambar akan dianalisis oleh AI berbasis model pembelajaran penyakit tanaman.</p>
-      </div>
-      <div class="step" data-aos="zoom-in" data-aos-delay="300">
-        <img src="logo/feedback.png" alt="Hasil Diagnosa" />
-        <h3>Lihat Hasil & Saran</h3>
-        <p>Hasil diagnosis akan muncul lengkap dengan nama penyakit dan saran perawatan awal.</p>
-      </div>
-      <div class="step" data-aos="zoom-in" data-aos-delay="400">
-        <img src="logo/Care.png" alt="Tips Pencegahan" />
-        <h3>Pelajari Cara Mencegah Penyakit</h3>
-        <p>Ketahui langkah-langkah mudah untuk mencegah penyakit tanaman dan menjaga tanaman tetap sehat.</p>
-      </div>
-    </div>
-  </div>
-  <hr/>
-</section>
+      <section class="diagnose-feature" data-aos="fade-up">
+        <div class="white-container" data-aos="fade-up" data-aos-delay="150">
+        <div class="feature-intro" data-aos="fade-up" data-aos-delay="100">
+          <h2>Cara Kerja Fitur Deteksi Tanaman</h2>
+          <p>Kirim atau ambil gambar tanamanmu, dan biarkan AI kami mendeteksi gejala penyakit secara otomatis. Dapatkan hasil analisis cepat lengkap dengan saran perawatan untuk menjaga tanamanmu tetap sehat.</p>
+        </div>
+          <div class="feature-steps">
+            <div class="step" data-aos="zoom-in" data-aos-delay="100">
+              <img src="logo/Kamera.png" alt="Unggah Gambar" />
+              <h3>Unggah atau Ambil Gambar</h3>
+              <p>Gunakan kamera langsung atau unggah dari galeri untuk mulai proses diagnosis.</p>
+            </div>
+            <div class="step" data-aos="zoom-in" data-aos-delay="200">
+              <img src="logo/Ai.png" alt="Deteksi AI" />
+              <h3>Analisis Otomatis oleh AI</h3>
+              <p>Gambar akan dianalisis oleh AI berbasis model pembelajaran penyakit tanaman.</p>
+            </div>
+            <div class="step" data-aos="zoom-in" data-aos-delay="300">
+              <img src="logo/feedback.png" alt="Hasil Diagnosa" />
+              <h3>Lihat Hasil & Saran</h3>
+              <p>Hasil diagnosis akan muncul lengkap dengan nama penyakit dan saran perawatan awal.</p>
+            </div>
+            <div class="step" data-aos="zoom-in" data-aos-delay="400">
+              <img src="logo/Care.png" alt="Tips Pencegahan" />
+              <h3>Pelajari Cara Mencegah Penyakit</h3>
+              <p>Ketahui langkah-langkah mudah untuk mencegah penyakit tanaman dan menjaga tanaman tetap sehat.</p>
+            </div>
+          </div>
+        </div>
+        <hr/>
+      </section>
 
 
       <section class="diagnose-info" data-aos="fade-up" data-aos-delay="200">
@@ -83,23 +82,23 @@ export default class DiagnosePage {
       </section>
 
       <div class="floating-button-container">
-  <button id="main-fab" class="fab">+</button>
-  <div id="fab-menu" class="fab-menu hidden">
-    <button id="scan-now-btn" class="fab-menu-item">
-  <img src="logo/scan.png" alt="Scan Icon" class="icon-scan" />
-  scan now
-</button>
+        <button id="main-fab" class="fab">+</button>
+          <div id="fab-menu" class="fab-menu hidden">
+            <button id="scan-now-btn" class="fab-menu-item">
+          <img src="logo/scan.png" alt="Scan Icon" class="icon-scan" />
+          scan now
+        </button>
 
-    <button id="how-to-btn" class="fab-menu-item">❓ how to scan?</button>
-    <div id="how-to-desc" class="fab-description hidden">
-      <ul>
-        <li>Klik scan now</li>
-        <li>Pilih/ambil gambar tanaman</li>
-        <li>Submit & tunggu hasilnya</li>
-      </ul>
-    </div>
-  </div>
-</div>
+          <button id="how-to-btn" class="fab-menu-item">❓ how to scan?</button>
+          <div id="how-to-desc" class="fab-description hidden">
+            <ul>
+              <li>Klik scan now</li>
+              <li>Pilih/ambil gambar tanaman</li>
+              <li>Submit & tunggu hasilnya</li>
+            </ul>
+          </div>
+        </div>
+      </div>
 
     </div>
 
@@ -110,7 +109,6 @@ export default class DiagnosePage {
   }
 
   async afterRender() {
-    // Get user data from auth service for navbar
     const userData = authService.getUserData();
     const userName =
       userData?.username || localStorage.getItem("user_name") || "User";
@@ -146,27 +144,12 @@ export default class DiagnosePage {
       });
     }
 
-    // 🔥 Inisialisasi ulang AOS (wajib untuk SPA)
     if (typeof AOS !== "undefined") {
       AOS.init({ duration: 800, once: true });
     }
   }
 
   bindNavigationEvents(currentPath, userInitial) {
-    // Get user data from auth service for navbar
-    const userData = authService.getUserData();
-    const userName =
-      userData?.username || localStorage.getItem("user_name") || "User";
-
-    const navbar = new NavigationBar({
-      currentPath: currentPath,
-      userInitial: userInitial,
-      username: userName,
-      profilePictureUrl: userData?.profilePictureUrl,
-      showProfile: true,
-    });
-
-    navbar.bindEvents();
   }
 
   setupCarousel(texts) {

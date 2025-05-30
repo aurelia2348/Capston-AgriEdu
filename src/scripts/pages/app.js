@@ -2,12 +2,14 @@ import getRoutes from "../routes/routes.js";
 import Link from "../components/Link.js";
 import Router from "../routes/Router.js";
 import authService from "../data/auth-service.js";
+import { NavigationBar } from "../components/NavigationBar.js";
 
 class App {
   constructor({ content, drawerButton, navigationDrawer }) {
     this.content = content;
     this.drawerButton = drawerButton;
     this.navigationDrawer = navigationDrawer;
+    this.persistentNavbar = null;
 
     this.router = new Router();
 
@@ -15,14 +17,13 @@ class App {
 
     this.router
       .beforeRoute((path) => {
-        console.log("Navigating to:", path);
+        this.updateNavigationForRoute(path);
         return true;
       })
       .afterRoute(async (_, pageInstance) => {
         await this.renderPage(pageInstance);
       })
       .setNotFoundCallback((path) => {
-        console.error(`Page not found: ${path}`);
         this.content.innerHTML = `
           <div class="error-container">
             <h1>404 - Page Not Found</h1>
@@ -47,10 +48,6 @@ class App {
 
   checkAuthStatus() {
     const isAuthenticated = authService.isAuthenticated();
-    console.log(
-      "Authentication status:",
-      isAuthenticated ? "Authenticated" : "Not authenticated"
-    );
 
     this.updateAuthUI(isAuthenticated);
   }
@@ -68,19 +65,57 @@ class App {
     }
   }
 
+  updateNavigationForRoute(path) {
+    if (this.shouldShowNavigation(path)) {
+      this.initializeOrUpdateNavigation(path);
+    }
+  }
+
+  shouldShowNavigation(path) {
+    const noNavRoutes = ["/login", "/register", "/landing"];
+    return !noNavRoutes.includes(path);
+  }
+
+  async initializeOrUpdateNavigation(path) {
+    try {
+      const userData = authService.getUserData();
+      const userName = userData?.username || localStorage.getItem("user_name") || "User";
+      const userInitial = userName.charAt(0).toUpperCase();
+
+      if (!this.persistentNavbar) {
+        this.persistentNavbar = NavigationBar.getInstance({
+          currentPath: path,
+          userInitial: userInitial,
+          username: userName,
+          profilePictureUrl: userData?.profilePictureUrl,
+          showProfile: true,
+        });
+      } else {
+        this.persistentNavbar.updateOptions({
+          currentPath: path,
+          userInitial: userInitial,
+          username: userName,
+          profilePictureUrl: userData?.profilePictureUrl,
+          showProfile: true,
+        });
+      }
+    } catch (error) {
+      console.error("Error updating navigation:", error);
+    }
+  }
+
   async renderPage(pageInstance) {
     if (this.content && pageInstance) {
       try {
-        console.log("Rendering page instance:", pageInstance);
 
         const content = await pageInstance.render();
-        console.log(
-          "Rendered content:",
-          content ? "Content available" : "Content is undefined or empty"
-        );
 
         if (content) {
           this.content.innerHTML = content;
+
+          if (this.persistentNavbar && document.querySelector('.app-navbar')) {
+            this.persistentNavbar.bindEvents();
+          }
 
           if (pageInstance.afterRender) {
             await pageInstance.afterRender();
@@ -109,7 +144,6 @@ class App {
   }
 
   setupInPageNavigation() {
-    console.log("Setting up in-page navigation in App");
   }
 }
 

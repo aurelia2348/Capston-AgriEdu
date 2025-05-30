@@ -17,18 +17,8 @@ class CommunityPagePresenter {
     await this.formComponent.afterRender();
 
     if (!this._hasBoundSubmitHandler) {
-      console.log(
-        "CommunityPagePresenter: Registering submit-post event listener"
-      );
       document.addEventListener("submit-post", this._handleSubmit.bind(this));
       this._hasBoundSubmitHandler = true;
-      console.log(
-        "CommunityPagePresenter: submit-post event listener registered successfully"
-      );
-    } else {
-      console.log(
-        "CommunityPagePresenter: submit-post event listener already registered"
-      );
     }
   }
 
@@ -43,20 +33,9 @@ class CommunityPagePresenter {
   }
 
   async _handleSubmit(event) {
-    console.log("CommunityPagePresenter: submit-post event received");
-
     try {
       const formData = event.detail;
-      console.log("CommunityPagePresenter: FormData received:", formData);
-
-      console.log(
-        "CommunityPagePresenter: Calling CommunityModel.createPost..."
-      );
       const response = await CommunityModel.createPost(formData);
-      console.log(
-        "CommunityPagePresenter: Post created successfully:",
-        response
-      );
 
       document.getElementById("post-result").innerHTML = `
         <p style="color: green; margin-top: 10px;">
@@ -66,13 +45,10 @@ class CommunityPagePresenter {
 
       this.formComponent?.resetForm?.();
 
-      // Langsung pindah ke halaman community dan refresh posts
       setTimeout(() => {
         window.location.hash = "#/community";
       }, 1000);
     } catch (error) {
-      console.error("Error creating post:", error);
-
       if (
         error.message.includes("Sesi Anda telah berakhir") ||
         error.message.includes("belum login")

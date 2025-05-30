@@ -3,28 +3,19 @@ import { NavigationBar } from "../../components/NavigationBar.js";
 
 export default class ProfilePage {
   constructor() {
-    // Store selected file temporarily until form submission
     this.pendingProfilePicture = null;
     this.hasUnsavedChanges = false;
   }
 
   async render() {
-    // Get user data from auth service
     const authService = (await import("../../data/auth-service.js")).default;
     const userData = authService.getUserData();
-
-    // Debug logging
-    console.log("ProfilePage render - userData from authService:", userData);
-    console.log(
-      "ProfilePage render - profilePictureUrl:",
-      userData?.profilePictureUrl
-    );
 
     const userName =
       userData?.username || localStorage.getItem("user_name") || "User";
     const userInitial = userName.charAt(0).toUpperCase();
 
-    const navbar = new NavigationBar({
+    const navbar = NavigationBar.getInstance({
       currentPath: window.location.hash.slice(1),
       userInitial: userInitial,
       username: userName,
@@ -101,10 +92,8 @@ export default class ProfilePage {
   }
 
   async afterRender() {
-    // Set up navigation bar events
     this.setupNavigationEvents();
 
-    // Set up avatar preview functionality (no immediate upload)
     const editBtn = document.getElementById("editAvatarBtn");
     const avatarInput = document.getElementById("avatarInput");
     const avatarPreview = document.getElementById("avatarPreview");
@@ -117,7 +106,6 @@ export default class ProfilePage {
       avatarInput.addEventListener("change", () => {
         const file = avatarInput.files[0];
         if (file) {
-          // Validate file size (2MB limit as mentioned in UI)
           if (file.size > 2 * 1024 * 1024) {
             Swal.fire({
               icon: "warning",
@@ -126,11 +114,10 @@ export default class ProfilePage {
               showConfirmButton: true,
               confirmButtonText: "OK",
             });
-            avatarInput.value = ""; // Clear the input
+            avatarInput.value = "";
             return;
           }
 
-          // Validate file type
           if (!file.type.startsWith("image/")) {
             Swal.fire({
               icon: "warning",
@@ -139,54 +126,27 @@ export default class ProfilePage {
               showConfirmButton: true,
               confirmButtonText: "OK",
             });
-            avatarInput.value = ""; // Clear the input
+            avatarInput.value = "";
             return;
           }
 
-          // Store the file for later upload
           this.pendingProfilePicture = file;
 
-          // Show preview of selected image
           this.showImagePreview(file);
 
-          // Mark as having unsaved changes
           this.markAsUnsaved();
-
-          console.log("Profile picture selected for preview:", file.name);
         }
       });
     }
 
-    // Set up form change tracking
     this.setupFormChangeTracking();
 
-    // Initialize ProfilePresenter
     ProfilePresenter.init(this);
   }
 
   async setupNavigationEvents() {
-    // Set up navigation bar events using the NavigationBar component's centralized event handling
-    const authService = (await import("../../data/auth-service.js")).default;
-    const userData = authService.getUserData();
-    const userName =
-      userData?.username || localStorage.getItem("user_name") || "User";
-    const userInitial = userName.charAt(0).toUpperCase();
-
-    const navbar = new NavigationBar({
-      currentPath: window.location.hash.slice(1),
-      userInitial: userInitial,
-      username: userName,
-      profilePictureUrl: userData?.profilePictureUrl,
-      showProfile: true,
-    });
-
-    // Use the NavigationBar's built-in event binding
-    navbar.bindEvents();
   }
 
-  /**
-   * Set up tracking for form input changes
-   */
   setupFormChangeTracking() {
     const formInputs = [
       document.getElementById("fullNameInput"),
@@ -212,14 +172,12 @@ export default class ProfilePage {
   }
 
   async showProfile({ fullName, username, experience }) {
-    // Update main profile form
     const fullNameInput = document.getElementById("fullNameInput");
     const usernameInput = document.getElementById("usernameInput");
 
     if (fullNameInput) fullNameInput.value = fullName || "";
     if (usernameInput) usernameInput.value = username || "";
 
-    // Update experience radio buttons
     if (experience) {
       const radio = document.querySelector(
         `input[name="experience"][value="${experience}"]`
@@ -227,27 +185,15 @@ export default class ProfilePage {
       if (radio) radio.checked = true;
     }
 
-    // Update avatar images using profile picture service for consistency
     const profilePictureService = (
       await import("../../data/profile-picture-service.js")
     ).default;
 
-    // Get user data to extract profilePictureUrl
     const authService = (await import("../../data/auth-service.js")).default;
     const userData = authService.getUserData();
 
-    console.log(
-      "ProfilePage showProfile - updating avatars with userData:",
-      userData
-    );
-    console.log(
-      "ProfilePage showProfile - profilePictureUrl:",
-      userData?.profilePictureUrl
-    );
-
     const avatarPreview = document.getElementById("avatarPreview");
     if (avatarPreview) {
-      console.log("Updating avatarPreview element");
       await profilePictureService.updateImageElement(
         avatarPreview,
         userData?.profilePictureUrl,
@@ -257,7 +203,6 @@ export default class ProfilePage {
 
     const sidebarAvatar = document.getElementById("sidebarAvatar");
     if (sidebarAvatar) {
-      console.log("Updating sidebarAvatar element");
       await profilePictureService.updateImageElement(
         sidebarAvatar,
         userData?.profilePictureUrl,
@@ -265,7 +210,6 @@ export default class ProfilePage {
       );
     }
 
-    // Update sidebar information
     const sidebarUsername = document.getElementById("sidebarUsername");
     const sidebarExperience = document.getElementById("sidebarExperience");
 
@@ -275,21 +219,15 @@ export default class ProfilePage {
       sidebarExperience.textContent = experience || "Experience Level";
   }
 
-  /**
-   * Show preview of selected image file
-   * @param {File} file - The selected image file
-   */
   showImagePreview(file) {
     const reader = new FileReader();
 
     reader.onload = (e) => {
       const imageDataUrl = e.target.result;
 
-      // Remove any existing fallback avatars
       const existingFallbacks = document.querySelectorAll(".fallback-avatar");
       existingFallbacks.forEach((fallback) => fallback.remove());
 
-      // Update main profile avatar preview
       const avatarPreview = document.getElementById("avatarPreview");
       if (avatarPreview) {
         avatarPreview.src = imageDataUrl;
@@ -297,7 +235,6 @@ export default class ProfilePage {
         avatarPreview.alt = "Profile Picture Preview";
       }
 
-      // Update sidebar avatar preview
       const sidebarAvatar = document.getElementById("sidebarAvatar");
       if (sidebarAvatar) {
         sidebarAvatar.src = imageDataUrl;
@@ -305,11 +242,9 @@ export default class ProfilePage {
         sidebarAvatar.alt = "Profile Picture Preview";
       }
 
-      console.log("Profile picture preview updated");
     };
 
     reader.onerror = () => {
-      console.error("Failed to read selected image file");
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -322,19 +257,14 @@ export default class ProfilePage {
     reader.readAsDataURL(file);
   }
 
-  /**
-   * Mark the form as having unsaved changes
-   */
   markAsUnsaved() {
     this.hasUnsavedChanges = true;
 
-    // Show unsaved changes indicator
     const indicator = document.getElementById("unsavedChangesIndicator");
     if (indicator) {
       indicator.style.display = "block";
     }
 
-    // Update button text to indicate pending changes
     const saveBtn = document.getElementById("saveProfileBtn");
     if (saveBtn) {
       if (this.pendingProfilePicture) {
@@ -345,44 +275,30 @@ export default class ProfilePage {
     }
   }
 
-  /**
-   * Mark the form as saved (clear unsaved changes)
-   */
   markAsSaved() {
     this.hasUnsavedChanges = false;
     this.pendingProfilePicture = null;
 
-    // Clear the file input
     const avatarInput = document.getElementById("avatarInput");
     if (avatarInput) {
       avatarInput.value = "";
     }
 
-    // Hide unsaved changes indicator
     const indicator = document.getElementById("unsavedChangesIndicator");
     if (indicator) {
       indicator.style.display = "none";
     }
 
-    // Reset button text
     const saveBtn = document.getElementById("saveProfileBtn");
     if (saveBtn) {
       saveBtn.textContent = "Edit Profile";
     }
   }
 
-  /**
-   * Get the pending profile picture file
-   * @returns {File|null} The pending profile picture file or null
-   */
   getPendingProfilePicture() {
     return this.pendingProfilePicture;
   }
 
-  /**
-   * Check if there are unsaved changes
-   * @returns {boolean} True if there are unsaved changes
-   */
   hasUnsavedProfileChanges() {
     return this.hasUnsavedChanges;
   }

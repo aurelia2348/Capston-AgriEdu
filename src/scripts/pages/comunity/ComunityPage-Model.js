@@ -10,26 +10,16 @@ const CommunityModel = {
       throw new Error("Anda belum login. Silakan login terlebih dahulu.");
     }
 
-    console.log("Creating post with API:", url);
-    console.log("FormData contents:");
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);
-    }
-
     try {
       const response = await fetch(url, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
-          // Don't set Content-Type for FormData - browser will set it automatically with boundary
         },
         body: formData,
       });
 
-      console.log("Create post response status:", response.status);
-
       const responseText = await response.text();
-      console.log("Create post response text:", responseText);
 
       let data = {};
       try {
@@ -61,7 +51,6 @@ const CommunityModel = {
         }
       }
 
-      console.log("Post created successfully:", data);
       return {
         success: true,
         data: data.data || data,
@@ -80,8 +69,6 @@ const CommunityModel = {
   async getAllPosts() {
     const url = `${CONFIG.BASE_URL}${CONFIG.API_ENDPOINTS.POSTS.GET_ALL}`;
     const token = authService.getToken();
-
-    console.log("Fetching posts from:", url);
 
     try {
       const headers = {
@@ -102,9 +89,7 @@ const CommunityModel = {
       }
 
       const data = await response.json();
-      console.log("Posts API response:", data);
 
-      // Handle different response structures based on API schema
       let postsArray = [];
       if (data.data && Array.isArray(data.data)) {
         postsArray = data.data;
@@ -114,8 +99,6 @@ const CommunityModel = {
         console.warn("Unexpected response structure:", data);
         postsArray = [];
       }
-
-      console.log(`Found ${postsArray.length} posts`);
 
       return {
         success: true,
@@ -150,9 +133,7 @@ const CommunityModel = {
         headers: headers,
       });
 
-      console.log("Get post by ID response status:", response.status);
       const responseText = await response.text();
-      console.log("Get post by ID response text:", responseText);
 
       let data = {};
       try {
@@ -192,9 +173,6 @@ const CommunityModel = {
       throw new Error("Anda belum login. Silakan login terlebih dahulu.");
     }
 
-    console.log("Deleting post with ID:", postId);
-    console.log("Delete API URL:", url);
-
     try {
       const response = await fetch(url, {
         method: "DELETE",
@@ -203,8 +181,6 @@ const CommunityModel = {
           "Content-Type": "application/json",
         },
       });
-
-      console.log("Delete response status:", response.status);
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -234,7 +210,6 @@ const CommunityModel = {
         }
       }
 
-      // For DELETE request, response might be empty
       const responseText = await response.text();
       let data = { success: true };
       if (responseText) {
@@ -245,7 +220,6 @@ const CommunityModel = {
         }
       }
 
-      console.log("Post deleted successfully:", data);
       return data;
     } catch (error) {
       console.error("Error deleting post:", error);
@@ -253,7 +227,6 @@ const CommunityModel = {
     }
   },
 
-  // Comments API functions
   async getComments(postId) {
     const url = `${
       CONFIG.BASE_URL
@@ -274,9 +247,7 @@ const CommunityModel = {
         headers: headers,
       });
 
-      console.log("Get comments response status:", response.status);
       const responseText = await response.text();
-      console.log("Get comments response text:", responseText);
 
       let data = {};
       try {
@@ -312,9 +283,6 @@ const CommunityModel = {
       throw new Error("Anda belum login. Silakan login terlebih dahulu.");
     }
 
-    console.log("Creating comment for post:", postId);
-    console.log("Comment content:", content);
-
     try {
       const response = await fetch(url, {
         method: "POST",
@@ -325,9 +293,7 @@ const CommunityModel = {
         body: JSON.stringify({ content }),
       });
 
-      console.log("Create comment response status:", response.status);
       const responseText = await response.text();
-      console.log("Create comment response text:", responseText);
 
       let data = {};
       try {
@@ -358,7 +324,6 @@ const CommunityModel = {
         }
       }
 
-      console.log("Comment created successfully:", data);
       return {
         success: true,
         data: data.data || data,
@@ -382,8 +347,6 @@ const CommunityModel = {
       throw new Error("Anda belum login. Silakan login terlebih dahulu.");
     }
 
-    console.log("Deleting comment:", commentId, "from post:", postId);
-
     try {
       const response = await fetch(url, {
         method: "DELETE",
@@ -393,12 +356,8 @@ const CommunityModel = {
         },
       });
 
-      console.log("Delete comment response status:", response.status);
-
       if (!response.ok) {
         const errorText = await response.text();
-        console.error("Delete comment error response:", errorText);
-
         let errorData = {};
         try {
           errorData = errorText ? JSON.parse(errorText) : {};
@@ -434,7 +393,6 @@ const CommunityModel = {
         }
       }
 
-      console.log("Comment deleted successfully:", data);
       return data;
     } catch (error) {
       console.error("Error deleting comment:", error);

@@ -12,6 +12,7 @@
   max-width: 800px;
   overflow: hidden;
   position: relative;
+  padding: 20px 0;
 }
 
 .gallery-carousel-track {

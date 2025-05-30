@@ -17,11 +17,10 @@ export default class ChatbotPresenter {
     this.appendMessage('You', message);
     this.inputElement.value = '';
 
-    // Simulasi balasan chatbot statis
     const reply = this.generateBotReply(message);
     setTimeout(() => {
       this.appendMessage('Bot', reply);
-    }, 500); // delay 500ms biar kayak balasan nyata
+    }, 500);
   }
 
   generateBotReply(message) {

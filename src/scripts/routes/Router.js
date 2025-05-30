@@ -49,9 +49,6 @@ class Router {
     this.currentPath = path;
 
     if (RouteGuard.requiresAuth(path) && !RouteGuard.isAuthenticated()) {
-      console.log(
-        `Route ${path} requires authentication. Redirecting to login.`
-      );
       window.location.hash = RouteGuard.getAuthRedirectPath().substring(1);
       return;
     }
@@ -76,7 +73,6 @@ class Router {
   getPathFromHash() {
     const hash = window.location.hash.substring(1);
 
-    // Remove query parameters from path for routing
     const pathWithoutQuery = hash.split("?")[0];
 
     return pathWithoutQuery || "/";
@@ -108,7 +104,7 @@ class Router {
       element.getBoundingClientRect().top + window.pageYOffset;
     const startPosition = window.pageYOffset;
     const distance = targetPosition - startPosition;
-    const duration = 500; // ms
+    const duration = 500;
     let startTime = null;
 
     function animation(currentTime) {

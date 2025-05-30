@@ -147,28 +147,19 @@ export class LandingPage {
   }
 
   setupSmoothScrolling() {
-    console.log("Setting up smooth scrolling for landing page");
     const scrollLinks = document.querySelectorAll(".scroll-link");
-    console.log(`Found ${scrollLinks.length} scroll links`);
 
     scrollLinks.forEach((link, index) => {
-      console.log(
-        `Setting up scroll link ${index + 1}: ${link.getAttribute("href")}`
-      );
-
       const newLink = link.cloneNode(true);
       link.parentNode.replaceChild(newLink, link);
 
       newLink.addEventListener("click", (event) => {
-        console.log(`Scroll link clicked: ${newLink.getAttribute("href")}`);
         event.preventDefault();
 
         const targetId = newLink.getAttribute("href").substring(1);
-        console.log(`Target ID: ${targetId}`);
         const targetElement = document.getElementById(targetId);
 
         if (targetElement) {
-          console.log(`Found target element, scrolling to it`);
           if ("scrollBehavior" in document.documentElement.style) {
             targetElement.scrollIntoView({
               behavior: "smooth",
@@ -276,8 +267,6 @@ export class LandingPage {
       return;
     }
 
-    console.log(`Searching for: ${query}`);
-
     const serviceCards = document.querySelectorAll(".card");
     let foundResults = false;
 
@@ -328,7 +317,6 @@ export class LandingPage {
   }
 
   highlightSearchResults(query) {
-    console.log(`Live search for: ${query}`);
   }
 
   clearSearchHighlights() {

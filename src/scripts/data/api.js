@@ -8,7 +8,6 @@ const createHeaders = (includeAuth = false) => {
 
   if (includeAuth) {
     const token = authService.getToken();
-    console.log("Token untuk Authorization:", token);
     if (token) {
       headers.append("Authorization", `Bearer ${token}`);
     }
@@ -30,7 +29,6 @@ export async function apiRequest(url, options = {}) {
 
     return data;
   } catch (error) {
-    console.error("API request error:", error);
     throw error;
   }
 }
