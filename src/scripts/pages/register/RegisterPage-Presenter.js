@@ -52,6 +52,7 @@ export default class RegisterPresenter {
       const data = this._getFormData(form);
       validate(data, e.target.id);
       setError("generalError", "");
+      setError("generalError", "");
     });
 
     form.addEventListener("focusin", (e) => {

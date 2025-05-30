@@ -149,8 +149,7 @@ export default class DiagnosePage {
     }
   }
 
-  bindNavigationEvents(currentPath, userInitial) {
-  }
+  bindNavigationEvents(currentPath, userInitial) {}
 
   setupCarousel(texts) {
     const slides = document.querySelectorAll(".carousel-slide img");

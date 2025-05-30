@@ -105,8 +105,7 @@ export default class CommunityForm {
     await this.loadUserInfo();
   }
 
-  setupNavigationEvents() {
-  }
+  setupNavigationEvents() {}
 
   async loadUserInfo() {
     try {
@@ -188,8 +187,7 @@ export default class CommunityForm {
     });
 
     if (submitButton) {
-      submitButton.addEventListener("click", () => {
-      });
+      submitButton.addEventListener("click", () => {});
     }
   }
 

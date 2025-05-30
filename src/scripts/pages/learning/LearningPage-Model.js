@@ -174,6 +174,7 @@ export async function fetchLearningData() {
   } catch (error) {
     console.error("Error fetching learning data:", error);
     return articles;
+    return articles;
   }
 }
 

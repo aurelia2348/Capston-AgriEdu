@@ -79,7 +79,7 @@
   }
 }
 
-/* Medium screens (tablet): 2 cards per row */
+
 @media (max-width: 1199px) and (min-width: 768px) {
   .services {
     padding: 50px 30px;

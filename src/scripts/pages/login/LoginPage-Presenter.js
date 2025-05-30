@@ -95,7 +95,9 @@ export default class LoginPresenter {
             const userId = userData.id;
 
             if (userId) {
-              const { hasCompletedSetup } = await import("../../utils/indexeddb");
+              const { hasCompletedSetup } = await import(
+                "../../utils/indexeddb"
+              );
               const setupCompleted = await hasCompletedSetup(userId);
 
               if (setupCompleted) {

@@ -4,7 +4,6 @@ import authService from "./auth-service.js";
 const imageCache = new Map();
 
 class ProfilePictureService {
-
   async uploadProfilePicture(file) {
     try {
       const token = authService.getToken();
@@ -246,7 +245,7 @@ class ProfilePictureService {
       if (imageCache.has(imageUrl)) {
         return imageCache.get(imageUrl);
       }
-      
+
       const token = authService.getToken();
       const headers = {};
 

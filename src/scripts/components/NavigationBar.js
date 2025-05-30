@@ -182,8 +182,7 @@ export class NavigationBar {
             mobileImgElement.style.display = "flex";
           };
 
-          mobileImgElement.onerror = () => {
-          };
+          mobileImgElement.onerror = () => {};
 
           mobileImgElement.src = blobUrl;
         }
@@ -438,8 +437,7 @@ export class NavigationBar {
         imgElement.style.display = "flex";
       };
 
-      imgElement.onerror = () => {
-      };
+      imgElement.onerror = () => {};
 
       imgElement.src = blobUrl;
     }
@@ -454,8 +452,7 @@ export class NavigationBar {
         mobileImgElement.style.display = "flex";
       };
 
-      mobileImgElement.onerror = () => {
-      };
+      mobileImgElement.onerror = () => {};
 
       mobileImgElement.src = blobUrl;
     }
@@ -489,4 +486,3 @@ export class NavigationBar {
 }
 
 export default NavigationBar;
-

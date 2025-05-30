@@ -159,8 +159,7 @@ export default class DiagnoseForm {
     });
   }
 
-  setupNavigation() {
-  }
+  setupNavigation() {}
 
   showMessage(message) {
     Swal.fire({

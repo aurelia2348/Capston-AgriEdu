@@ -77,8 +77,7 @@ export default class CommunityPage {
     await this.loadPosts();
   }
 
-  setupNavigationEvents() {
-  }
+  setupNavigationEvents() {}
 
   setupCreatePostButtons() {
     const createPostBtn = document.getElementById("createPostBtn");
@@ -361,7 +360,6 @@ export default class CommunityPage {
     container.innerHTML = postsHTML;
 
     this.loadPostProfilePictures();
-
   }
 
   async loadPostProfilePictures() {
@@ -409,7 +407,6 @@ export default class CommunityPage {
 
   async showComments(postId) {
     try {
-
       const [postResponse, commentsResponse] = await Promise.all([
         CommunityModel.getPostById(postId),
         CommunityModel.getComments(postId),
@@ -546,7 +543,9 @@ export default class CommunityPage {
           );
         } catch (error) {
           console.warn(
-            `Failed to load profile picture for comment ${comment._id || comment.id}:`,
+            `Failed to load profile picture for comment ${
+              comment._id || comment.id
+            }:`,
             error
           );
           container.innerHTML = profilePictureService.createFallbackAvatar(
@@ -555,7 +554,10 @@ export default class CommunityPage {
           );
         }
       } else {
-        container.innerHTML = profilePictureService.createFallbackAvatar(userData.username, "small");
+        container.innerHTML = profilePictureService.createFallbackAvatar(
+          userData.username,
+          "small"
+        );
       }
     }
   }
@@ -578,7 +580,12 @@ export default class CommunityPage {
         commentUserId = currentUserId;
         profilePictureUrl = currentUser.profilePictureUrl;
       } else {
-        console.warn(`Comment ${comment._id || comment.id} has unexpected userId structure:`, comment.userId);
+        console.warn(
+          `Comment ${
+            comment._id || comment.id
+          } has unexpected userId structure:`,
+          comment.userId
+        );
       }
     }
 
@@ -586,7 +593,7 @@ export default class CommunityPage {
       username: commentUsername,
       userId: commentUserId,
       profilePictureUrl: profilePictureUrl,
-      isOwner: currentUserId && commentUserId === currentUserId
+      isOwner: currentUserId && commentUserId === currentUserId,
     };
   }
 
@@ -599,7 +606,9 @@ export default class CommunityPage {
       .map((comment) => {
         const userData = this.extractCommentUserData(comment);
 
-        const commentProfilePictureId = `comment-avatar-${comment._id || comment.id}`;
+        const commentProfilePictureId = `comment-avatar-${
+          comment._id || comment.id
+        }`;
 
         const fallbackAvatarHtml = profilePictureService.createFallbackAvatar(
           userData.username,
@@ -623,7 +632,9 @@ export default class CommunityPage {
             ${
               userData.isOwner
                 ? `
-              <button class="delete-comment-btn" onclick="window.communityPage.deleteComment('${postId}', '${comment._id || comment.id}')" title="Hapus komentar">
+              <button class="delete-comment-btn" onclick="window.communityPage.deleteComment('${postId}', '${
+                    comment._id || comment.id
+                  }')" title="Hapus komentar">
                 <i class="fas fa-trash"></i>
               </button>
             `
@@ -659,7 +670,6 @@ export default class CommunityPage {
 
       const commentsResponse = await CommunityModel.getComments(postId);
       const comments = commentsResponse.data || [];
-
       const commentsList = document.getElementById(`comments-list-${postId}`);
       if (commentsList) {
         commentsList.innerHTML = this.renderComments(comments, postId);
@@ -700,12 +710,10 @@ export default class CommunityPage {
     }
 
     try {
-
       await CommunityModel.deleteComment(postId, commentId);
 
       const commentsResponse = await CommunityModel.getComments(postId);
       const comments = commentsResponse.data || [];
-
       const commentsList = document.getElementById(`comments-list-${postId}`);
       if (commentsList) {
         commentsList.innerHTML = this.renderComments(comments, postId);
@@ -733,7 +741,6 @@ export default class CommunityPage {
     try {
       const response = await CommunityModel.getPostById(postId);
       const post = response.data;
-
 
       let username = "Anonymous";
       if (post.userId && typeof post.userId === "object") {

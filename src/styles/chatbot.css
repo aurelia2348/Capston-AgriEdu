@@ -36,7 +36,6 @@ html, body {
   font-size: 0.9rem;
 }
 
-/* Tablet */
 @media (min-width: 600px) {
   .chatbot-welcome {
     font-size: 1.3rem;
@@ -47,7 +46,6 @@ html, body {
   }
 }
 
-/* Laptop */
 @media (min-width: 1024px) {
   .chatbot-welcome {
     font-size: 1.5rem;
@@ -67,7 +65,6 @@ html, body {
   box-sizing: border-box;
 }
 
-/* Tulisan welcome di paling atas */
 .chatbot-welcome {
   margin: 0 0 15px 0;
   text-align: center;
@@ -79,7 +76,7 @@ html, body {
 .chat-container {
   flex: 1;
   border-radius: 8px;
-  background-color: transparent; /* jangan pakai none, pakai transparent */
+  background-color: transparent; 
   padding: 10px;
   overflow-y: auto;
   display: flex;
@@ -89,11 +86,11 @@ html, body {
 
   margin-left: auto;
   margin-right: auto;
-  width: 100%; /* supaya responsive */
+  width: 100%; 
 }
 
 
-/* Chat bubble styling */
+
 .chat-message {
   max-width: 70%;
   padding: 10px 15px;
@@ -121,7 +118,7 @@ html, body {
 .input-container {
   position: sticky;
   bottom: 0;
-  background-color: white; /* supaya background putih menutupi chat */
+  background-color: white;
   padding: 10px 0 0 0;
   display: flex;
   gap: 10px;
@@ -155,7 +152,7 @@ html, body {
   border-color: #2a2a2a;
 }
 
-/* Tombol kirim */
+
 #send-btn {
   padding: 12px 25px;
   background-color: #2a2a2a;
@@ -207,7 +204,7 @@ html, body {
 .typing .text,
 .typing-desc .text {
   display: inline-block;
-  white-space: normal;  /* <--- penting! supaya teks bisa pindah baris */
+  white-space: normal;  
   word-break: break-word;
   width: 100%;
 }
@@ -263,7 +260,6 @@ html, body {
   }
 }
 
-/* Responsive untuk Mobile (max-width: 600px) */
 @media (max-width: 600px) {
   .chatbot-wrapper {
     padding: 10px;
@@ -279,7 +275,7 @@ html, body {
   }
 
   .chat-message {
-    max-width: 90%; /* Lebih lebar untuk mobile */
+    max-width: 90%; 
     font-size: 13px;
     padding: 8px 12px;
   }
@@ -310,7 +306,6 @@ html, body {
   }
 }
 
-/* Responsive untuk Tablet (min-width: 601px) and (max-width: 1024px) */
 @media (min-width: 601px) and (max-width: 1024px) {
   .chatbot-wrapper {
     padding: 15px 20px;
@@ -356,7 +351,6 @@ html, body {
   }
 }
 
-/* Responsive untuk Laptop Besar & Desktop (min-width: 1025px) sampai 1440px */
 @media (min-width: 1025px) and (max-width: 1440px) {
   .chatbot-wrapper {
     padding: 20px 30px;
@@ -402,7 +396,6 @@ html, body {
   }
 }
 
-/* Khusus untuk layar sangat kecil di bawah 550px */
 @media (max-width: 549px) {
   .chatbot-wrapper {
     padding: 8px 10px;
@@ -420,7 +413,7 @@ html, body {
   }
 
   .chat-message {
-    max-width: 95% !important; /* Supaya bubble benar-benar lebar di layar kecil */
+    max-width: 95% !important; 
     font-size: 13px;
     padding: 8px 12px;
   }

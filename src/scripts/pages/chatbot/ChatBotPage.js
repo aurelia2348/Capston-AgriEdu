@@ -49,6 +49,5 @@ export default class ChatbotPage {
     this.chatbot = new ChatbotPresenter(chatContainer, chatInput, sendBtn);
   }
 
-  setupNavigationEvents() {
-  }
+  setupNavigationEvents() {}
 }

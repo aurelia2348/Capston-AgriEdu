@@ -144,8 +144,7 @@ export default class ProfilePage {
     ProfilePresenter.init(this);
   }
 
-  async setupNavigationEvents() {
-  }
+  async setupNavigationEvents() {}
 
   setupFormChangeTracking() {
     const formInputs = [
@@ -241,7 +240,6 @@ export default class ProfilePage {
         sidebarAvatar.style.display = "block";
         sidebarAvatar.alt = "Profile Picture Preview";
       }
-
     };
 
     reader.onerror = () => {

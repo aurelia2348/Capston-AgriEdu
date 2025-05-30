@@ -194,7 +194,7 @@
   display: none;
 }
 
-/* Desktop Navigation Styles */
+
 @media (min-width: 1156px) {
   .app-navbar-content {
     padding: 0 40px;
@@ -209,7 +209,7 @@
     gap: 15px;
   }
 
-  /* Ensure only one profile container is shown on desktop */
+ 
   .mobile-only {
     display: none !important;
   }
@@ -219,7 +219,7 @@
   }
 }
 
-/* Tablet and Mobile Navigation Styles */
+
 @media (max-width: 1155px) {
   .app-navbar-content {
     position: relative;
@@ -255,7 +255,7 @@
     margin-left: auto;
   }
 
-  /* Hide desktop profile container */
+  
   .app-navbar-content > .user-profile-container {
     display: none !important;
   }
@@ -323,7 +323,7 @@
     margin-left: auto;
   }
 
-  /* Hide desktop profile container */
+  
   .app-navbar-content > .user-profile-container {
     display: none !important;
   }
@@ -361,7 +361,7 @@
   }
 }
 
-/* Animation for mobile menu */
+
 @keyframes slideDown {
   from {
     opacity: 0;

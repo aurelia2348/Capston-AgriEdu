@@ -26,7 +26,9 @@ export function renderArticles(container, list) {
       <div class="learning-item-header">
         <h4 class="article-title" data-url="${item.url}">${item.title}</h4>
         <div class="learning-item-actions">
-          <button class="read-btn" data-index="${index}" data-type="${item.type}" title="Mark as read">
+          <button class="read-btn" data-index="${index}" data-type="${
+      item.type
+    }" title="Mark as read">
             <i class="fa fa-circle-o"></i>
           </button>
           <button class="favorite-btn ${heartClass}" data-index="${index}" data-type="${
@@ -246,7 +248,8 @@ function formatTimestamp(timestamp) {
 }
 
 export const setupFavoriteListeners = (articleContainer, videoContainer) => {
-  const articleFavoriteButtons = articleContainer.querySelectorAll(".favorite-btn");
+  const articleFavoriteButtons =
+    articleContainer.querySelectorAll(".favorite-btn");
   articleFavoriteButtons.forEach((button) => {
     button.addEventListener("click", (e) => {
       e.preventDefault();

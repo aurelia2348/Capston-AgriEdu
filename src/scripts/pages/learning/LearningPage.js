@@ -38,8 +38,7 @@ const CATEGORY_IDS = {
 };
 
 export default class LearningPage {
-  constructor() {
-  }
+  constructor() {}
 
   render() {
     const userData = authService.getUserData();
