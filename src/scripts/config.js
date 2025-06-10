@@ -1,5 +1,5 @@
 const CONFIG = {
-  BASE_URL: "https://apiww-production.up.railway.app",
+  BASE_URL: "https://agriedu-production.up.railway.app",
   API_ENDPOINTS: {
     AUTH: {
       REGISTER: "/api/auth/register",
