@@ -37,7 +37,6 @@ export default class SetupPagePresenter {
   async init() {
     const userData = authService.getUserData();
     if (!userData || !userData.id) {
-      console.warn("No user data found, redirecting to login");
       window.location.hash = "#/login";
       return;
     }

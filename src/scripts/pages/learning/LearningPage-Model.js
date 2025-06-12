@@ -103,21 +103,21 @@ export const videos = [
 
 const CATEGORY_IDS = {
   experience: {
-    pemula: "6837fe6c06bf979e73ffd611",
-    menengah: "6837fe8c06bf979e73ffd61a",
-    lanjutan: "6837fe9606bf979e73ffd61f",
+    pemula: "684a9862cb667731eed9469f",
+    menengah: "684a9862cb667731eed946a1",
+    lanjutan: "684a9862cb667731eed946a3",
   },
   plantType: {
-    sayuran: "6838035e06bf979e73ffd64b",
-    buah: "6838036d06bf979e73ffd650",
-    "tanaman-hias": "6838037e06bf979e73ffd655",
-    lainnya: "6838038a06bf979e73ffd65a",
+    sayuran: "684a9862cb667731eed946a5",
+    buah: "684a9862cb667731eed946a7",
+    tanamanHias: "684a9862cb667731eed946a9",
+    lainnya: "684a9862cb667731eed946ab",
   },
   method: {
-    konvensional: "683803a806bf979e73ffd65f",
-    hidroponik: "683803c306bf979e73ffd664",
-    organik: "683803d006bf979e73ffd669",
-    lainnya: "6838041b06bf979e73ffd671",
+    konvensional: "684a9862cb667731eed946ad",
+    hidroponik: "684a9862cb667731eed946af",
+    organik: "684a9862cb667731eed946b1",
+    lainnya: "684a9862cb667731eed946b3",
   },
 };
 
@@ -148,6 +148,7 @@ function transformApiData(apiData) {
 
     return {
       type: "article",
+      id: item.id,
       title: item.title,
       description: item.summary,
       url: item.contentLink,
@@ -182,6 +183,15 @@ export class LearningStorage {
   static FAVORITES_KEY = "agriedu_favorites";
   static RECENT_LEARNING_KEY = "agriedu_recent_learning";
 
+  static getUserId() {
+    const userData = JSON.parse(localStorage.getItem("user_data") || "{}");
+    return userData.id || "guest";
+  }
+
+  static getRecentLearningKey() {
+    return `${this.RECENT_LEARNING_KEY}_${this.getUserId()}`;
+  }
+
   static loadFavorites() {
     try {
       const favorites = localStorage.getItem(this.FAVORITES_KEY);
@@ -202,7 +212,7 @@ export class LearningStorage {
 
   static loadRecentLearning() {
     try {
-      const recent = localStorage.getItem(this.RECENT_LEARNING_KEY);
+      const recent = localStorage.getItem(this.getRecentLearningKey());
       return recent ? JSON.parse(recent) : [];
     } catch (error) {
       console.error("Error loading recent learning:", error);
@@ -214,7 +224,7 @@ export class LearningStorage {
     try {
       const limitedItems = recentItems.slice(0, 5);
       localStorage.setItem(
-        this.RECENT_LEARNING_KEY,
+        this.getRecentLearningKey(),
         JSON.stringify(limitedItems)
       );
     } catch (error) {
@@ -224,24 +234,19 @@ export class LearningStorage {
 
   static addToRecentLearning(item) {
     const recent = this.loadRecentLearning();
-
     const filtered = recent.filter((r) => r.url !== item.url);
-
     filtered.unshift({
       ...item,
       timestamp: Date.now(),
     });
-
     this.saveRecentLearning(filtered);
   }
 
   static initializeFavorites() {
     const favorites = this.loadFavorites();
-
     articles.forEach((article, index) => {
       article.isFavorite = favorites.articles.includes(index);
     });
-
     videos.forEach((video, index) => {
       video.isFavorite = favorites.videos.includes(index);
     });
@@ -250,8 +255,7 @@ export class LearningStorage {
   static toggleFavorite(index, type) {
     const favorites = this.loadFavorites();
     const dataArray = type === "video" ? videos : articles;
-    const favoriteArray =
-      type === "video" ? favorites.videos : favorites.articles;
+    const favoriteArray = type === "video" ? favorites.videos : favorites.articles;
 
     dataArray[index].isFavorite = !dataArray[index].isFavorite;
 

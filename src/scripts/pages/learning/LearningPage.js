@@ -19,21 +19,21 @@ import learningService from "../../data/learning-service.js";
 
 const CATEGORY_IDS = {
   experience: {
-    pemula: "6837fe6c06bf979e73ffd611",
-    menengah: "6837fe8c06bf979e73ffd61a",
-    lanjutan: "6837fe9606bf979e73ffd61f",
+    pemula: "684a9862cb667731eed9469f",
+    menengah: "684a9862cb667731eed946a1",
+    lanjutan: "684a9862cb667731eed946a3",
   },
   plantType: {
-    sayuran: "6838035e06bf979e73ffd64b",
-    buah: "6838036d06bf979e73ffd650",
-    "tanaman-hias": "6838037e06bf979e73ffd655",
-    lainnya: "6838038a06bf979e73ffd65a",
+    sayuran: "684a9862cb667731eed946a5",
+    buah: "684a9862cb667731eed946a7",
+    tanamanHias: "684a9862cb667731eed946a9",
+    lainnya: "684a9862cb667731eed946ab",
   },
   method: {
-    konvensional: "683803a806bf979e73ffd65f",
-    hidroponik: "683803c306bf979e73ffd664",
-    organik: "683803d006bf979e73ffd669",
-    lainnya: "6838041b06bf979e73ffd671",
+    konvensional: "684a9862cb667731eed946ad",
+    hidroponik: "684a9862cb667731eed946af",
+    organik: "684a9862cb667731eed946b1",
+    lainnya: "684a9862cb667731eed946b3",
   },
 };
 
@@ -45,6 +45,7 @@ export default class LearningPage {
     const userName =
       userData?.username || localStorage.getItem("user_name") || "User";
     const userInitial = userName.charAt(0).toUpperCase();
+    const isAdmin = userData && userData.role === "admin";
 
     const navbar = NavigationBar.getInstance({
       currentPath: window.location.hash.slice(1),
@@ -104,13 +105,16 @@ export default class LearningPage {
                   <i class="fa fa-search search-icon"></i>
                 </div>
                 <div id="article-grid" class="learning-grid"></div>
+                <div id="pagination" class="pagination"></div>
               </div>
 
               <aside class="learning-filter-panel">
                 <h4><i class="fa fa-filter"></i> Filter Materi</h4>
-                <button id="add-learning-btn" class="add-learning-btn">
-                  <i class="fas fa-plus"></i> Tambah Materi
-                </button>
+                ${isAdmin ? `
+                  <button id="add-learning-btn" class="add-learning-btn">
+                    <i class="fas fa-plus"></i> Tambah Materi
+                  </button>
+                ` : ''}
 
                 <div class="filter-group">
                   <strong>Pengalaman</strong>
@@ -123,7 +127,7 @@ export default class LearningPage {
                   <strong>Jenis Tanaman</strong>
                   <label><input type="checkbox" value="sayuran" name="plantType" /> Sayuran</label>
                   <label><input type="checkbox" value="buah" name="plantType" /> Buah</label>
-                  <label><input type="checkbox" value="tanaman-hias" name="plantType" /> Tanaman Hias</label>
+                  <label><input type="checkbox" value="tanamanHias" name="plantType" /> Tanaman Hias</label>
                   <label><input type="checkbox" value="lainnya" name="plantType" /> Lainnya</label>
                 </div>
 
@@ -155,87 +159,65 @@ export default class LearningPage {
             </section>
           </section>
         </div>
-        <div id="add-learning-modal" class="modal" style="display: none;">
-          <div class="modal-overlay"></div>
-          <div class="modal-content">
-            <div class="modal-header">
-              <h2>Tambah Materi Pembelajaran</h2>
-              <button class="modal-close" onclick="this.closest('.modal').style.display='none'">
-                <i class="fas fa-times"></i>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form id="add-learning-form">
-                <div class="form-group">
-                  <label for="title">Judul Materi</label>
-                  <input type="text" id="title" name="title" required placeholder="Masukkan judul materi" />
-                </div>
+        ${isAdmin ? `
+          <div id="add-learning-modal" class="modal" style="display: none;">
+            <div class="modal-overlay"></div>
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2>Tambah Materi Pembelajaran</h2>
+                <button class="modal-close" onclick="this.closest('.modal').style.display='none'">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form id="add-learning-form">
+                  <div class="form-group">
+                    <label for="title">Judul Materi</label>
+                    <input type="text" id="title" name="title" required placeholder="Masukkan judul materi" />
+                  </div>
 
-                <div class="form-group">
-                  <label for="summary">Ringkasan</label>
-                  <textarea id="summary" name="summary" required placeholder="Masukkan ringkasan materi" rows="3"></textarea>
-                </div>
+                  <div class="form-group">
+                    <label for="summary">Ringkasan</label>
+                    <textarea id="summary" name="summary" required placeholder="Masukkan ringkasan materi" rows="3"></textarea>
+                  </div>
 
-                <div class="form-group">
-                  <label for="contentLink">Link Konten</label>
-                  <input type="url" id="contentLink" name="contentLink" required placeholder="Masukkan link konten (URL)" />
-                </div>
+                  <div class="form-group">
+                    <label for="contentLink">Link Konten</label>
+                    <input type="url" id="contentLink" name="contentLink" required placeholder="Masukkan link konten (URL)" />
+                  </div>
 
-                <div class="form-group">
-                  <label>Kategori</label>
-                  <div class="category-options">
-                    <div class="category-section">
-                      <h4>Level Pengalaman</h4>
-                      <label><input type="checkbox" name="categories" value="pemula" data-id="${
-                        CATEGORY_IDS.experience.pemula
-                      }" /> Pemula</label>
-                      <label><input type="checkbox" name="categories" value="menengah" data-id="${
-                        CATEGORY_IDS.experience.menengah
-                      }" /> Menengah</label>
-                      <label><input type="checkbox" name="categories" value="lanjutan" data-id="${
-                        CATEGORY_IDS.experience.lanjutan
-                      }" /> Lanjutan</label>
-                    </div>
-
-                    <div class="category-section">
-                      <h4>Jenis Tanaman</h4>
-                      <label><input type="checkbox" name="categories" value="sayuran" data-id="${
-                        CATEGORY_IDS.plantType.sayuran
-                      }" /> Sayuran</label>
-                      <label><input type="checkbox" name="categories" value="buah" data-id="${
-                        CATEGORY_IDS.plantType.buah
-                      }" /> Buah</label>
-                      <label><input type="checkbox" name="categories" value="tanaman-hias" data-id="${
-                        CATEGORY_IDS.plantType["tanaman-hias"]
-                      }" /> Tanaman Hias</label>
-                      <label><input type="checkbox" name="categories" value="lainnya" data-id="${
-                        CATEGORY_IDS.plantType.lainnya
-                      }" /> Lainnya</label>
-                    </div>
-
-                    <div class="category-section">
-                      <h4>Metode</h4>
-                      <label><input type="checkbox" name="categories" value="konvensional" data-id="${
-                        CATEGORY_IDS.method.konvensional
-                      }" /> Konvensional</label>
-                      <label><input type="checkbox" name="categories" value="hidroponik" data-id="${
-                        CATEGORY_IDS.method.hidroponik
-                      }" /> Hidroponik</label>
-                      <label><input type="checkbox" name="categories" value="organik" data-id="${
-                        CATEGORY_IDS.method.organik
-                      }" /> Organik</label>
-                      <label><input type="checkbox" name="categories" value="lainnya" data-id="${
-                        CATEGORY_IDS.method.lainnya
-                      }" /> Lainnya</label>
+                  <div class="form-group">
+                    <label>Kategori</label>
+                    <div class="category-options">
+                      <div class="category-section">
+                        <h4>Level Pengalaman</h4>
+                        <label><input type="checkbox" name="categories" value="pemula" data-id="${CATEGORY_IDS.experience.pemula}" /> Pemula</label>
+                        <label><input type="checkbox" name="categories" value="menengah" data-id="${CATEGORY_IDS.experience.menengah}" /> Menengah</label>
+                        <label><input type="checkbox" name="categories" value="lanjutan" data-id="${CATEGORY_IDS.experience.lanjutan}" /> Lanjutan</label>
+                      </div>
+                      <div class="category-section">
+                        <h4>Jenis Tanaman</h4>
+                        <label><input type="checkbox" name="categories" value="sayuran" data-id="${CATEGORY_IDS.plantType.sayuran}" /> Sayuran</label>
+                        <label><input type="checkbox" name="categories" value="buah" data-id="${CATEGORY_IDS.plantType.buah}" /> Buah</label>
+                        <label><input type="checkbox" name="categories" value="tanamanHias" data-id="${CATEGORY_IDS.plantType.tanamanHias}" /> Tanaman Hias</label>
+                        <label><input type="checkbox" name="categories" value="lainnya" data-id="${CATEGORY_IDS.plantType.lainnya}" /> Lainnya</label>
+                      </div>
+                      <div class="category-section">
+                        <h4>Metode</h4>
+                        <label><input type="checkbox" name="categories" value="konvensional" data-id="${CATEGORY_IDS.method.konvensional}" /> Konvensional</label>
+                        <label><input type="checkbox" name="categories" value="hidroponik" data-id="${CATEGORY_IDS.method.hidroponik}" /> Hidroponik</label>
+                        <label><input type="checkbox" name="categories" value="organik" data-id="${CATEGORY_IDS.method.organik}" /> Organik</label>
+                        <label><input type="checkbox" name="categories" value="lainnya" data-id="${CATEGORY_IDS.method.lainnya}" /> Lainnya</label>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <button type="submit" class="submit-btn">Tambah Materi</button>
-              </form>
+                  <button type="submit" class="submit-btn">Tambah Materi</button>
+                </form>
+              </div>
             </div>
           </div>
-        </div>
+        ` : ''}
         <footer class="page-footer">
           <p>&copy; 2025 AgriEdu. All rights reserved.</p>
         </footer>
@@ -267,96 +249,92 @@ export default class LearningPage {
 
       this.setupSearchAndFilters(articleContainer, videoContainer);
 
-      const addLearningBtn = document.getElementById("add-learning-btn");
-      const addLearningModal = document.getElementById("add-learning-modal");
-      const addLearningForm = document.getElementById("add-learning-form");
+      const userData = authService.getUserData();
+      const isAdmin = userData && userData.role === "admin";
 
-      addLearningBtn.addEventListener("click", () => {
-        addLearningModal.style.display = "flex";
-      });
+      if (isAdmin) {
+        const addLearningBtn = document.getElementById("add-learning-btn");
+        const addLearningModal = document.getElementById("add-learning-modal");
+        const addLearningForm = document.getElementById("add-learning-form");
 
-      addLearningModal
-        .querySelector(".modal-overlay")
-        .addEventListener("click", () => {
-          addLearningModal.style.display = "none";
-        });
-
-      addLearningForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        const selectedCategories = Array.from(
-          document.querySelectorAll('input[name="categories"]:checked')
-        ).map((cb) => cb.dataset.id);
-
-        const formData = {
-          title: document.getElementById("title").value,
-          summary: document.getElementById("summary").value,
-          contentLink: document.getElementById("contentLink").value,
-          categories: selectedCategories,
-        };
-
-        try {
-          const result = await learningService.createLearning(formData);
-
-          articles.unshift({
-            type: "article",
-            title: result.learning.title,
-            description: result.learning.summary,
-            url: result.learning.contentLink,
-            category: {
-              experience:
-                Object.entries(CATEGORY_IDS.experience).find(([_, id]) =>
-                  result.learning.categories.some((c) => c.id === id)
-                )?.[0] || "pemula",
-              plantType:
-                Object.entries(CATEGORY_IDS.plantType).find(([_, id]) =>
-                  result.learning.categories.some((c) => c.id === id)
-                )?.[0] || "lainnya",
-              method:
-                Object.entries(CATEGORY_IDS.method).find(([_, id]) =>
-                  result.learning.categories.some((c) => c.id === id)
-                )?.[0] || "konvensional",
-            },
-            isFavorite: false,
+        if (addLearningBtn && addLearningModal && addLearningForm) {
+          addLearningBtn.addEventListener("click", () => {
+            addLearningModal.style.display = "flex";
           });
 
-          renderArticles(articleContainer, articles);
+          addLearningModal
+            .querySelector(".modal-overlay")
+            .addEventListener("click", () => {
+              addLearningModal.style.display = "none";
+            });
 
-          addLearningModal.style.display = "none";
-          addLearningForm.reset();
+          addLearningForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
 
-          Swal.fire({
-            icon: "success",
-            title: "Berhasil!",
-            text: "Materi pembelajaran berhasil ditambahkan!",
-            showConfirmButton: false,
-            timer: 3000,
-          });
-        } catch (error) {
-          console.error("Error adding learning material:", error);
-          let errorMessage = "Gagal menambahkan materi pembelajaran. ";
+            const selectedCategories = Array.from(
+              document.querySelectorAll('input[name="categories"]:checked')
+            ).map((cb) => cb.dataset.id);
 
-          if (error.message.includes("401")) {
-            errorMessage += "Sesi Anda telah berakhir. Sialakan login kembali.";
-          } else if (error.message.includes("404")) {
-            errorMessage +=
-              "API endpoint tidak ditemukan. Silakan hubungi administrator.";
-          } else if (error.message.includes("500")) {
-            errorMessage +=
-              "Terjadi kesalahan pada server. Silakan coba lagi nanti.";
-          } else {
-            errorMessage += "Silakan coba lagi.";
-          }
+            const formData = {
+              title: document.getElementById("title").value,
+              summary: document.getElementById("summary").value,
+              contentLink: document.getElementById("contentLink").value,
+              categories: selectedCategories,
+            };
 
-          Swal.fire({
-            icon: "error",
-            title: "Gagal!",
-            text: errorMessage,
-            confirmButtonText: "OK",
+            try {
+              const result = await learningService.createLearning(formData);
+
+              articles.unshift({
+                type: "article",
+                id: result.learning.id,
+                title: result.learning.title,
+                description: result.learning.summary,
+                url: result.learning.contentLink,
+                category: {
+                  experience:
+                    Object.entries(CATEGORY_IDS.experience).find(([_, id]) =>
+                      result.learning.categories.some((c) => c.id === id)
+                    )?.[0] || "pemula",
+                  plantType:
+                    Object.entries(CATEGORY_IDS.plantType).find(([_, id]) =>
+                      result.learning.categories.some((c) => c.id === id)
+                    )?.[0] || "lainnya",
+                  method:
+                    Object.entries(CATEGORY_IDS.method).find(([_, id]) =>
+                      result.learning.categories.some((c) => c.id === id)
+                    )?.[0] || "konvensional",
+                },
+                isFavorite: false,
+              });
+
+              renderArticles(articleContainer, articles);
+
+              addLearningModal.style.display = "none";
+              addLearningForm.reset();
+
+              Swal.fire({
+                icon: "success",
+                title: "Berhasil!",
+                text: "Materi pembelajaran berhasil ditambahkan!",
+                showConfirmButton: false,
+                timer: 3000,
+              });
+            } catch (error) {
+              console.error("Error adding learning:", error);
+              Swal.fire({
+                icon: "error",
+                title: "Gagal!",
+                text: "Gagal menambahkan materi pembelajaran. Silakan coba lagi.",
+                showConfirmButton: false,
+                timer: 3000,
+              });
+            }
           });
         }
-      });
+      }
 
+      // Setup favorite filter
       const favoriteBtn = document.getElementById("favorite-filter");
       let showingFavorites = false;
 
@@ -377,8 +355,8 @@ export default class LearningPage {
       });
 
       this.addClearFiltersButton(articleContainer, videoContainer);
-
       this.setupGalleryCarousel();
+
     } catch (error) {
       console.error("Error loading learning data:", error);
       articleContainer.innerHTML = `

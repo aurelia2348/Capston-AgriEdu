@@ -71,6 +71,19 @@ class LearningService {
       throw error;
     }
   }
+
+  async deleteLearning(id) {
+    try {
+      const response = await deleteData(
+        `${CONFIG.API_ENDPOINTS.LEARNING.DELETE}${id}`,
+        true
+      );
+      return response;
+    } catch (error) {
+      console.error("Delete learning error:", error);
+      throw error;
+    }
+  }
 }
 
 export default new LearningService();

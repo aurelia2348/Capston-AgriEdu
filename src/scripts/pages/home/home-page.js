@@ -39,77 +39,80 @@ class HomePage {
             showProfile: true,
           });
 
-          return `
-          <div class="home-container">
-            ${navbar.render()}
+return `
+  <div class="home-container">
+    ${navbar.render()}
 
-            <main>
-              <section class="hero">
-                <div class="hero-content">
-                  <h1>Selamat datang di AgriE<span class="green">d</span>u!</h1>
-                  <p>Belajar, berbagi, dan diagnosa tanaman dengan teknologi AI.</p>
-                  <p>Semoga pengalaman Anda menyenangkan!</p>
-                  <div class="hero-buttons">
-                    <button class="green" id="learnBtn">Mulai Belajar</button>
-                    <button class="white" id="communityBtn">Gabung Komunitas</button>
-                  </div>
-                </div>
-              </section>
-
-              <section class="main-activities">
-                <div class="section-header">
-                  <div class="logo-circle">
-                    <img src="logo/Home-Activity.png" alt="Aktivitas Icon" class="header-icon">
-                  </div>
-                  <h2>Aktivitas Utama</h2>
-                </div>
-
-                <hr>
-                <div class="grid-container-home">
-                  <div class="card-home" id="learnCard">
-                      <img src="logo/Learning-Main.png" alt="Pembelajaran" class="card-icon" />
-                    <div class="card-content">
-                      <h3>Pembelajaran Interaktif</h3>
-                      <p>Tersedia materi bertahap sesuai kategori Anda untuk memahami dunia pertanian dengan cara yang praktis dan menyenangkan.</p>
-                    </div>
-                    <button class="lihat-btn">Lihat</button>
-                  </div>
-
-                  <div class="card-home" id="diagnosisCard">
-                    <img src="logo/Diagnose-Main.png" alt="Diagnosa" class="card-icon" />
-                    <div class="card-content">
-                      <h3>Diagnosa Tanaman</h3>
-                      <p>Unggah foto, lalu biarkan AI membantu mengidentifikasi masalah dan memberi saran penanganan.</p>
-                    </div>
-                    <button>Lihat</button>
-                  </div>
-
-                  <div class="card-home" id="communityCard">
-                    <img src="logo/comunityhome.png" alt="Komunitas" class="card-icon" />
-                    <div class="card-content">
-                      <h3>Komunitas Tani</h3>
-                      <p>Forum untuk bertanya, memberi saran, dan saling dukung antar petani, pelajar, maupun pegiat pertanian.</p>
-                    </div>
-                    <button>Lihat</button>
-                  </div>
-
-                  <div class="card-home" id="aiCard">
-                    <img src="logo/Ai.png" alt="ai" class="card-icon" />
-                    <div class="card-content">
-                      <h3>Asisten AI & ChatBot</h3>
-                      <p>Chatbot cerdas yang siap bantu menjawab pertanyaan tentang tanaman, pembelajaran, dan fitur aplikasi.</p>
-                    </div>
-                    <button>Lihat</button>
-                  </div>
-                </div>
-              </section>
-            </main>
-
-            <footer class="home-footer">
-              <p>&copy; 2025 AgriEdu. All rights reserved.</p>
-            </footer>
+    <main>
+      <section class="hero" data-aos="fade-up">
+        <div class="hero-content">
+          <h1>Selamat datang di AgriE<span class="green">d</span>u!</h1>
+          <p>Belajar, berbagi, dan diagnosa tanaman dengan teknologi AI.</p>
+          <p>Semoga pengalaman Anda menyenangkan!</p>
+          <div class="hero-buttons" data-aos="zoom-in" data-aos-delay="200">
+            <button class="green" id="learnBtn">Mulai Belajar</button>
+            <button class="white" id="communityBtn">Gabung Komunitas</button>
           </div>
-        `;
+        </div>
+      </section>
+
+      <section class="main-activities" data-aos="fade-up" data-aos-delay="100">
+        <div class="section-header">
+          <div class="logo-circle" data-aos="zoom-in">
+            <img src="logo/Home-Activity.png" alt="Aktivitas Icon" class="header-icon">
+          </div>
+          <h2>Aktivitas Utama</h2>
+        </div>
+
+        <hr data-aos="fade-up">
+
+        <div class="grid-container-home">
+          <div class="card-home" id="learnCard" data-aos="fade-up" data-aos-delay="100">
+            <img src="logo/Learning-Main.png" alt="Pembelajaran" class="card-icon" />
+            <div class="card-content">
+              <h3>Pembelajaran Interaktif</h3>
+              <p>Tersedia materi bertahap sesuai kategori Anda untuk memahami dunia pertanian dengan cara yang praktis dan menyenangkan.</p>
+            </div>
+            <button class="lihat-btn">Lihat</button>
+          </div>
+
+          <div class="card-home" id="diagnosisCard" data-aos="fade-up" data-aos-delay="200">
+            <img src="logo/Diagnose-Main.png" alt="Diagnosa" class="card-icon" />
+            <div class="card-content">
+              <h3>Diagnosa Tanaman</h3>
+              <p>Unggah foto, lalu biarkan AI membantu mengidentifikasi masalah dan memberi saran penanganan.</p>
+            </div>
+            <button>Lihat</button>
+          </div>
+
+          <div class="card-home" id="communityCard" data-aos="fade-up" data-aos-delay="300">
+            <img src="logo/comunityhome.png" alt="Komunitas" class="card-icon" />
+            <div class="card-content">
+              <h3>Komunitas Tani</h3>
+              <p>Forum untuk bertanya, memberi saran, dan saling dukung antar petani, pelajar, maupun pegiat pertanian.</p>
+            </div>
+            <button>Lihat</button>
+          </div>
+
+          <div class="card-home" id="aiCard" data-aos="fade-up" data-aos-delay="400">
+            <img src="logo/Ai.png" alt="ai" class="card-icon" />
+            <div class="card-content">
+              <h3>Asisten AI & ChatBot</h3>
+              <p>Chatbot cerdas yang siap bantu menjawab pertanyaan tentang tanaman, pembelajaran, dan fitur aplikasi.</p>
+            </div>
+            <button>Lihat</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="home-footer" data-aos="fade-up" data-aos-delay="100">
+      <p>&copy; 2025 AgriEdu. All rights reserved.</p>
+    </footer>
+  </div>
+`;
+
+
         },
       },
     };
@@ -154,30 +157,36 @@ class HomePage {
     }
   }
 
-  async afterRender() {
-    try {
-      this.Presenter.bindEvents();
+async afterRender() {
+  try {
+    this.Presenter.bindEvents();
 
-      const hashParts = window.location.hash.split("?");
-      if (hashParts.length > 1) {
-        const urlParams = new URLSearchParams(hashParts[1]);
-        if (urlParams.get("welcome") === "true") {
-          const userName = localStorage.getItem("user_name") || "User";
-          Swal.fire({
-            icon: "success",
-            title: `Selamat datang, ${userName}!`,
-            text: "Setup berhasil diselesaikan! Selamat menjelajahi fitur-fitur AgriEdu.",
-            showConfirmButton: false,
-            timer: 4000,
-          });
+    const hashParts = window.location.hash.split("?");
+    if (hashParts.length > 1) {
+      const urlParams = new URLSearchParams(hashParts[1]);
+      if (urlParams.get("welcome") === "true") {
+        const userName = localStorage.getItem("user_name") || "User";
+        Swal.fire({
+          icon: "success",
+          title: `Selamat datang, ${userName}!`,
+          text: "Setup berhasil diselesaikan! Selamat menjelajahi fitur-fitur AgriEdu.",
+          showConfirmButton: false,
+          timer: 4000,
+        });
 
-          window.history.replaceState(null, null, "#/home");
-        }
+        window.history.replaceState(null, null, "#/home");
       }
-    } catch (error) {
-      console.error("Error in HomePage afterRender:", error);
     }
+    AOS.init({
+      duration: 800,
+      once: true,
+    });
+
+  } catch (error) {
+    console.error("Error in HomePage afterRender:", error);
   }
+}
+
 }
 
 export default HomePage;

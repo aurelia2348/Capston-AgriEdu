@@ -143,7 +143,6 @@ class ProfilePictureService {
       const response = await fetch(fullUrl, { method: "HEAD" });
       return response.ok;
     } catch (error) {
-      console.warn("Profile picture accessibility check failed:", error);
       return false;
     }
   }
@@ -191,9 +190,6 @@ class ProfilePictureService {
 
   async updateImageElement(imgElement, profilePictureUrl, username) {
     if (!imgElement) {
-      console.warn(
-        "ProfilePictureService.updateImageElement: No image element provided"
-      );
       return;
     }
 
@@ -221,10 +217,6 @@ class ProfilePictureService {
           return;
         }
       } catch (error) {
-        console.warn(
-          "Failed to fetch profile picture with auth, trying direct load:",
-          error
-        );
         imgElement.onerror = () => {
           console.warn("Direct image load also failed, using fallback avatar");
           this.showFallbackAvatar(imgElement, username);

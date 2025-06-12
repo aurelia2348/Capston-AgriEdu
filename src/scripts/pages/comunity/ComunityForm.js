@@ -318,7 +318,7 @@ export default class CommunityForm {
         const videoDevices = devices.filter((d) => d.kind === "videoinput");
         this.updateCameraDevices(videoDevices);
       })
-      .catch((err) => console.warn("Gagal enumerate devices:", err));
+      .catch((err) => {});
 
     const stopStream = () => {
       if (this.cameraStream) {

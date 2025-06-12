@@ -63,8 +63,7 @@ export default class DiagnoseForm {
             <div id="analysisResult" class="analysis-placeholder">
               Hasil analisis akan muncul di sini.
             </div>
-
-            <button id="reanalyzeBtn" style="display: none; margin-top: 1rem;">Analisis Ulang</button>
+            <button id="reanalyzeBtn" class="diagnose-button" style="display: none; margin-top: 1rem;">Analisis Ulang</button>
           </div>
         </div>
       </section>

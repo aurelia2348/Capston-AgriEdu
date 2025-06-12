@@ -8,7 +8,7 @@ const ProfilePresenter = {
     try {
       await authService.getCurrentUser();
     } catch (error) {
-      console.warn("Gagal update user data dari API:", error);
+      // Failed to update user data
     }
 
     const profile = await ProfileModel.getUserProfile();
@@ -59,7 +59,7 @@ const ProfilePresenter = {
         try {
           await authService.getCurrentUser();
         } catch (error) {
-          console.warn("Failed to refresh user data from API:", error);
+          // Failed to refresh user data
         }
 
         const profile = await ProfileModel.getUserProfile();

@@ -5,6 +5,7 @@ import {
   getRecentLearning,
 } from "./LearningPage-Model.js";
 import learningService from "../../data/learning-service.js";
+import authService from "../../data/auth-service.js";
 
 function convertToEmbedUrl(url) {
   const regex = /(?:youtu\.be\/|youtube\.com\/watch\?v=)([^&?/]+)/;
@@ -12,10 +13,28 @@ function convertToEmbedUrl(url) {
   return match ? `https://www.youtube.com/embed/${match[1]}` : null;
 }
 
-export function renderArticles(container, list) {
+const ITEMS_PER_PAGE = 4;
+
+export function renderArticles(container, list, currentPage = 1) {
   container.innerHTML = "";
 
-  list.forEach((item, index) => {
+  const start = (currentPage - 1) * ITEMS_PER_PAGE;
+  const end = start + ITEMS_PER_PAGE;
+  const pageItems = list.slice(start, end);
+
+  if (pageItems.length === 0) {
+    container.innerHTML = `
+      <div class="no-items-message">
+        <p>Tidak ada artikel yang ditemukan.</p>
+      </div>
+    `;
+    return;
+  }
+
+  const currentUser = authService.getUserData();
+  const isAdmin = currentUser && currentUser.role === "admin";
+
+  pageItems.forEach((item, index) => {
     const articleElement = document.createElement("div");
     articleElement.className = "learning-item";
 
@@ -26,30 +45,138 @@ export function renderArticles(container, list) {
       <div class="learning-item-header">
         <h4 class="article-title" data-url="${item.url}">${item.title}</h4>
         <div class="learning-item-actions">
-          <button class="read-btn" data-index="${index}" data-type="${
-      item.type
-    }" title="Mark as read">
+          <button class="read-btn" data-index="${index}" data-type="${item.type}" title="Mark as read">
             <i class="fa fa-circle-o"></i>
           </button>
-          <button class="favorite-btn ${heartClass}" data-index="${index}" data-type="${
-      item.type
-    }" title="Bookmark">
+          <button class="favorite-btn ${heartClass}" data-index="${index}" data-type="${item.type}" title="Bookmark">
             <i class="${heartIcon}"></i>
           </button>
+          ${isAdmin ? `
+            <button class="delete-btn-articles" data-id="${item.id}" title="Delete article">
+              <i class="fas fa-trash"></i>
+            </button>
+          ` : ''}
         </div>
       </div>
       <p class="learning-item-description">${item.description || ""}</p>
     `;
 
-    const titleElement = articleElement.querySelector(".article-title");
-    titleElement.addEventListener("click", () => {
-      trackArticleClick(item);
-      window.open(item.url, "_blank");
-    });
+    // Add click event for the article
+    const articleTitle = articleElement.querySelector('.article-title');
+    if (articleTitle) {
+      articleTitle.addEventListener("click", (e) => {
+        trackArticleClick(item);
+        window.open(item.url, "_blank");
+      });
+    }
+
+    // Add delete button event listener for admin users
+    if (isAdmin) {
+      const deleteBtn = articleElement.querySelector(".delete-btn-articles");
+      if (deleteBtn) {
+        deleteBtn.addEventListener("click", async (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const articleId = deleteBtn.dataset.id;
+          
+          if (!articleId) {
+            Swal.fire(
+              'Error!',
+              'Cannot delete article: Missing article ID',
+              'error'
+            );
+            return;
+          }
+
+          const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          });
+
+          if (result.isConfirmed) {
+            try {
+              await learningService.deleteLearning(articleId);
+              Swal.fire(
+                'Deleted!',
+                'Article has been deleted.',
+                'success'
+              );
+              // Remove the article from the list and re-render
+              const articleIndex = articles.findIndex(a => a.id === articleId);
+              if (articleIndex !== -1) {
+                articles.splice(articleIndex, 1);
+                renderArticles(container, articles, currentPage);
+              }
+            } catch (error) {
+              console.error('Delete error:', error);
+              Swal.fire(
+                'Error!',
+                'Failed to delete article. Please try again.',
+                'error'
+              );
+            }
+          }
+        });
+      }
+    }
 
     container.appendChild(articleElement);
   });
+
+  renderPagination(list.length, currentPage);
 }
+
+function renderPagination(totalItems, currentPage) {
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  const paginationContainer = document.getElementById("pagination");
+  
+  if (!paginationContainer) {
+    return;
+  }
+  
+  paginationContainer.innerHTML = "";
+
+  // Add previous button
+  const prevBtn = document.createElement("button");
+  prevBtn.textContent = "Previous";
+  prevBtn.className = "pagination-btn";
+  prevBtn.disabled = currentPage === 1;
+  prevBtn.addEventListener("click", () => {
+    if (currentPage > 1) {
+      renderArticles(document.getElementById("article-grid"), articles, currentPage - 1);
+    }
+  });
+  paginationContainer.appendChild(prevBtn);
+
+  // Add page numbers
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i;
+    btn.className = `pagination-btn ${i === currentPage ? "active-page" : ""}`;
+    btn.addEventListener("click", () => {
+      renderArticles(document.getElementById("article-grid"), articles, i);
+    });
+    paginationContainer.appendChild(btn);
+  }
+
+  // Add next button
+  const nextBtn = document.createElement("button");
+  nextBtn.textContent = "Next";
+  nextBtn.className = "pagination-btn";
+  nextBtn.disabled = currentPage === totalPages;
+  nextBtn.addEventListener("click", () => {
+    if (currentPage < totalPages) {
+      renderArticles(document.getElementById("article-grid"), articles, currentPage + 1);
+    }
+  });
+  paginationContainer.appendChild(nextBtn);
+}
+
 
 function getYoutubeThumbnail(url) {
   const regex = /(?:youtu\.be\/|youtube\.com\/watch\?v=)([^&?/]+)/;

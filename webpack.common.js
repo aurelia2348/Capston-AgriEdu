@@ -9,6 +9,7 @@ module.exports = {
   output: {
     filename: "[name].bundle.js",
     path: path.resolve(__dirname, "dist"),
+    clean: true,
   },
   module: {
     rules: [
@@ -16,17 +17,33 @@ module.exports = {
         test: /\.(png|jpe?g|gif)$/i,
         type: "asset/resource",
       },
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader',
+          },
+        ],
+      },
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "src/index.html"),
+      filename: 'index.html',
+      template: path.resolve(__dirname, 'src/index.html'),
     }),
     new CopyWebpackPlugin({
       patterns: [
         {
           from: path.resolve(__dirname, "src/public/"),
           to: path.resolve(__dirname, "dist/"),
+        },
+        {
+          from: path.resolve(__dirname, "src/models/"),
+          to: path.resolve(__dirname, "dist/models/"),
         },
       ],
     }),

@@ -25,7 +25,6 @@ const CommunityModel = {
       try {
         data = responseText ? JSON.parse(responseText) : {};
       } catch (parseError) {
-        console.warn("Failed to parse JSON response:", parseError);
         throw new Error("Server returned invalid response");
       }
 
@@ -91,12 +90,11 @@ const CommunityModel = {
       const data = await response.json();
 
       let postsArray = [];
-      if (data.data && Array.isArray(data.data)) {
+      if (data && data.data) {
         postsArray = data.data;
-      } else if (Array.isArray(data)) {
+      } else if (data && Array.isArray(data)) {
         postsArray = data;
       } else {
-        console.warn("Unexpected response structure:", data);
         postsArray = [];
       }
 
@@ -139,8 +137,7 @@ const CommunityModel = {
       try {
         data = responseText ? JSON.parse(responseText) : {};
       } catch (parseError) {
-        console.warn("Failed to parse JSON response:", parseError);
-        data = { rawResponse: responseText };
+        throw new Error("Server returned invalid response");
       }
 
       if (!response.ok) {
@@ -190,7 +187,7 @@ const CommunityModel = {
         try {
           errorData = errorText ? JSON.parse(errorText) : {};
         } catch (parseError) {
-          console.warn("Failed to parse error JSON response:", parseError);
+          errorData = { rawError: errorText };
         }
 
         switch (response.status) {
@@ -216,7 +213,7 @@ const CommunityModel = {
         try {
           data = JSON.parse(responseText);
         } catch (parseError) {
-          console.warn("Failed to parse JSON response:", parseError);
+          data = { rawResponse: responseText };
         }
       }
 
@@ -253,8 +250,7 @@ const CommunityModel = {
       try {
         data = responseText ? JSON.parse(responseText) : {};
       } catch (parseError) {
-        console.warn("Failed to parse JSON response:", parseError);
-        data = { rawResponse: responseText };
+        return null;
       }
 
       if (!response.ok) {
@@ -299,8 +295,7 @@ const CommunityModel = {
       try {
         data = responseText ? JSON.parse(responseText) : {};
       } catch (parseError) {
-        console.warn("Failed to parse JSON response:", parseError);
-        throw new Error("Server returned invalid response");
+        return null;
       }
 
       if (!response.ok) {
@@ -362,7 +357,7 @@ const CommunityModel = {
         try {
           errorData = errorText ? JSON.parse(errorText) : {};
         } catch (parseError) {
-          console.warn("Failed to parse error JSON response:", parseError);
+          errorData = { rawError: errorText };
         }
 
         switch (response.status) {
@@ -389,7 +384,7 @@ const CommunityModel = {
         try {
           data = JSON.parse(responseText);
         } catch (parseError) {
-          console.warn("Failed to parse JSON response:", parseError);
+          data = { rawResponse: responseText };
         }
       }
 

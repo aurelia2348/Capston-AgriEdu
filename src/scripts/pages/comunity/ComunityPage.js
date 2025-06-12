@@ -72,6 +72,10 @@ export default class CommunityPage {
         once: true,
       });
     }
+
+    // Wait for DOM to be ready
+    await new Promise(resolve => setTimeout(resolve, 0));
+
     this.setupCreatePostButtons();
     await this.loadUserInfo();
     await this.loadPosts();
@@ -122,10 +126,10 @@ export default class CommunityPage {
             }
           }
         } catch (apiError) {
-          console.warn("Failed to refresh user data from API:", apiError);
+          // Failed to refresh user data
         }
       } else {
-        console.warn("No token available");
+        // No token available
       }
 
       try {
@@ -147,12 +151,17 @@ export default class CommunityPage {
         }
       }
     } catch (err) {
-      console.error("Gagal ambil user info:", err);
+      // Failed to get user info
     }
   }
 
   async loadPosts() {
     try {
+      const postsContainer = document.getElementById("postsContainer");
+      if (!postsContainer) {
+        return;
+      }
+
       const response = await CommunityModel.getAllPosts();
 
       let postsData = [];
@@ -182,6 +191,11 @@ export default class CommunityPage {
     } catch (error) {
       console.error("Error loading posts:", error);
 
+      const postsContainer = document.getElementById("postsContainer");
+      if (!postsContainer) {
+        return;
+      }
+
       let errorMessage = error.message;
 
       if (
@@ -194,7 +208,7 @@ export default class CommunityPage {
           "Tidak dapat terhubung ke server API. Periksa koneksi internet dan pastikan server API berjalan.";
       }
 
-      document.getElementById("postsContainer").innerHTML = `
+      postsContainer.innerHTML = `
         <div class="error-message">
           <p>Gagal memuat diskusi: ${errorMessage}</p>
           <p><small>URL API: ${CONFIG.BASE_URL}${CONFIG.API_ENDPOINTS.POSTS.GET_ALL}</small></p>
@@ -243,8 +257,14 @@ export default class CommunityPage {
 
   renderPosts() {
     const container = document.getElementById("postsContainer");
+    
+    if (!container) {
+      return;
+    }
+
     const currentUser = authService.getUserData();
     const currentUserId = currentUser?.id;
+    const isAdmin = currentUser && currentUser.role === "admin";
 
     if (!this.posts || this.posts.length === 0) {
       container.innerHTML = `
@@ -279,6 +299,7 @@ export default class CommunityPage {
         }
 
         const isOwner = currentUserId && postUserId === currentUserId;
+        const canDelete = isOwner || isAdmin;
 
         const maxContentLength = 150;
         const truncatedContent =
@@ -323,7 +344,7 @@ export default class CommunityPage {
                 </div>
               </div>
               ${
-                isOwner
+                canDelete
                   ? `
                 <button class="delete-post-btn" onclick="event.stopPropagation(); window.communityPage.deletePost('${post.id}')" title="Hapus diskusi">
                   <i class="fas fa-trash"></i>
@@ -602,9 +623,13 @@ export default class CommunityPage {
       return '<p class="no-comments">Belum ada komentar. Jadilah yang pertama berkomentar!</p>';
     }
 
+    const currentUser = authService.getUserData();
+    const isAdmin = currentUser && currentUser.role === "admin";
+
     return comments
       .map((comment) => {
         const userData = this.extractCommentUserData(comment);
+        const canDelete = userData.isOwner || isAdmin;
 
         const commentProfilePictureId = `comment-avatar-${
           comment._id || comment.id
@@ -630,7 +655,7 @@ export default class CommunityPage {
               </div>
             </div>
             ${
-              userData.isOwner
+              canDelete
                 ? `
               <button class="delete-comment-btn" onclick="window.communityPage.deleteComment('${postId}', '${
                     comment._id || comment.id

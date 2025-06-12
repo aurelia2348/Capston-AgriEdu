@@ -188,7 +188,6 @@ export class NavigationBar {
         }
       }
     } catch (error) {
-      console.warn("Failed to load navigation bar profile picture:", error);
     }
   }
 
@@ -416,7 +415,6 @@ export class NavigationBar {
         this.applyProfilePicture(blobUrl);
       }
     } catch (error) {
-      console.warn("Failed to load navigation bar profile picture:", error);
     }
   }
 
